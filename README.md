@@ -21,21 +21,25 @@ işlenir. Kaynak, test ve belge dosyaları `.htaccess` ile dışarıya kapatılm
 
 ## Derleme
 
+`package.json` bilerek depo kökünde DEĞİL, `_kaynak/` içindedir: kökte olursa Hostinger projeyi Node.js
+uygulaması sanıp `app.js`'i (tarayıcı betiği) sunucuda çalıştırmaya kalkar (`document is not defined`).
+
 ```bash
+cd _kaynak
 npm install            # typescript + playwright (yalnız geliştirme için; sunucuya gitmez)
-npm run build          # app.ts → app.js, sayfalar → kök
+npm run build          # app.ts → ../app.js, sayfalar → depo kökü
 npm run qa             # 11 sayfa × 4 genişlik tarayıcı denetimi (çerez/depolama/dış istek/CSP/taşma)
-bash _test/php-test.sh # PHP ucu testleri (php 8.1+ ve curl gerekir)
 npm run kontrol        # YAYIN KAPISI: künye eksik ya da hukuk onayı yoksa 1 ile çıkar
+cd .. && bash _test/php-test.sh   # PHP ucu testleri (php 8.1+ ve curl gerekir)
 ```
 
-Değişiklikten sonra **her zaman** `npm run build` çalıştırıp üretilen dosyaları da commit'leyin.
+Değişiklikten sonra **her zaman** `_kaynak/` içinde `npm run build` çalıştırıp üretilen dosyaları da commit'leyin.
 
 ## Yayın kapısı (veri toplamadan önce)
 
 1. `_kaynak/kunye.json` içindeki tüm boş `deger` alanlarını doldurun (veri sorumlusu, adres, e-postalar, sunucu
    konumu, saklama süreleri…). Boş alan sitede sarı `[DOLDURULACAK]` olarak görünür.
-2. Eksik alan varken `npm run build` formları **kapalı** üretir ve `api/basvuru.php` **503** döner. Bu kasıtlıdır:
+2. Eksik alan varken derleme formları **kapalı** üretir ve `api/basvuru.php` **503** döner. Bu kasıtlıdır:
    veri sorumlusu kimliği yazılmamış bir aydınlatma metniyle kişisel veri toplanmaz.
 3. Yasal metinleri bir hukukçuya okutun; onaydan sonra `kunye.json` → `"hukuk_onayi": true` (taslak uyarısı kalkar).
 4. `YAYIN-KONTROL.md` listesinin tamamını işaretleyin.
@@ -61,7 +65,7 @@ Kaynak: Hostinger belgeleri, [Git ile dağıtım](https://docs.hostinger.com/web
 1. **PHP sürümü:** hPanel → Web siteleri → Yönet → Gelişmiş → PHP Yapılandırması → **8.1 veya üstü**.
 2. **public_html'i boşaltın:** Git dağıtımı boş klasör ister. Hostinger'in varsayılan `default.php` /
    `index.php` dosyalarını Dosya Yöneticisi'nden silin.
-3. **Git bağlantısı:** hPanel → Gelişmiş → **GIT** → *Connect with GitHub* (Hostinger GitHub uygulamasına yalnız
+3. **Git bağlantısı (Node.js uygulaması DEĞİL):** hPanel → Gelişmiş → **GIT** → *Connect with GitHub* (Hostinger GitHub uygulamasına yalnız
    bu depo için izin verin) → depo `kabin-web`, dal `main`, dizin boş (= `public_html`) → Oluştur → *Deploy*.
 4. **Otomatik dağıtım:** aynı ekranda *Auto Deployment* açın. Her `git push` sonrası site güncellenir.
    Her dağıtım `public_html` içeriğini depodakiyle değiştirir, bu yüzden sunucuda `public_html` içine elle

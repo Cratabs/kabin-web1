@@ -4,10 +4,10 @@
   "version": "0.1.0",
   "description": "Kabin tanıtım sitesi (Hostinger, statik + PHP başvuru ucu)",
   "scripts": {
-    "build:ts": "tsc -p _kaynak/tsconfig.json",
-    "build": "npm run build:ts && python3 _kaynak/build.py",
-    "kontrol": "npm run build && python3 _kaynak/build.py --kontrol",
-    "qa": "node _test/onizleme.mjs"
+    "build:ts": "tsc -p tsconfig.json",
+    "build": "npm run build:ts && python3 build.py",
+    "kontrol": "npm run build && python3 build.py --kontrol",
+    "qa": "node ../_test/onizleme.mjs"
   },
   "devDependencies": {
     "playwright": "1.64.1",

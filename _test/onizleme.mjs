@@ -1,5 +1,5 @@
 // Tarayıcı QA: tüm sayfalar × 4 genişlik. Ağ yalnız yerel; PHP yerine form ucu sahte yanıtla taklit edilir.
-// Çalıştırma:  node _test/onizleme.mjs        (playwright yoksa: KABIN_PLAYWRIGHT=/yol/playwright/index.mjs)
+// Çalıştırma:  node _test/onizleme.mjs        (önce: cd _kaynak && npm install; başka kurulum için KABIN_PLAYWRIGHT=/yol/playwright/index.mjs)
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
 import { mkdir, readFile, stat } from 'node:fs/promises';
@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const OUT = join(ROOT, '_test', 'artifacts');
-const { chromium } = await import(process.env.KABIN_PLAYWRIGHT ?? 'playwright');
+const { chromium } = await import(process.env.KABIN_PLAYWRIGHT ?? new URL('../_kaynak/node_modules/playwright/index.mjs', import.meta.url).href);
 const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.svg': 'image/svg+xml', '.ttf': 'font/ttf', '.txt': 'text/plain; charset=utf-8' };
 const PAGES = ['index.html', 'markalar.html', 'basvuru-alindi.html', 'basvuru-hata.html', 'yasal/', 'yasal/kvkk-aydinlatma.html', 'yasal/gizlilik.html', 'yasal/cerez.html', 'yasal/kullanim-kosullari.html', 'yasal/beta-katilim.html', 'yasal/topluluk-kurallari.html'];
 
