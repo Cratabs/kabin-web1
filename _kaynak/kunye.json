@@ -1,0 +1,27 @@
+{
+  "_not": "Yayın öncesi TÜM boş 'deger' alanlarını doldurun. Boş alan sitede [DOLDURULACAK] olarak görünür ve başvuru formu kapalı kalır (api/basvuru.php 503 döner). Uygulanmayan alan için 'Yok' yazın. Doldurduktan sonra: python3 _kaynak/build.py",
+  "hukuk_onayi": false,
+  "surum": "0.1",
+  "guncelleme": "7 Kasım 2026",
+  "alanlar": {
+    "unvan": { "deger": "", "aciklama": "Veri sorumlusunun tam ticari unvanı ya da şahıs işletmesi sahibinin adı soyadı" },
+    "kisa_ad": { "deger": "", "aciklama": "Metinlerde kullanılacak kısa ad (ör. Kabin Teknoloji)" },
+    "adres": { "deger": "", "aciklama": "Tebligat adresi (açık adres)" },
+    "mersis_vkn": { "deger": "", "aciklama": "MERSİS no ya da vergi dairesi + vergi kimlik no" },
+    "kep": { "deger": "", "aciklama": "KEP adresi (şirketler için zorunludur; yoksa 'Yok')" },
+    "eposta_kvkk": { "deger": "", "aciklama": "KVKK başvuruları için e-posta (ör. kvkk@alanadiniz.com)" },
+    "eposta_iletisim": { "deger": "", "aciklama": "Genel iletişim e-postası (ör. merhaba@alanadiniz.com)" },
+    "eposta_guvenlik": { "deger": "", "aciklama": "Güvenlik açığı bildirimi e-postası (ör. guvenlik@alanadiniz.com)" },
+    "alan_adi": { "deger": "", "aciklama": "Sitenin alan adı, https:// olmadan (ör. kabin.app)" },
+    "barindirma_unvan": { "deger": "", "aciklama": "Barındırma sözleşmenizdeki Hostinger tüzel kişisinin unvanı ve ülkesi (hPanel > fatura/sözleşme belgesinden kontrol edin)" },
+    "site_sunucu_konumu": { "deger": "", "aciklama": "Sitenin barındırıldığı veri merkezi ülkesi (hPanel > Web siteleri > Genel bakış > Sunucu konumu)" },
+    "uygulama_sunucu_konumu": { "deger": "", "aciklama": "Kabin uygulama sunucusunun (API, ölçü profili, dolap) barındırılacağı ülke ve sağlayıcı" },
+    "yurt_disi_guvence": { "deger": "", "aciklama": "Sunucular Türkiye dışındaysa KVKK m.9 kapsamındaki dayanak (ör. 'Kurul'a bildirilen standart sözleşme'); hepsi Türkiye'deyse 'Yurt dışına aktarım yapılmamaktadır.'" },
+    "kiyafet_gorsel_analizi": { "deger": "", "aciklama": "Betada dolaba eklenen KIYAFET görselleri etiketleme/vektörleme için NVIDIA API'sine (NVIDIA Corporation, ABD) gönderilecek mi? Evet ise o cümleyi, hayır ise 'Kıyafet görselleri yalnız kendi sunucularımızda işlenir.' yazın" },
+    "saklama_beta": { "deger": "", "aciklama": "Beta başvuru verisinin saklama süresi (önerilen: kapalı beta sona erdikten sonra 6 ay)" },
+    "saklama_pilot": { "deger": "", "aciklama": "Marka pilot talebinin saklama süresi (önerilen: talebin sonuçlanmasından sonra 2 yıl)" },
+    "saklama_erisim_kaydi": { "deger": "", "aciklama": "Sunucu erişim kayıtlarının saklama süresi (barındırma sağlayıcısının politikası; Hostinger'den teyit edin)" },
+    "saklama_uygulama_kaydi": { "deger": "", "aciklama": "Uygulama güvenlik kayıtlarının saklama süresi (önerilen: 90 gün)" },
+    "yetkili_yer": { "deger": "", "aciklama": "Tüketici olmayan uyuşmazlıklar için yetkili mahkeme ve icra daireleri (ör. İstanbul (Çağlayan))" }
+  }
+}

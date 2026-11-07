@@ -1,0 +1,10 @@
+node_modules/
+_test/artifacts/
+*.log
+.env
+.env.*
+kabin-private/
+config.php
+!_kaynak/config.example.php
+__pycache__/
+*.pyc

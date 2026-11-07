@@ -1,0 +1,67 @@
+# Kabin tanıtım sitesi — Hostinger (LiteSpeed / Apache uyumlu)
+# Bu depo olduğu gibi public_html'e açılır; yalnız site dosyaları dışarıdan erişilebilir olmalı.
+
+Options -Indexes -MultiViews
+DirectoryIndex index.html
+AddDefaultCharset utf-8
+ServerSignature Off
+ErrorDocument 404 /404.html
+ErrorDocument 403 /404.html
+
+AddType font/ttf .ttf
+AddType image/svg+xml .svg
+AddType text/plain .txt
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # 1) Her zaman HTTPS (Hostinger CDN arkasında X-Forwarded-Proto da kontrol edilir).
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+  # 2) Gizli dosya ve klasörler (.git, .gitignore, .htaccess …) — .well-known hariç (SSL doğrulaması ve security.txt).
+  RewriteCond %{REQUEST_URI} !^/\.well-known/
+  RewriteRule (^|/)\. - [R=404,L]
+
+  # 3) Kaynak, test ve belge dosyaları yayımlanmaz.
+  RewriteRule ^(_kaynak|_test|node_modules|api/_lib)(/|$) - [R=404,L]
+  RewriteRule \.(md|py|ts|json|lock|sh|mjs|cjs|map|example\.php|tsbuildinfo|bak|log|jsonl)$ - [R=404,L]
+  RewriteRule ^(package\.json|package-lock\.json|LICENSE|README.*)$ - [R=404,L]
+
+  # 4) api/ altında yalnız başvuru ucu çalışır.
+  RewriteCond %{REQUEST_URI} ^/api/
+  RewriteCond %{REQUEST_URI} !^/api/basvuru\.php$
+  RewriteRule ^ - [R=404,L]
+</IfModule>
+
+# mod_rewrite yoksa ikinci savunma hattı.
+<FilesMatch "(^\.|\.(md|py|ts|json|lock|sh|mjs|map|jsonl|log)$|\.example\.php$)">
+  Require all denied
+</FilesMatch>
+
+<IfModule mod_headers.c>
+  Header always set Strict-Transport-Security "max-age=31536000"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "DENY"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=(), accelerometer=(), gyroscope=(), magnetometer=(), browsing-topics=()"
+  Header always set Cross-Origin-Opener-Policy "same-origin"
+  Header always set Cross-Origin-Resource-Policy "same-origin"
+  Header always set Content-Security-Policy "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests"
+  # Alan adı açılsa da arama motorlarına kapalı (kapalı beta önizlemesi). Açmak için README > İndeksleme.
+  Header always set X-Robots-Tag "noindex, nofollow"
+  Header always unset X-Powered-By
+  Header unset X-Powered-By
+
+  # HTML her zaman yeniden doğrulanır; css/js sürüm parametresiyle (?v=) uzun önbelleklenir.
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+  <FilesMatch "\.(css|js)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+  <FilesMatch "\.(ttf|svg)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+</IfModule>
