@@ -1,5 +1,6 @@
 /**
- * Site etkileşimleri: mobil menü, temsili beden demosu ve başvuru formunun JS ile gönderimi.
+ * Site etkileşimleri: mobil menü, temsili beden demosu, pilot formunun JS ile gönderimi ve
+ * yapay zekâ ajanları için salt-okunur WebMCP araçları (tarayıcı destekliyorsa).
  * Çerez, yerel depolama ya da izleme yok. Ağ isteği yalnız kullanıcı formu gönderdiğinde, aynı kökene
  * (/api/basvuru.php) yapılır. JS kapalıysa form normal HTML gönderimiyle aynı ucu kullanır.
  * Sunucudan gelen metin DOM'a yalnız textContent ile yazılır.
@@ -64,11 +65,11 @@ sizes.forEach((button) =>
 const ERRORS: Record<string, string> = {
   GECERSIZ: 'Lütfen zorunlu alanları kontrol et; e-posta adresi geçerli olmalı.',
   SINIR: 'Kısa sürede çok fazla deneme yapıldı. Lütfen bir saat sonra tekrar dene.',
-  KAPALI: 'Başvurular şu an kapalı. Lütfen daha sonra tekrar dene.',
+  KAPALI: 'Talepler şu an bu formdan alınamıyor. Lütfen bize e-postayla yaz.',
   KAYNAK: 'Başvuru bu sayfadan gönderilemedi. Sayfayı yenileyip tekrar dene.',
   BUYUK: 'Gönderilen bilgi çok uzun.',
 };
-const GENERIC = 'Başvuru gönderilemedi. Bağlantını kontrol edip tekrar dene.';
+const GENERIC = 'Talep gönderilemedi. Bağlantını kontrol edip tekrar dene.';
 
 function errorCode(body: unknown): string | null {
   if (typeof body !== 'object' || body === null || !('kod' in body)) return null;
@@ -82,12 +83,9 @@ function showDone(form: HTMLFormElement): void {
   done.setAttribute('role', 'status');
   done.tabIndex = -1;
   const title = document.createElement('strong');
-  title.textContent = 'Başvurun alındı.';
+  title.textContent = 'Talebiniz alındı.';
   const text = document.createElement('p');
-  text.textContent =
-    form.dataset['basvuru'] === 'pilot'
-      ? 'Talebinizi kaydettik; en kısa sürede e-postayla dönüş yapacağız.'
-      : 'Kapalı beta kontenjanı açıldıkça başvuruları sırayla değerlendiriyoruz. Uygun olursa davet kodunu e-postana göndereceğiz.';
+  text.textContent = 'Talebinizi kaydettik; en kısa sürede e-postayla dönüş yapacağız.';
   done.append(title, text);
   form.replaceWith(done);
   done.focus();
@@ -138,3 +136,97 @@ document.querySelectorAll<HTMLFormElement>('form[data-basvuru]').forEach((form) 
       });
   });
 });
+
+/*
+ * WebMCP (https://webmachinelearning.github.io/webmcp/): tarayıcıdaki yapay zekâ ajanlarına salt-okunur
+ * araçlar sunar. Araçlar yalnız bu sitenin herkese açık Markdown dosyalarını aynı kökenden okur; kişisel
+ * veri okumaz, form göndermez, durum değiştirmez. Desteklemeyen tarayıcıda hiçbir şey yapılmaz.
+ */
+interface WebMcpText {
+  type: 'text';
+  text: string;
+}
+interface WebMcpResult {
+  content: WebMcpText[];
+  isError?: boolean;
+}
+interface WebMcpTool {
+  name: string;
+  title?: string;
+  description: string;
+  inputSchema?: Record<string, unknown>;
+  annotations?: { readOnlyHint?: boolean };
+  execute: (input: Record<string, unknown>) => Promise<WebMcpResult>;
+}
+interface ModelContext {
+  registerTool: (tool: WebMcpTool, options?: { signal?: AbortSignal }) => Promise<undefined> | undefined;
+}
+
+const MD_YOLU = /^\/(?:[a-z0-9-]+\/)*[a-z0-9-]+\.md$/;
+
+function metinSonuc(text: string, isError = false): WebMcpResult {
+  return isError ? { content: [{ type: 'text', text }], isError } : { content: [{ type: 'text', text }] };
+}
+
+async function yerelMetin(yol: string): Promise<WebMcpResult> {
+  try {
+    const res = await fetch(yol, { credentials: 'omit', headers: { Accept: 'text/markdown, text/plain' } });
+    if (!res.ok) return metinSonuc(`Bulunamadı: ${yol}`, true);
+    return metinSonuc(await res.text());
+  } catch {
+    return metinSonuc('Sayfa okunamadı.', true);
+  }
+}
+
+function sayfaMdYolu(pathname: string): string {
+  const yol = pathname.endsWith('/') ? `${pathname}index.html` : pathname;
+  return yol.replace(/\.html$/, '.md');
+}
+
+const ARACLAR: WebMcpTool[] = [
+  {
+    name: 'kabin_site_ozeti',
+    title: 'Kabin site özeti',
+    description:
+      'Kabin hakkında kısa özet, iletişim adresleri ve sitedeki tüm sayfaların Markdown bağlantılarını (llms.txt) döndürür.',
+    inputSchema: { type: 'object', properties: {} },
+    annotations: { readOnlyHint: true },
+    execute: () => yerelMetin('/llms.txt'),
+  },
+  {
+    name: 'kabin_sayfa_oku',
+    title: 'Kabin sayfasını oku',
+    description:
+      'Bu sitedeki bir sayfanın Markdown sürümünü döndürür. "yol" verilmezse açık olan sayfa okunur. Örnek: /yasal/gizlilik.md',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        yol: { type: 'string', description: 'Sitedeki .md yolu, ör. /index.md, /markalar.md, /yasal/kvkk-aydinlatma.md' },
+      },
+    },
+    annotations: { readOnlyHint: true },
+    execute: (input) => {
+      const istenen = input['yol'];
+      const yol = typeof istenen === 'string' && istenen !== '' ? istenen : sayfaMdYolu(location.pathname);
+      if (!MD_YOLU.test(yol)) return Promise.resolve(metinSonuc('Geçersiz yol: /… .md biçiminde olmalı.', true));
+      return yerelMetin(yol);
+    },
+  },
+];
+
+function modelContext(): ModelContext | undefined {
+  const doc = document as Document & { modelContext?: ModelContext };
+  const nav = navigator as Navigator & { modelContext?: ModelContext };
+  return doc.modelContext ?? nav.modelContext;
+}
+
+const mc = modelContext();
+if (mc !== undefined && typeof mc.registerTool === 'function') {
+  for (const arac of ARACLAR) {
+    try {
+      void Promise.resolve(mc.registerTool(arac)).catch(() => undefined);
+    } catch {
+      // Eski ya da farklı bir WebMCP sürümü: araç kaydı atlanır, site normal çalışır.
+    }
+  }
+}

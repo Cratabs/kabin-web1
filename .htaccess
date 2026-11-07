@@ -11,6 +11,9 @@ ErrorDocument 403 /404.html
 AddType font/ttf .ttf
 AddType image/svg+xml .svg
 AddType text/plain .txt
+AddType text/markdown .md
+AddType application/xml .xml
+AddCharset utf-8 .md .txt .xml
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
@@ -24,19 +27,29 @@ AddType text/plain .txt
   RewriteCond %{REQUEST_URI} !^/\.well-known/
   RewriteRule (^|/)\. - [R=404,L]
 
-  # 3) Kaynak, test ve belge dosyaları yayımlanmaz.
+  # 3) Kaynak, test ve belge dosyaları yayımlanmaz. Sayfaların .md sürümleri (build.py üretir) açıktır;
+  #    depo belgeleri (README, YAYIN-KONTROL) kapalıdır.
   RewriteRule ^(_kaynak|_test|node_modules|api/_lib)(/|$) - [R=404,L]
-  RewriteRule \.(md|py|ts|json|lock|sh|mjs|cjs|map|example\.php|tsbuildinfo|bak|log|jsonl)$ - [R=404,L]
-  RewriteRule ^(package\.json|package-lock\.json|LICENSE|README.*)$ - [R=404,L]
+  RewriteRule \.(py|ts|json|lock|sh|mjs|cjs|map|example\.php|tsbuildinfo|bak|log|jsonl)$ - [R=404,L]
+  RewriteRule (^|/)(README|YAYIN-KONTROL|LICENSE|package\.json|package-lock\.json)[^/]*$ - [R=404,L]
 
   # 4) api/ altında yalnız başvuru ucu çalışır.
   RewriteCond %{REQUEST_URI} ^/api/
   RewriteCond %{REQUEST_URI} !^/api/basvuru\.php$
   RewriteRule ^ - [R=404,L]
+
+  # 5) Yapay zekâ ajanları için içerik anlaşması: "Accept: text/markdown" isteyen istemciye sayfanın
+  #    Markdown sürümü verilir (aynı adreste). Tarayıcılar bu türü istemez; onlara HTML gider.
+  RewriteCond %{HTTP:Accept} text/markdown [NC]
+  RewriteCond %{DOCUMENT_ROOT}/$1index.md -f
+  RewriteRule ^(.*/)?$ $1index.md [L]
+  RewriteCond %{HTTP:Accept} text/markdown [NC]
+  RewriteCond %{DOCUMENT_ROOT}/$1.md -f
+  RewriteRule ^(.+)\.html$ $1.md [L]
 </IfModule>
 
 # mod_rewrite yoksa ikinci savunma hattı.
-<FilesMatch "(^\.|\.(md|py|ts|json|lock|sh|mjs|map|jsonl|log)$|\.example\.php$)">
+<FilesMatch "(^\.|\.(py|ts|json|lock|sh|mjs|map|jsonl|log)$|\.example\.php$|^(README|YAYIN-KONTROL)[^/]*$)">
   Require all denied
 </FilesMatch>
 
@@ -49,14 +62,26 @@ AddType text/plain .txt
   Header always set Cross-Origin-Opener-Policy "same-origin"
   Header always set Cross-Origin-Resource-Policy "same-origin"
   Header always set Content-Security-Policy "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests"
-  # Alan adı açılsa da arama motorlarına kapalı (kapalı beta önizlemesi). Açmak için README > İndeksleme.
-  Header always set X-Robots-Tag "noindex, nofollow"
   Header always unset X-Powered-By
   Header unset X-Powered-By
 
-  # HTML her zaman yeniden doğrulanır; css/js sürüm parametresiyle (?v=) uzun önbelleklenir.
-  <FilesMatch "\.html$">
+  # HTML ve Markdown her zaman yeniden doğrulanır; aynı adres Accept'e göre iki türde dönebilir.
+  <FilesMatch "\.(html|md)$">
     Header set Cache-Control "no-cache"
+    Header merge Vary "Accept"
+  </FilesMatch>
+  # Ajanların siteyi keşfetmesi için (RFC 8288). Göreli adres isteğin adresine göre çözülür:
+  # "/" → /index.md, "/yasal/" → /yasal/index.md.
+  <FilesMatch "^index\.html$">
+    Header append Link "<index.md>; rel=\"alternate\"; type=\"text/markdown\""
+  </FilesMatch>
+  <FilesMatch "\.html$">
+    Header append Link "</llms.txt>; rel=\"describedby\"; type=\"text/plain\""
+    Header append Link "</sitemap.xml>; rel=\"sitemap\"; type=\"application/xml\""
+  </FilesMatch>
+  # Markdown sürümleri HTML sayfalarının kopyasıdır: ajanlar okur, arama motoru dizinine girmez.
+  <FilesMatch "\.md$">
+    Header set X-Robots-Tag "noindex"
   </FilesMatch>
   <FilesMatch "\.(css|js)$">
     Header set Cache-Control "public, max-age=2592000"

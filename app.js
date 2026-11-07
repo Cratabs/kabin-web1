@@ -45,11 +45,11 @@ sizes.forEach((button) => button.addEventListener('click', () => {
 const ERRORS = {
     GECERSIZ: 'Lütfen zorunlu alanları kontrol et; e-posta adresi geçerli olmalı.',
     SINIR: 'Kısa sürede çok fazla deneme yapıldı. Lütfen bir saat sonra tekrar dene.',
-    KAPALI: 'Başvurular şu an kapalı. Lütfen daha sonra tekrar dene.',
+    KAPALI: 'Talepler şu an bu formdan alınamıyor. Lütfen bize e-postayla yaz.',
     KAYNAK: 'Başvuru bu sayfadan gönderilemedi. Sayfayı yenileyip tekrar dene.',
     BUYUK: 'Gönderilen bilgi çok uzun.',
 };
-const GENERIC = 'Başvuru gönderilemedi. Bağlantını kontrol edip tekrar dene.';
+const GENERIC = 'Talep gönderilemedi. Bağlantını kontrol edip tekrar dene.';
 function errorCode(body) {
     if (typeof body !== 'object' || body === null || !('kod' in body))
         return null;
@@ -62,12 +62,9 @@ function showDone(form) {
     done.setAttribute('role', 'status');
     done.tabIndex = -1;
     const title = document.createElement('strong');
-    title.textContent = 'Başvurun alındı.';
+    title.textContent = 'Talebiniz alındı.';
     const text = document.createElement('p');
-    text.textContent =
-        form.dataset['basvuru'] === 'pilot'
-            ? 'Talebinizi kaydettik; en kısa sürede e-postayla dönüş yapacağız.'
-            : 'Kapalı beta kontenjanı açıldıkça başvuruları sırayla değerlendiriyoruz. Uygun olursa davet kodunu e-postana göndereceğiz.';
+    text.textContent = 'Talebinizi kaydettik; en kısa sürede e-postayla dönüş yapacağız.';
     done.append(title, text);
     form.replaceWith(done);
     done.focus();
@@ -123,3 +120,66 @@ document.querySelectorAll('form[data-basvuru]').forEach((form) => {
         });
     });
 });
+const MD_YOLU = /^\/(?:[a-z0-9-]+\/)*[a-z0-9-]+\.md$/;
+function metinSonuc(text, isError = false) {
+    return isError ? { content: [{ type: 'text', text }], isError } : { content: [{ type: 'text', text }] };
+}
+async function yerelMetin(yol) {
+    try {
+        const res = await fetch(yol, { credentials: 'omit', headers: { Accept: 'text/markdown, text/plain' } });
+        if (!res.ok)
+            return metinSonuc(`Bulunamadı: ${yol}`, true);
+        return metinSonuc(await res.text());
+    }
+    catch {
+        return metinSonuc('Sayfa okunamadı.', true);
+    }
+}
+function sayfaMdYolu(pathname) {
+    const yol = pathname.endsWith('/') ? `${pathname}index.html` : pathname;
+    return yol.replace(/\.html$/, '.md');
+}
+const ARACLAR = [
+    {
+        name: 'kabin_site_ozeti',
+        title: 'Kabin site özeti',
+        description: 'Kabin hakkında kısa özet, iletişim adresleri ve sitedeki tüm sayfaların Markdown bağlantılarını (llms.txt) döndürür.',
+        inputSchema: { type: 'object', properties: {} },
+        annotations: { readOnlyHint: true },
+        execute: () => yerelMetin('/llms.txt'),
+    },
+    {
+        name: 'kabin_sayfa_oku',
+        title: 'Kabin sayfasını oku',
+        description: 'Bu sitedeki bir sayfanın Markdown sürümünü döndürür. "yol" verilmezse açık olan sayfa okunur. Örnek: /yasal/gizlilik.md',
+        inputSchema: {
+            type: 'object',
+            properties: {
+                yol: { type: 'string', description: 'Sitedeki .md yolu, ör. /index.md, /markalar.md, /yasal/kvkk-aydinlatma.md' },
+            },
+        },
+        annotations: { readOnlyHint: true },
+        execute: (input) => {
+            const istenen = input['yol'];
+            const yol = typeof istenen === 'string' && istenen !== '' ? istenen : sayfaMdYolu(location.pathname);
+            if (!MD_YOLU.test(yol))
+                return Promise.resolve(metinSonuc('Geçersiz yol: /… .md biçiminde olmalı.', true));
+            return yerelMetin(yol);
+        },
+    },
+];
+function modelContext() {
+    const doc = document;
+    const nav = navigator;
+    return doc.modelContext ?? nav.modelContext;
+}
+const mc = modelContext();
+if (mc !== undefined && typeof mc.registerTool === 'function') {
+    for (const arac of ARACLAR) {
+        try {
+            void Promise.resolve(mc.registerTool(arac)).catch(() => undefined);
+        }
+        catch {
+        }
+    }
+}

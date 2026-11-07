@@ -17,27 +17,29 @@ KABIN_PRIVATE_DIR="$TMP/ozel" php -S 127.0.0.1:8099 -t "$TMP/site" >/dev/null 2>
 sleep 1
 U=http://127.0.0.1:8099/api/basvuru.php; H=(-s -o /dev/null -w '%{http_code}' -H 'Accept: application/json')
 gecti=0; kontrol() { if [ "$2" = "$3" ]; then gecti=$((gecti+1)); else echo "HATA: $1 → beklenen $3, gelen $2"; exit 1; fi; }
-B=(-d tur=beta -d platform=ios -d yas18=evet -d aydinlatma=evet)
+P=(-d tur=pilot -d ad='Ayşe Y' -d sirket=Marka -d kategori=kadin -d aydinlatma=evet)
+V="$TMP/ozel/veri/basvurular-pilot.jsonl"
 kontrol "GET 405"            "$(curl "${H[@]}" "$U")" 405
-kontrol "geçerli beta"       "$(curl "${H[@]}" "${B[@]}" -d eposta=Ayse@Ornek.com "$U")" 200
-kontrol "tekrar beta (aynı yanıt)" "$(curl "${H[@]}" "${B[@]}" -d eposta=ayse@ornek.com "$U")" 200
-kontrol "geçersiz e-posta"   "$(curl "${H[@]}" "${B[@]}" -d eposta=yok "$U")" 400
-kontrol "aydınlatma yok"     "$(curl "${H[@]}" -d tur=beta -d platform=ios -d yas18=evet -d eposta=b@ornek.com "$U")" 400
-kontrol "yabancı Origin"     "$(curl "${H[@]}" -H 'Origin: https://kotu.example' "${B[@]}" -d eposta=c@ornek.com "$U")" 403
-kontrol "cross-site fetch"   "$(curl "${H[@]}" -H 'Sec-Fetch-Site: cross-site' "${B[@]}" -d eposta=c@ornek.com "$U")" 403
-kontrol "tuzak alan (sahte başarı)" "$(curl "${H[@]}" "${B[@]}" -d eposta=bot@ornek.com -d web_sitesi=x "$U")" 200
-kontrol "pilot geçerli"      "$(curl "${H[@]}" -d tur=pilot -d ad='Ayşe Y' -d sirket=Marka -d eposta=p@marka.com -d kategori=kadin -d mesaj=$'Merhaba\r\nDeneme' -d aydinlatma=evet "$U")" 200
-kontrol "HTML formu → 303"   "$(curl -s -o /dev/null -w '%{http_code}' "${B[@]}" -d eposta=d@ornek.com "$U")" 303
-n=$(wc -l < "$TMP/ozel/veri/basvurular-beta.jsonl"); kontrol "beta satır sayısı (tekrar ve bot yazılmadı)" "$n" 2
-grep -q '"eposta":"ayse@ornek.com"' "$TMP/ozel/veri/basvurular-beta.jsonl"; gecti=$((gecti+1))
-if grep -q 'bot@ornek.com' "$TMP/ozel/veri/basvurular-beta.jsonl"; then echo "HATA: bot kaydedildi"; exit 1; fi
-kontrol "veri izinleri 600" "$(stat -c %a "$TMP/ozel/veri/basvurular-beta.jsonl")" 600
+kontrol "pilot geçerli"      "$(curl "${H[@]}" "${P[@]}" -d eposta=Ayse@Marka.com -d mesaj=$'Merhaba\r\nDeneme' "$U")" 200
+kontrol "eski beta türü reddedilir" "$(curl "${H[@]}" -d tur=beta -d platform=ios -d yas18=evet -d aydinlatma=evet -d eposta=b@ornek.com "$U")" 400
+kontrol "geçersiz e-posta"   "$(curl "${H[@]}" "${P[@]}" -d eposta=yok "$U")" 400
+kontrol "aydınlatma yok"     "$(curl "${H[@]}" -d tur=pilot -d ad='Ayşe Y' -d sirket=Marka -d kategori=kadin -d eposta=b@marka.com "$U")" 400
+kontrol "yabancı Origin"     "$(curl "${H[@]}" -H 'Origin: https://kotu.example' "${P[@]}" -d eposta=c@marka.com "$U")" 403
+kontrol "cross-site fetch"   "$(curl "${H[@]}" -H 'Sec-Fetch-Site: cross-site' "${P[@]}" -d eposta=c@marka.com "$U")" 403
+kontrol "tuzak alan (sahte başarı)" "$(curl "${H[@]}" "${P[@]}" -d eposta=bot@marka.com -d web_sitesi=x "$U")" 200
+kontrol "HTML formu → 303"   "$(curl -s -o /dev/null -w '%{http_code}' "${P[@]}" -d eposta=d@marka.com "$U")" 303
+n=$(wc -l < "$V"); kontrol "pilot satır sayısı (bot yazılmadı)" "$n" 2
+grep -q '"eposta":"ayse@marka.com"' "$V"; gecti=$((gecti+1))
+if grep -q 'bot@marka.com' "$V"; then echo "HATA: bot kaydedildi"; exit 1; fi
+if [ -e "$TMP/ozel/veri/basvurular-beta.jsonl" ]; then echo "HATA: beta dosyası oluştu"; exit 1; fi
+kontrol "veri izinleri 600" "$(stat -c %a "$V")" 600
 if grep -q '127.0.0.1' "$TMP/ozel/veri/sinir.json"; then echo "HATA: IP düz yazılmış"; exit 1; fi
 gecti=$((gecti+1))
-# Hız sınırı: saatte 10 deneme. Yukarıda 7 sayılan POST var (403'ler kaynak denetiminde, sınırdan ÖNCE
-# reddedilir; GET sayılmaz). 3 deneme daha → 10; 11. istek 429.
-for _ in 1 2 3; do curl "${H[@]}" -d tur=beta "$U" >/dev/null; done
-kontrol "hız sınırı 429" "$(curl "${H[@]}" "${B[@]}" -d eposta=e@ornek.com "$U")" 429
+# Hız sınırı: saatte 10 deneme. Yukarıda sınıra sayılan 6 POST var (pilot, beta türü, geçersiz e-posta,
+# aydınlatma yok, tuzak, 303). 403'ler kaynak denetiminde, sınırdan ÖNCE reddedilir; GET sayılmaz.
+# 4 deneme daha → 10; 11. istek 429.
+for _ in 1 2 3 4; do curl "${H[@]}" -d tur=pilot "$U" >/dev/null; done
+kontrol "hız sınırı 429" "$(curl "${H[@]}" "${P[@]}" -d eposta=e@marka.com "$U")" 429
 rm "$TMP/ozel/config.php"
-kontrol "ayar yoksa 503" "$(curl "${H[@]}" "${B[@]}" -d eposta=f@ornek.com "$U")" 503
+kontrol "ayar yoksa 503" "$(curl "${H[@]}" "${P[@]}" -d eposta=f@marka.com "$U")" 503
 echo "PHP testleri geçti: $gecti denetim"

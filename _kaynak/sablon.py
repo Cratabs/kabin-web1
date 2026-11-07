@@ -15,26 +15,45 @@ META_CSP = (
 
 NAV = [
     ("nasil", "/index.html#nasil", "Nasıl çalışır?"),
-    ("kapsam", "/index.html#kapsam", "Beta kapsamı"),
+    ("olcu", "/index.html#olcu", "Fotoğrafla ölçü"),
     ("markalar", "/markalar.html", "Markalar için"),
     ("yasal", "/yasal/", "Yasal"),
 ]
 
 
-def head(title: str, description: str, surum: dict[str, str]) -> str:
+def head(title: str, description: str, surum: dict[str, str], *, canonical: str | None = None,
+         md_href: str | None = None, jsonld: str | None = None) -> str:
+    """canonical=None: dizine eklenmeyen sayfa (404, başvuru sonucu) → noindex."""
+    if canonical is None:
+        seo = '<meta name="robots" content="noindex">'
+    else:
+        c = escape(canonical)
+        seo = (
+            f'<link rel="canonical" href="{c}">'
+            '<meta property="og:type" content="website"><meta property="og:site_name" content="Kabin">'
+            '<meta property="og:locale" content="tr_TR">'
+            f'<meta property="og:title" content="{escape(title)}">'
+            f'<meta property="og:description" content="{escape(description)}">'
+            f'<meta property="og:url" content="{c}">'
+            '<meta name="twitter:card" content="summary">'
+        )
+    if md_href is not None:
+        seo += f'<link rel="alternate" type="text/markdown" href="{escape(md_href)}">'
+    seo += '<link rel="describedby" type="text/plain" href="/llms.txt">'
+    # JSON-LD bir veri bloğudur, çalıştırılmaz; CSP script-src bunu engellemez. "<" ajan.py'de kaçırılır.
+    ld = f'<script type="application/ld+json">{jsonld}</script>' if jsonld else ""
     return (
         '<!doctype html><html lang="tr"><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width, initial-scale=1">'
-        '<meta name="robots" content="noindex,nofollow">'
         '<meta name="referrer" content="strict-origin-when-cross-origin">'
         f'<meta http-equiv="Content-Security-Policy" content="{META_CSP}">'
         f"<title>{escape(title)}</title>"
-        f'<meta name="description" content="{escape(description)}">'
+        f'<meta name="description" content="{escape(description)}">{seo}'
         '<meta name="theme-color" content="#faf8f5">'
         '<link rel="icon" href="/assets/kabin-mark.svg" type="image/svg+xml">'
         '<link rel="preload" href="/assets/playfair.ttf" as="font" type="font/ttf" crossorigin>'
         f'<link rel="stylesheet" href="/styles.css?v={surum["css"]}">'
-        f'<script src="/app.js?v={surum["js"]}" defer></script>'
+        f'<script src="/app.js?v={surum["js"]}" defer></script>{ld}'
         "</head><body>"
     )
 
@@ -44,10 +63,9 @@ def header(active: str) -> str:
     for key, href, label in NAV:
         current = ' aria-current="page"' if key == active else ""
         links.append(f'<a href="{href}"{current}>{label}</a>')
-    links.append('<a class="nav-cta" href="/index.html#beta">Kapalı beta <span aria-hidden="true">↗</span></a>')
+    links.append('<a class="nav-cta" href="/index.html#iletisim">İletişim <span aria-hidden="true">↗</span></a>')
     return (
         '<a class="skip" href="#icerik">İçeriğe geç</a>'
-        '<div class="preview-bar">KAPALI BETA HAZIRLIĞI · DAVETLİ KULLANIM</div>'
         '<header><nav class="wrap nav" aria-label="Ana menü">'
         '<a class="brand" href="/index.html" aria-label="Kabin ana sayfa">'
         '<img src="/assets/kabin-mark.svg" width="32" height="32" alt=""><span class="wordmark">kabin</span></a>'
@@ -65,19 +83,20 @@ def footer(f: dict[str, str]) -> str:
         '<a class="brand" href="/index.html"><img src="/assets/kabin-mark.svg" width="30" height="30" alt="">'
         '<span class="wordmark">kabin</span></a><div class="footer-links">'
         '<a href="/index.html#nasil">Nasıl çalışır?</a><a href="/markalar.html">Markalar için</a>'
+        '<a href="/hakkinda.html">Hakkımızda</a><a href="/iletisim.html">İletişim</a>'
         '<a href="/yasal/kvkk-aydinlatma.html">KVKK aydınlatma</a><a href="/yasal/gizlilik.html">Gizlilik</a>'
+        '<a href="/yasal/kullanici-sozlesmesi.html">Kullanıcı sözleşmesi</a>'
         '<a href="/yasal/cerez.html">Çerezler</a><a href="/yasal/kullanim-kosullari.html">Kullanım koşulları</a>'
         '<a href="/yasal/">Tüm yasal metinler</a></div></div>'
         '<div class="footer-bottom">'
-        f'<span>© 2026 {f["kisa_ad"]} · Veri sorumlusu: {f["unvan"]} · {f["eposta_iletisim"]}</span>'
-        "<span>Kapalı beta hazırlığında. Genel kullanıma açık değildir. "
-        "Beden önerileri tahminidir.</span></div></div></footer></body></html>"
+        f'<span>© 2026 {f["kisa_ad"]} · Veri sorumluları: {f["unvan"]} · {f["eposta_link"]}</span>'
+        "<span>Fotoğraftan ölçüler ve beden önerileri tahminidir; uyum garantisi değildir.</span>"
+        "</div></div></footer></body></html>"
     )
 
 
-def _check(name: str, text: str, required: bool = True) -> str:
-    req = " required" if required else ""
-    return f'<label class="check-label"><input type="checkbox" name="{name}" value="evet"{req}><span>{text}</span></label>'
+def _check(name: str, text: str) -> str:
+    return f'<label class="check-label"><input type="checkbox" name="{name}" value="evet" required><span>{text}</span></label>'
 
 
 def _honeypot() -> str:
@@ -88,62 +107,60 @@ def _honeypot() -> str:
     )
 
 
-def form(kind: str, open_: bool) -> str:
-    """Başvuru formu. open_=False iken yasal metinler eksik: alanlar kapalı, gönderim yok."""
+def form(kind: str, open_: bool, eposta_link: str) -> str:
+    """Marka pilot formu. open_=False iken yasal kapı kapalı: alanlar kapalı, gönderim yok, e-posta yolu gösterilir."""
     aydinlatma = (
         '<a href="/yasal/kvkk-aydinlatma.html" target="_blank" rel="noopener">KVKK Aydınlatma Metni</a>’ni '
         "okudum. Bilgilerimin bu metinde belirtilen amaçlarla işleneceğini biliyorum."
     )
-    if kind == "beta":
-        fields = (
-            '<label for="beta-eposta">E-posta adresin</label>'
-            '<input id="beta-eposta" name="eposta" type="email" autocomplete="email" maxlength="254" '
-            'placeholder="sen@ornek.com" required>'
-            '<fieldset class="choice"><legend>Kabin’i nerede kullanmak istersin?</legend>'
-            '<label><input type="radio" name="platform" value="ios" required> iPhone</label>'
-            '<label><input type="radio" name="platform" value="android"> Android</label>'
-            '<label><input type="radio" name="platform" value="tarayici"> Yalnız tarayıcı eklentisi</label>'
-            "</fieldset>"
-            + _check("chrome", "Bilgisayarımda Google Chrome ya da Chromium tabanlı bir tarayıcı kullanıyorum.", False)
-            + _check("yas18", "18 yaşını doldurdum.")
-            + _check("aydinlatma", aydinlatma)
-        )
-        button = "Kapalı betaya başvur"
-    else:
-        fields = (
-            '<div class="form-grid"><div><label for="pilot-ad">Ad soyad</label>'
-            '<input id="pilot-ad" name="ad" autocomplete="name" minlength="2" maxlength="100" required></div>'
-            '<div><label for="pilot-sirket">Marka / şirket</label>'
-            '<input id="pilot-sirket" name="sirket" autocomplete="organization" minlength="2" maxlength="120" '
-            "required></div></div>"
-            '<label for="pilot-eposta">İş e-posta adresi</label>'
-            '<input id="pilot-eposta" name="eposta" type="email" autocomplete="email" maxlength="254" required>'
-            '<label for="pilot-kategori">Ürün kategoriniz</label>'
-            '<select id="pilot-kategori" name="kategori" required><option value="">Seçin</option>'
-            '<option value="kadin">Kadın giyim</option><option value="erkek">Erkek giyim</option>'
-            '<option value="unisex">Unisex / temel giyim</option><option value="spor">Spor giyim</option>'
-            '<option value="diger">Diğer</option></select>'
-            '<label for="pilot-mesaj">Pilotunuzda neyi çözmek istiyorsunuz? <span class="opt">(isteğe bağlı)</span></label>'
-            '<textarea id="pilot-mesaj" name="mesaj" maxlength="1000" '
-            'aria-describedby="pilot-mesaj-not"></textarea>'
-            '<p class="fine" id="pilot-mesaj-not">Ticari sır, müşteri verisi ya da başka kişilere ait kişisel veri '
-            "eklemeyin. En fazla 1000 karakter.</p>"
-            + _check("aydinlatma", aydinlatma)
-        )
-        button = "Pilot talebini gönder"
+    if kind != "pilot":
+        raise ValueError(f"bilinmeyen form: {kind}")
+    fields = (
+        '<div class="form-grid"><div><label for="pilot-ad">Ad soyad</label>'
+        '<input id="pilot-ad" name="ad" autocomplete="name" minlength="2" maxlength="100" required></div>'
+        '<div><label for="pilot-sirket">Marka / şirket</label>'
+        '<input id="pilot-sirket" name="sirket" autocomplete="organization" minlength="2" maxlength="120" '
+        "required></div></div>"
+        '<label for="pilot-eposta">İş e-posta adresi</label>'
+        '<input id="pilot-eposta" name="eposta" type="email" autocomplete="email" maxlength="254" required>'
+        '<label for="pilot-kategori">Ürün kategoriniz</label>'
+        '<select id="pilot-kategori" name="kategori" required><option value="">Seçin</option>'
+        '<option value="kadin">Kadın giyim</option><option value="erkek">Erkek giyim</option>'
+        '<option value="unisex">Unisex / temel giyim</option><option value="spor">Spor giyim</option>'
+        '<option value="diger">Diğer</option></select>'
+        '<label for="pilot-mesaj">Pilotunuzda neyi çözmek istiyorsunuz? <span class="opt">(isteğe bağlı)</span></label>'
+        '<textarea id="pilot-mesaj" name="mesaj" maxlength="1000" '
+        'aria-describedby="pilot-mesaj-not"></textarea>'
+        '<p class="fine" id="pilot-mesaj-not">Ticari sır, müşteri verisi ya da başka kişilere ait kişisel veri '
+        "eklemeyin. En fazla 1000 karakter.</p>"
+        + _check("aydinlatma", aydinlatma)
+    )
+    button = "Pilot talebini gönder"
+    # WebMCP bildirimsel araç: yalnız form gerçekten açıkken ajanlara sunulur.
+    arac = (
+        ' toolname="kabin_pilot_talebi" tooldescription="Bir moda markası adına Kabin beden önerisi pilotu için '
+        "talep gönderir. Kişinin kendi ad, şirket ve iş e-posta bilgisiyle ve KVKK aydınlatma metnini okuduğunu "
+        'onaylamasıyla kullanılmalıdır."'
+        if open_ else ""
+    )
     hp = _honeypot().replace("{k}", kind)
     if open_:
         notice = ""
-        disabled = ""
+        kapali = ""
     else:
+        # Yasal kapı kapalıyken form hiç gösterilmez (gizli ve devre dışı); yerine e-posta yolu sunulur.
         notice = (
-            '<div class="draft-notice" role="note">Başvurular henüz açılmadı. Veri sorumlusu bilgileri ve yasal '
-            "metinler tamamlandığında bu form çalışacak. Şu an hiçbir bilgi gönderilemez.</div>"
+            '<div class="contact-card pilot-mail"><p class="eyebrow">PİLOT TALEBİ</p>'
+            f'<p class="contact-mail">{eposta_link}</p>'
+            '<p class="fine">Markanızı, ürün kategorinizi ve pilotta çözmek istediğiniz sorunu kısaca yazın. '
+            "Ticari sır, müşteri verisi ya da başka kişilere ait kişisel veri eklemeyin. Kişisel verileriniz "
+            '<a class="text-link" href="/yasal/kvkk-aydinlatma.html">KVKK Aydınlatma Metni</a>’ne göre işlenir.</p></div>'
         )
-        disabled = " disabled"
+        kapali = " hidden"
+    disabled = "" if open_ else " disabled"
     return (
-        f'<form class="apply" action="/api/basvuru.php" method="post" data-basvuru="{kind}">'
-        f'{notice}<fieldset class="form-body"{disabled}>'
+        f'{notice}<form class="apply" action="/api/basvuru.php" method="post" data-basvuru="{kind}"{arac}{kapali}>'
+        f'<fieldset class="form-body"{disabled}>'
         f'<input type="hidden" name="tur" value="{kind}">{fields}{hp}'
         f'<button class="button" type="submit">{button} <span aria-hidden="true">↗</span></button>'
         "</fieldset>"

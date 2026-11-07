@@ -1,5 +1,5 @@
-Contact: mailto:[DOLDURULACAK: guvenlik e-postasi]
+Contact: mailto:berkay@kabincommunity.com
 Expires: 2027-11-01T00:00:00.000Z
 Preferred-Languages: tr, en
-Canonical: https://[DOLDURULACAK: alan adi]/.well-known/security.txt
-Policy: https://[DOLDURULACAK: alan adi]/yasal/kullanim-kosullari.html#guvenlik
+Canonical: https://kabincommunity.com/.well-known/security.txt
+Policy: https://kabincommunity.com/yasal/kullanim-kosullari.html#guvenlik

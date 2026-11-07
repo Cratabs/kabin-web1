@@ -3,25 +3,95 @@
   "hukuk_onayi": false,
   "surum": "0.1",
   "guncelleme": "7 Kasım 2026",
+  "guncelleme_iso": "2026-11-07",
   "alanlar": {
-    "unvan": { "deger": "", "aciklama": "Veri sorumlusunun tam ticari unvanı ya da şahıs işletmesi sahibinin adı soyadı" },
-    "kisa_ad": { "deger": "", "aciklama": "Metinlerde kullanılacak kısa ad (ör. Kabin Teknoloji)" },
-    "adres": { "deger": "", "aciklama": "Tebligat adresi (açık adres)" },
-    "mersis_vkn": { "deger": "", "aciklama": "MERSİS no ya da vergi dairesi + vergi kimlik no" },
-    "kep": { "deger": "", "aciklama": "KEP adresi (şirketler için zorunludur; yoksa 'Yok')" },
-    "eposta_kvkk": { "deger": "", "aciklama": "KVKK başvuruları için e-posta (ör. kvkk@alanadiniz.com)" },
-    "eposta_iletisim": { "deger": "", "aciklama": "Genel iletişim e-postası (ör. merhaba@alanadiniz.com)" },
-    "eposta_guvenlik": { "deger": "", "aciklama": "Güvenlik açığı bildirimi e-postası (ör. guvenlik@alanadiniz.com)" },
-    "alan_adi": { "deger": "", "aciklama": "Sitenin alan adı, https:// olmadan (ör. kabin.app)" },
-    "barindirma_unvan": { "deger": "", "aciklama": "Barındırma sözleşmenizdeki Hostinger tüzel kişisinin unvanı ve ülkesi (hPanel > fatura/sözleşme belgesinden kontrol edin)" },
-    "site_sunucu_konumu": { "deger": "", "aciklama": "Sitenin barındırıldığı veri merkezi ülkesi (hPanel > Web siteleri > Genel bakış > Sunucu konumu)" },
-    "uygulama_sunucu_konumu": { "deger": "", "aciklama": "Kabin uygulama sunucusunun (API, ölçü profili, dolap) barındırılacağı ülke ve sağlayıcı" },
-    "yurt_disi_guvence": { "deger": "", "aciklama": "Sunucular Türkiye dışındaysa KVKK m.9 kapsamındaki dayanak (ör. 'Kurul'a bildirilen standart sözleşme'); hepsi Türkiye'deyse 'Yurt dışına aktarım yapılmamaktadır.'" },
-    "kiyafet_gorsel_analizi": { "deger": "", "aciklama": "Betada dolaba eklenen KIYAFET görselleri etiketleme/vektörleme için NVIDIA API'sine (NVIDIA Corporation, ABD) gönderilecek mi? Evet ise o cümleyi, hayır ise 'Kıyafet görselleri yalnız kendi sunucularımızda işlenir.' yazın" },
-    "saklama_beta": { "deger": "", "aciklama": "Beta başvuru verisinin saklama süresi (önerilen: kapalı beta sona erdikten sonra 6 ay)" },
-    "saklama_pilot": { "deger": "", "aciklama": "Marka pilot talebinin saklama süresi (önerilen: talebin sonuçlanmasından sonra 2 yıl)" },
-    "saklama_erisim_kaydi": { "deger": "", "aciklama": "Sunucu erişim kayıtlarının saklama süresi (barındırma sağlayıcısının politikası; Hostinger'den teyit edin)" },
-    "saklama_uygulama_kaydi": { "deger": "", "aciklama": "Uygulama güvenlik kayıtlarının saklama süresi (önerilen: 90 gün)" },
-    "yetkili_yer": { "deger": "", "aciklama": "Tüketici olmayan uyuşmazlıklar için yetkili mahkeme ve icra daireleri (ör. İstanbul (Çağlayan))" }
+    "unvan": {
+      "deger": "Berkay Korkmaz, Merve Kaplan ve Müfide Tuvana Taşar (Kabin kurucu ortakları; henüz tüzel kişilik kurulmamıştır)",
+      "aciklama": "Veri sorumlusunun tam ticari unvanı ya da şahıs işletmesi sahibinin adı soyadı"
+    },
+    "kisa_ad": {
+      "deger": "Kabin",
+      "aciklama": "Metinlerde kullanılacak kısa ad (ör. Kabin Teknoloji)"
+    },
+    "adres": {
+      "deger": "Yıldız Teknik Üniversitesi Davutpaşa Kampüsü, Esenler / İstanbul",
+      "aciklama": "Tebligat adresi (açık adres)"
+    },
+    "mersis_vkn": {
+      "deger": "Yok (gerçek kişi)",
+      "aciklama": "MERSİS no ya da vergi dairesi + vergi kimlik no"
+    },
+    "kep": {
+      "deger": "Yok",
+      "aciklama": "KEP adresi (şirketler için zorunludur; yoksa 'Yok')"
+    },
+    "eposta_kvkk": {
+      "deger": "berkay@kabincommunity.com",
+      "aciklama": "KVKK başvuruları için e-posta (ör. kvkk@alanadiniz.com)"
+    },
+    "eposta_iletisim": {
+      "deger": "berkay@kabincommunity.com",
+      "aciklama": "Genel iletişim e-postası (ör. merhaba@alanadiniz.com)"
+    },
+    "eposta_guvenlik": {
+      "deger": "berkay@kabincommunity.com",
+      "aciklama": "Güvenlik açığı bildirimi e-postası (ör. guvenlik@alanadiniz.com)"
+    },
+    "alan_adi": {
+      "deger": "kabincommunity.com",
+      "aciklama": "Sitenin alan adı, https:// olmadan (ör. kabin.app)"
+    },
+    "barindirma_unvan": {
+      "deger": "Hostinger International Ltd. (Kıbrıs)",
+      "aciklama": "Barındırma sözleşmenizdeki Hostinger tüzel kişisinin unvanı ve ülkesi (hPanel > fatura/sözleşme belgesinden kontrol edin)"
+    },
+    "site_sunucu_konumu": {
+      "deger": "Fransa (Avrupa Birliği)",
+      "aciklama": "Sitenin barındırıldığı veri merkezi ülkesi (hPanel > Web siteleri > Genel bakış > Sunucu konumu)"
+    },
+    "uygulama_sunucu_konumu": {
+      "deger": "Türkiye",
+      "aciklama": "Kabin uygulama sunucusunun (API, ölçü profili, dolap) barındırılacağı ülke ve sağlayıcı"
+    },
+    "yurt_disi_guvence": {
+      "deger": "Web sitesi ve marka pilot talepleri Fransa'daki (AB) veri merkezinde barındırıldığından yurt dışına aktarılır. Bu aktarım KVKK m.9 uyarınca, barındırma sağlayıcısıyla imzalanan ve Kişisel Verileri Koruma Kurulu'na bildirilen standart sözleşme güvencesiyle yapılır. Kabin uygulamasının verileri Türkiye'deki sunucularda tutulur.",
+      "aciklama": "Sunucular Türkiye dışındaysa KVKK m.9 kapsamındaki dayanak (ör. 'Kurul'a bildirilen standart sözleşme'); hepsi Türkiye'deyse 'Yurt dışına aktarım yapılmamaktadır.'"
+    },
+    "kiyafet_gorsel_analizi": {
+      "deger": "Kıyafet görselleri yalnız kendi sunucularımızda işlenir; üçüncü taraf yapay zekâ hizmetlerine gönderilmez.",
+      "aciklama": "Betada dolaba eklenen KIYAFET görselleri etiketleme/vektörleme için NVIDIA API'sine (NVIDIA Corporation, ABD) gönderilecek mi? Evet ise o cümleyi, hayır ise 'Kıyafet görselleri yalnız kendi sunucularımızda işlenir.' yazın"
+    },
+    "saklama_pilot": {
+      "deger": "talebin sonuçlanmasından itibaren 2 yıl",
+      "aciklama": "Marka pilot talebinin saklama süresi (önerilen: talebin sonuçlanmasından sonra 2 yıl)"
+    },
+    "saklama_erisim_kaydi": {
+      "deger": "barındırma sağlayıcısının (Hostinger) politikasında belirtilen süre",
+      "aciklama": "Sunucu erişim kayıtlarının saklama süresi (barındırma sağlayıcısının politikası; Hostinger'den teyit edin)"
+    },
+    "saklama_uygulama_kaydi": {
+      "deger": "en fazla 90 gün",
+      "aciklama": "Uygulama güvenlik kayıtlarının saklama süresi (önerilen: 90 gün)"
+    },
+    "yetkili_yer": {
+      "deger": "İstanbul (Çağlayan)",
+      "aciklama": "Tüketici olmayan uyuşmazlıklar için yetkili mahkeme ve icra daireleri (ör. İstanbul (Çağlayan))"
+    }
+  },
+  "sameAs": [],
+  "_sameAs_not": "Kabin'in resmî sosyal medya / dizin profil adresleri (https://...). Boş liste olabilir; yapılandırılmış veride sameAs olarak yayımlanır.",
+  "yapisal": {
+    "_not": "JSON-LD (schema.org) için yapılandırılmış künye. Metin alanlarıyla tutarlı tutun.",
+    "kurucular": [
+      "Berkay Korkmaz",
+      "Merve Kaplan",
+      "Müfide Tuvana Taşar"
+    ],
+    "adres": {
+      "streetAddress": "Yıldız Teknik Üniversitesi Davutpaşa Kampüsü",
+      "addressLocality": "Esenler",
+      "addressRegion": "İstanbul",
+      "addressCountry": "TR"
+    }
   }
 }

@@ -1,0 +1,24 @@
+# Kabin
+
+> Kabin, kişisel beden ve stil asistanıdır. Önden ve yandan çekilen iki fotoğraftan vücut ölçülerini tahmin eder (mezurayla girilen ölçü her zaman önceliklidir), ürünün beden tablosuyla karşılaştırır ve her bölge için dar / uygun / bol sonucunu nedeniyle gösterir. Dolap cihazda tutulur; kombin uyumu puanlanır; toplulukta kombin paylaşılır. Fotoğraflar diske yazılmaz.
+
+Önemli: Ölçüler ve beden önerileri tahminidir, uyum garantisi değildir. Uygulama davetle kullanılır; sitede satış, ödeme ya da hesap açma yoktur.
+
+İletişim: berkay@kabincommunity.com · KVKK başvuruları: berkay@kabincommunity.com · Güvenlik bildirimi: berkay@kabincommunity.com (https://kabincommunity.com/.well-known/security.txt)
+
+## Sayfalar
+
+- [Kabin — Etiketteki beden değil, sana uyan beden.](https://kabincommunity.com/index.md): İki fotoğraftan ölçü tahmini, ürünün beden tablosuyla bölge bölge karşılaştırma ve nedenini açıklayan beden önerisi.
+- [Markalar için Kabin — Beden önerisini birlikte doğrulayalım](https://kabincommunity.com/markalar.md): Moda markaları için açıklanabilir beden önerisi pilotu.
+- [Hakkımızda — Kabin](https://kabincommunity.com/hakkinda.md): Kabin'i kimin, neden ve nasıl geliştirdiği.
+- [İletişim — Kabin](https://kabincommunity.com/iletisim.md): Kabin ekibinin e-posta ve adres bilgileri.
+
+## Yasal metinler
+
+- [Yasal metinler — Kabin](https://kabincommunity.com/yasal/index.md): Kabin yasal metinleri ve künye.
+- [KVKK Aydınlatma Metni — Kabin](https://kabincommunity.com/yasal/kvkk-aydinlatma.md): Web sitesi ve marka pilot talebi için kişisel verilerin işlenmesine ilişkin aydınlatma metni.
+- [Gizlilik Politikası — Kabin](https://kabincommunity.com/yasal/gizlilik.md): Kabin web sitesi ve uygulaması gizlilik politikası; fotoğrafla ölçü dahil.
+- [Çerez Politikası — Kabin](https://kabincommunity.com/yasal/cerez.md): Kabin web sitesi çerez politikası.
+- [Web Sitesi Kullanım Koşulları — Kabin](https://kabincommunity.com/yasal/kullanim-kosullari.md): Kabin web sitesi kullanım koşulları.
+- [Kullanıcı Sözleşmesi — Kabin](https://kabincommunity.com/yasal/kullanici-sozlesmesi.md): Kabin uygulamasını kullananlar ile aramızdaki sözleşme.
+- [Topluluk Kuralları — Kabin](https://kabincommunity.com/yasal/topluluk-kurallari.md): Kabin topluluğu kuralları ve moderasyon süreci.

@@ -60,29 +60,6 @@ function kabin_onay(mixed $v): bool
 
 /**
  * @param array<array-key, mixed> $p
- * @return array{eposta: string, platform: string, chrome: bool, yas18: bool, aydinlatma: bool}|null
- */
-function kabin_beta_dogrula(array $p): ?array
-{
-    $eposta = kabin_eposta($p['eposta'] ?? null);
-    $platform = kabin_secim($p['platform'] ?? null, ['ios', 'android', 'tarayici']);
-    if ($eposta === null || $platform === null) {
-        return null;
-    }
-    if (!kabin_onay($p['yas18'] ?? null) || !kabin_onay($p['aydinlatma'] ?? null)) {
-        return null;
-    }
-    return [
-        'eposta' => $eposta,
-        'platform' => $platform,
-        'chrome' => kabin_onay($p['chrome'] ?? null),
-        'yas18' => true,
-        'aydinlatma' => true,
-    ];
-}
-
-/**
- * @param array<array-key, mixed> $p
  * @return array{ad: string, sirket: string, eposta: string, kategori: string, mesaj: string, aydinlatma: bool}|null
  */
 function kabin_pilot_dogrula(array $p): ?array

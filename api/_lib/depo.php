@@ -90,7 +90,7 @@ function kabin_sinir_izin(string $anahtar, int $saatlik, int $gunlukGenel): bool
  */
 function kabin_kaydet(string $tur, array $kayit, bool $tekil): bool
 {
-    if (!in_array($tur, ['beta', 'pilot'], true)) {
+    if (!in_array($tur, ['pilot'], true)) {
         throw new InvalidArgumentException('tür');
     }
     $path = kabin_veri_dizini() . '/basvurular-' . $tur . '.jsonl';

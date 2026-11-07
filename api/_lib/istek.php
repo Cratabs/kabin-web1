@@ -75,7 +75,7 @@ function kabin_bildir(array $ayar, string $tur, string $id): void
         return;
     }
     // Bildirim kişisel veri içermez; e-posta başlıklarına kullanıcı girdisi hiç girmez.
-    $konu = $tur === 'beta' ? 'Kabin: yeni kapali beta basvurusu' : 'Kabin: yeni marka pilot talebi';
+    $konu = 'Kabin: yeni marka pilot talebi';
     $govde = "Yeni bir kayıt alındı.\r\nTür: {$tur}\r\nKimlik: {$id}\r\nZaman (UTC): " . gmdate('Y-m-d H:i')
         . "\r\n\r\nKişisel veriler bu e-postaya eklenmez. Ayrıntılar sunucuda: kabin-private/veri/basvurular-{$tur}.jsonl\r\n";
     $basliklar = [
@@ -118,10 +118,11 @@ function kabin_istek(): void
             kabin_yanit(200, 'TAMAM', $json);
         }
         $tur = $_POST['tur'] ?? null;
-        if ($tur !== 'beta' && $tur !== 'pilot') {
+        // Yalnız marka pilot talebi kabul edilir; başka tür aydınlatma metninin kapsamında değildir.
+        if ($tur !== 'pilot') {
             kabin_yanit(400, 'GECERSIZ', $json);
         }
-        $alanlar = $tur === 'beta' ? kabin_beta_dogrula($_POST) : kabin_pilot_dogrula($_POST);
+        $alanlar = kabin_pilot_dogrula($_POST);
         if ($alanlar === null) {
             kabin_yanit(400, 'GECERSIZ', $json);
         }
@@ -131,8 +132,7 @@ function kabin_istek(): void
             'zaman' => gmdate('c'),
             'aydinlatma_surumu' => (string) ($yasal['surum'] ?? ''),
         ] + $alanlar;
-        // Beta başvurusu e-posta başına tektir; tekrar başvuru da aynı yanıtı alır (kayıt varlığı sızmaz).
-        if (kabin_kaydet($tur, $kayit, $tur === 'beta')) {
+        if (kabin_kaydet($tur, $kayit, false)) {
             kabin_bildir($ayar, $tur, $kayit['id']);
         }
         kabin_yanit(200, 'TAMAM', $json);

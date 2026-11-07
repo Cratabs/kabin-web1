@@ -9,8 +9,12 @@ import { fileURLToPath } from 'node:url';
 const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const OUT = join(ROOT, '_test', 'artifacts');
 const { chromium } = await import(process.env.KABIN_PLAYWRIGHT ?? new URL('../_kaynak/node_modules/playwright/index.mjs', import.meta.url).href);
-const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.svg': 'image/svg+xml', '.ttf': 'font/ttf', '.txt': 'text/plain; charset=utf-8' };
-const PAGES = ['index.html', 'markalar.html', 'basvuru-alindi.html', 'basvuru-hata.html', 'yasal/', 'yasal/kvkk-aydinlatma.html', 'yasal/gizlilik.html', 'yasal/cerez.html', 'yasal/kullanim-kosullari.html', 'yasal/beta-katilim.html', 'yasal/topluluk-kurallari.html'];
+const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.svg': 'image/svg+xml', '.ttf': 'font/ttf', '.txt': 'text/plain; charset=utf-8', '.md': 'text/markdown; charset=utf-8', '.xml': 'application/xml' };
+const PAGES = ['index.html', 'markalar.html', 'hakkinda.html', 'iletisim.html', 'basvuru-alindi.html', 'basvuru-hata.html', 'yasal/', 'yasal/kvkk-aydinlatma.html', 'yasal/gizlilik.html', 'yasal/cerez.html', 'yasal/kullanim-kosullari.html', 'yasal/kullanici-sozlesmesi.html', 'yasal/topluluk-kurallari.html'];
+// Dizine girmeyen sayfalar: canonical/JSON-LD/.md yok, noindex var.
+const DIZINSIZ = new Set(['basvuru-alindi.html', 'basvuru-hata.html']);
+// Sitede olmaması gereken kavramlar (kullanıcı kararı: beta yok, uygulamada çalışmayan özellik yok).
+const YASAK = /\bbeta\b|tarayıcı eklenti|chrome uzant|davet kodu/i;
 
 // Basit statik sunucu: .htaccess'in CSP başlığını da uygular ki CSP ihlalleri konsolda yakalansın.
 const htaccess = await readFile(join(ROOT, '.htaccess'), 'utf8');
@@ -58,6 +62,29 @@ try {
         const p = (href ?? '').split('#')[0];
         if (p) { const r = await page.request.get(`${base}${p}`); assert.equal(r.status(), 200, `bağlantı ${href} (${route})`); }
       }
+      if (width === 1440) {
+        const html = await res.text();
+        assert.doesNotMatch(html.replace(/<[^>]+>/g, ' '), YASAK, `yasak kavram yok: ${route}`);
+        const dizinli = !DIZINSIZ.has(route);
+        assert.equal(await page.locator('meta[name=robots][content*=noindex]').count(), dizinli ? 0 : 1, `noindex: ${route}`);
+        assert.equal(await page.locator('link[rel=canonical]').count(), dizinli ? 1 : 0, `canonical: ${route}`);
+        if (dizinli) {
+          const ld = JSON.parse(await page.locator('script[type="application/ld+json"]').textContent() ?? '');
+          const types = ld['@graph'].map((n) => n['@type']);
+          assert.ok(types.includes('Organization') && types.includes('WebSite'), `JSON-LD: ${route}`);
+          if (route === 'index.html') assert.ok(types.includes('FAQPage'), 'JSON-LD FAQPage');
+          const md = await page.locator('link[rel=alternate][type="text/markdown"]').getAttribute('href');
+          const mr = await page.request.get(`${base}${md}`);
+          assert.equal(mr.status(), 200, `md: ${md}`);
+          const mt = await mr.text();
+          assert.match(mt, /^---\ntitle: /, `md ön bilgi: ${md}`);
+          assert.match(mt, /\n# /, `md başlık: ${md}`);
+          assert.doesNotMatch(mt, YASAK, `md yasak kavram yok: ${md}`);
+          assert.doesNotMatch(mt, /<[a-z][^>]*>/i, `md içinde HTML etiketi yok: ${md}`);
+          checks += 6;
+        }
+        checks += 3;
+      }
       checks += 5;
       if (width === 390 || width === 1440) await page.screenshot({ path: join(OUT, `${route.replace(/\//g, '_') || 'yasal'}-${width}.png`), fullPage: true });
     }
@@ -80,10 +107,17 @@ try {
       await page.keyboard.press('Escape');
       assert.equal(await toggle.getAttribute('aria-expanded'), 'false');
     }
-    // Künye eksikken form kapalı olmalı
-    const form = page.locator('form[data-basvuru="beta"]');
-    assert.notEqual(await form.locator('fieldset.form-body').getAttribute('disabled'), null, 'künye eksikken fieldset kapalı');
-    assert.equal(await form.locator('[name=eposta]').isDisabled(), true, 'künye eksikken alanlar kapalı');
+    // Ana sayfada başvuru formu yok; iletişim e-postası tıklanabilir.
+    assert.equal(await page.locator('form').count(), 0, 'ana sayfada form yok');
+    assert.match(await page.locator('#iletisim a[href^="mailto:"]').getAttribute('href') ?? '', /^mailto:[^@]+@kabincommunity\.com$/);
+    // Pilot formu: hukuk onayı yokken kapalı, e-posta yolu gösterilir, ajan aracı olarak sunulmaz.
+    await page.goto(`${base}/markalar.html`);
+    const form = page.locator('form[data-basvuru="pilot"]');
+    assert.notEqual(await form.locator('fieldset.form-body').getAttribute('disabled'), null, 'yasal kapı kapalıyken fieldset kapalı');
+    assert.equal(await form.locator('[name=eposta]').isDisabled(), true, 'yasal kapı kapalıyken alanlar kapalı');
+    assert.equal(await form.isVisible(), false, 'yasal kapı kapalıyken form görünmez');
+    assert.equal(await page.locator('.pilot-mail a[href^="mailto:"]').isVisible(), true, 'kapalıyken e-posta yolu görünür');
+    assert.equal(await form.getAttribute('toolname'), null, 'kapalı form WebMCP aracı değil');
     // İstemci akışı: formu açıp sahte uçla hem hata hem başarı yolunu dene
     let posted = '';
     let reply = { status: 429, body: { ok: false, kod: 'SINIR' } };
@@ -92,27 +126,69 @@ try {
       assert.equal(r.request().method(), 'POST');
       await r.fulfill({ status: reply.status, contentType: 'application/json', body: JSON.stringify(reply.body) });
     });
-    await form.evaluate((f) => f.querySelector('fieldset')?.removeAttribute('disabled'));
+    // İstemci akışını yine de sına: formu yalnız test için görünür ve etkin yap.
+    await form.evaluate((f) => { f.hidden = false; f.querySelector('fieldset')?.removeAttribute('disabled'); });
+    await form.locator('[name=ad]').fill('Test Kişi');
+    await form.locator('[name=sirket]').fill('Örnek Marka');
     await form.locator('[name=eposta]').fill('test@example.com');
-    await form.locator('[name=platform][value=android]').check();
-    await form.locator('[name=yas18]').check();
+    await form.locator('[name=kategori]').selectOption('kadin');
     await form.locator('[name=aydinlatma]').check();
-    await form.getByRole('button', { name: /başvur/ }).click();
+    await form.getByRole('button', { name: /Pilot talebini gönder/ }).click();
     await page.waitForFunction(() => document.querySelector('.form-status')?.classList.contains('err'));
     assert.match(await form.locator('.form-status').innerText(), /bir saat sonra/);
     errors.splice(0, errors.length, ...errors.filter((e) => !/status of 429/.test(e)));
     assert.match(posted, /name="eposta"[\s\S]*test@example\.com/);
+    assert.match(posted, /name="tur"\r\n\r\npilot\r\n/, 'tür pilot');
     assert.match(posted, /name="web_sitesi"\r\n\r\n\r\n/, 'tuzak alan boş gider');
     reply = { status: 200, body: { ok: true, kod: 'TAMAM' } };
-    await form.getByRole('button', { name: /başvur/ }).click();
+    await form.getByRole('button', { name: /Pilot talebini gönder/ }).click();
     await page.locator('.form-done').waitFor();
-    assert.match(await page.locator('.form-done').innerText(), /Başvurun alındı/);
+    assert.match(await page.locator('.form-done').innerText(), /Talebiniz alındı/);
     await page.unroute('**/api/basvuru.php');
     assert.deepEqual(await context.cookies(), [], 'çerez yok');
     assert.equal(await page.evaluate(() => localStorage.length + sessionStorage.length), 0, 'depolama yok');
     assert.deepEqual(errors, [], `konsol/CSP hatası yok @${width}`);
     assert.deepEqual(outgoing, [], `dış istek yok @${width}`);
-    checks += 12;
+    checks += 16;
+    await context.close();
+  }
+  // Ajan dosyaları ve WebMCP (bir kez).
+  {
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    for (const [yol, desen] of [['/robots.txt', /Content-Signal: search=yes, ai-input=yes, ai-train=no[\s\S]*Allow: \/[\s\S]*Sitemap: https:\/\/kabincommunity\.com\/sitemap\.xml/],
+      ['/sitemap.xml', /<loc>https:\/\/kabincommunity\.com\/<\/loc>[\s\S]*hakkinda\.html/], ['/llms.txt', /^# Kabin\n\n> [\s\S]*## Yasal metinler/],
+      ['/.well-known/security.txt', /Contact: mailto:/]]) {
+      const r = await page.request.get(`${base}${yol}`);
+      assert.equal(r.status(), 200, yol);
+      const t = await r.text();
+      assert.match(t, desen, yol);
+      assert.doesNotMatch(t, YASAK, `yasak kavram yok: ${yol}`);
+      checks += 3;
+    }
+    const sitemap = await (await page.request.get(`${base}/sitemap.xml`)).text();
+    for (const loc of sitemap.matchAll(/<loc>https:\/\/kabincommunity\.com(\/[^<]*)<\/loc>/g)) {
+      assert.equal((await page.request.get(`${base}${loc[1]}`)).status(), 200, `sitemap adresi: ${loc[1]}`);
+      checks += 1;
+    }
+    // WebMCP: tarayıcı API'sini taklit et, araçların kaydını ve salt-okunur çalışmasını doğrula.
+    await page.addInitScript(() => {
+      const tools = [];
+      Object.defineProperty(window, '__araclar', { value: tools });
+      Object.defineProperty(document, 'modelContext', { value: { registerTool: (t) => { tools.push(t); return Promise.resolve(undefined); } } });
+    });
+    await page.goto(`${base}/yasal/gizlilik.html`);
+    const adlar = await page.evaluate(() => window.__araclar.map((t) => `${t.name}:${t.annotations?.readOnlyHint}`));
+    assert.deepEqual(adlar, ['kabin_site_ozeti:true', 'kabin_sayfa_oku:true']);
+    const ozet = await page.evaluate(() => window.__araclar[0].execute({}));
+    assert.match(ozet.content[0].text, /^# Kabin/);
+    const bu = await page.evaluate(() => window.__araclar[1].execute({}));
+    assert.match(bu.content[0].text, /# Gizlilik Politikası/);
+    const kotu = await page.evaluate(() => window.__araclar[1].execute({ yol: 'https://kotu.example/x.md' }));
+    assert.equal(kotu.isError, true, 'dış adres reddedilir');
+    const gizli = await page.evaluate(() => window.__araclar[1].execute({ yol: '/../_kaynak/kunye.json' }));
+    assert.equal(gizli.isError, true, 'kaynak dosyası reddedilir');
+    checks += 5;
     await context.close();
   }
 } finally {
