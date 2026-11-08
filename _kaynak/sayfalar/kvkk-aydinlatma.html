@@ -9,22 +9,23 @@
   <li><a href="#sure">Saklama süreleri</a></li><li><a href="#haklar">Haklarınız ve başvuru yolları</a></li>
 </ol></nav>
 
-<p>Bu metin, 6698 sayılı Kişisel Verilerin Korunması Kanunu’nun (“KVKK”) 10. maddesi ve Aydınlatma Yükümlülüğünün Yerine Getirilmesinde Uyulacak Usul ve Esaslar Hakkında Tebliğ uyarınca, bu web sitesini ziyaret eden ya da marka pilot talebi gönderen kişileri bilgilendirmek için hazırlanmıştır. Kabin uygulamasının kendisinde işlenen veriler <a href="/yasal/gizlilik.html">Gizlilik Politikası</a>’nda ayrıca anlatılır.</p>
-<p class="note">Bu metin bir açık rıza metni değildir. Aşağıdaki işlemler için açık rızanıza dayanmıyoruz; formdaki onay kutusu yalnız bu metni okuduğunuzu belirtir.</p>
+<p>Bu metin, 6698 sayılı Kişisel Verilerin Korunması Kanunu’nun (“KVKK”) 10. maddesi ve Aydınlatma Yükümlülüğünün Yerine Getirilmesinde Uyulacak Usul ve Esaslar Hakkında Tebliğ uyarınca, {{alan_adi}} sitesini ziyaret eden ya da marka pilot talebi gönderen kişileri bilgilendirmek için hazırlanmıştır. Kabin uygulamasında işlenen veriler <a href="/yasal/gizlilik.html">Gizlilik Politikası</a>’nda ayrıca anlatılır.</p>
+<p class="note">Bu metin bir açık rıza metni değildir; aşağıdaki işlemler için açık rızanıza dayanmıyoruz. Bu metnin özeti pilot formunda, veri toplanmadan önce gösterilir. Formdaki kutu yalnız metni okuduğunuzu teyit eder; bir onay ya da rıza beyanı değildir.</p>
 
 <h2 id="sorumlu">1. Veri sorumlusu</h2>
-<p>Kişisel verileriniz, müşterek veri sorumlusu sıfatıyla <strong>{{unvan}}</strong> (“Kabin”, “biz”) tarafından işlenir. Başvurularınızı ortaklardan herhangi birine yöneltebilirsiniz.<br>Adres: {{adres}} · MERSİS / vergi no: {{mersis_vkn}} · KEP: {{kep}} · E-posta: {{eposta_kvkk}}</p>
+<p>Kişisel verileriniz, müşterek veri sorumlusu sıfatıyla <strong>{{unvan}}</strong> (“Kabin”, “biz”) tarafından işlenir. Başvurularınızı ortaklardan herhangi birine yöneltebilirsiniz.<br>Posta adresi: {{adres}} · MERSİS / vergi no: {{mersis_vkn}} · E-posta: {{eposta_kvkk}}</p>
 
 <h2 id="veriler">2. İşlenen veriler, amaçlar ve hukuki sebepler</h2>
 <div class="table-wrap"><table>
 <thead><tr><th>Süreç</th><th>Veri kategorileri</th><th>Amaç</th><th>Hukuki sebep (KVKK m.5/2)</th></tr></thead>
 <tbody>
-<tr><td>Marka pilot talebi</td><td>Kimlik: ad soyad. İletişim: iş e-posta adresi. Mesleki bilgi: marka / şirket adı, ürün kategorisi, talep mesajınız, aydınlatma beyanı, talep zamanı.</td><td>Talebi değerlendirmek, size dönüş yapmak ve olası pilot iş birliğini planlamak.</td><td>(c) Sözleşmenin kurulmasıyla doğrudan ilgili olması; (f) temsil ettiğiniz kurumla iş görüşmesi yürütmeye yönelik meşru menfaatimiz.</td></tr>
-<tr><td>Form güvenliği</td><td>İşlem güvenliği: IP adresinizin, gizli bir anahtarla üretilmiş geri döndürülemez özeti (HMAC) ve deneme zamanları. IP adresinin kendisi başvuruyla birlikte saklanmaz.</td><td>Otomatik (bot) başvuruları, spam ve kötüye kullanımı sınırlamak.</td><td>(f) Hizmetin güvenliğini sağlamaya yönelik meşru menfaatimiz (temel hak ve özgürlüklerinize zarar vermemek kaydıyla).</td></tr>
-<tr><td>Siteyi ziyaret</td><td>İşlem güvenliği: barındırma sağlayıcısının sunucu erişim kayıtları (IP adresi, tarih-saat, istenen sayfa, tarayıcı bilgisi).</td><td>Sitenin çalıştırılması, güvenliğinin sağlanması ve hataların giderilmesi.</td><td>(f) Meşru menfaat; mevzuatın öngördüğü hâllerde (ç) hukuki yükümlülük.</td></tr>
+<tr><td>Marka pilot talebi — kendi adınıza başvurursanız</td><td>Kimlik: ad soyad. İletişim: e-posta adresi. Mesleki bilgi: marka / şirket adı, ürün kategorisi, talep mesajınız, aydınlatma metnini okuduğunuza ilişkin teyit, talep zamanı.</td><td>Talebi değerlendirmek, size dönüş yapmak ve taraf olacağınız olası pilot sözleşmesini planlamak.</td><td>(c) Sözleşmenin kurulmasıyla doğrudan ilgili olması.</td></tr>
+<tr><td>Marka pilot talebi — bir kuruluş adına iletişim kurarsanız</td><td>Yukarıdaki veriler; iş iletişim bilgileriniz.</td><td>Temsil ettiğiniz kuruluşla pilot görüşmesini yürütmek.</td><td>(f) Temel hak ve özgürlüklerinize zarar vermemek kaydıyla, kuruluşunuzla iş görüşmesi yürütmeye yönelik meşru menfaatimiz.</td></tr>
+<tr><td>Form güvenliği</td><td>İşlem güvenliği: IP adresinizden gizli bir anahtarla üretilen ve geri döndürülemeyen özet (HMAC) ile deneme zamanları. Bu özet, aynı kaynaktan gelen denemeleri ilişkilendirmek için kullanılır; IP adresinin kendisi başvuruyla birlikte saklanmaz.</td><td>Otomatik (bot) başvuruları, spam ve kötüye kullanımı sınırlamak.</td><td>(f) Temel hak ve özgürlüklerinize zarar vermemek kaydıyla, hizmetin güvenliğini sağlamaya yönelik meşru menfaatimiz.</td></tr>
+<tr><td>Siteyi ziyaret</td><td>İşlem güvenliği: barındırma sağlayıcısının sunucu erişim kayıtları (IP adresi, tarih-saat, istenen sayfa, tarayıcı bilgisi). Bu kayıtlar form güvenliği özetinden ayrıdır ve sağlayıcı tarafından tutulur.</td><td>Sitenin çalıştırılması, güvenliğinin sağlanması ve hataların giderilmesi.</td><td>(f) Meşru menfaat; mevzuatın öngördüğü hâllerde (ç) hukuki yükümlülük.</td></tr>
 <tr><td>E-posta yazışmaları</td><td>İletişim: e-posta adresi, yazışma içeriği.</td><td>Sorularınızı ve KVKK başvurularınızı yanıtlamak.</td><td>(f) Sorularınızı yanıtlamaya yönelik meşru menfaatimiz; (ç) KVKK başvurularında hukuki yükümlülük.</td></tr>
 </tbody></table></div>
-<p>Bu sitede çerez, analiz, reklam ya da sosyal medya takip aracı kullanılmaz; ziyaretiniz profillenmez. Formlarda özel nitelikli kişisel veri (sağlık, beden ölçüsü, fotoğraf vb.) istemiyoruz; lütfen serbest metin alanlarına bu tür bilgi yazmayın.</p>
+<p>Bu sitede analiz, reklam ya da sosyal medya takip aracı kullanılmaz; ziyaretiniz profillenmez (bkz. <a href="/yasal/cerez.html">Çerez Politikası</a>). Lütfen forma müşteri fotoğrafı, beden ölçüsü veya sağlık bilgisi eklemeyin.</p>
 <p>Talebiniz yalnız pilot görüşmesiyle ilgili iletişim için kullanılır. Size bülten, kampanya ya da başka bir ticari elektronik ileti göndermeyiz; ileride böyle bir ileti göndermek istersek önce 6563 sayılı Kanun kapsamında ayrıca onayınızı isteriz.</p>
 
 <h2 id="yontem">3. Toplama yöntemi</h2>
@@ -40,7 +41,7 @@
 
 <h2 id="sure">5. Saklama süreleri</h2>
 <ul>
-  <li>Marka pilot talebi: {{saklama_pilot}}.</li>
+  <li>Marka pilot talebi: {{saklama_pilot}}. Pilot görüşmesi sonuçlanmazsa süre, sizinle son yazışma tarihinden başlar. Bu süre, talep sonrasındaki olası soru ve uyuşmazlıklarda yazışmayı ispat edebilmek içindir.</li>
   <li>IP özeti ve deneme zamanları: en fazla 24 saat; süre dolunca otomatik silinir.</li>
   <li>Sunucu erişim kayıtları: {{saklama_erisim_kaydi}}.</li>
 </ul>
@@ -48,6 +49,6 @@
 
 <h2 id="haklar">6. Haklarınız ve başvuru yolları</h2>
 <p>KVKK’nın 11. maddesi uyarınca; kişisel verilerinizin işlenip işlenmediğini öğrenme, işlenmişse buna ilişkin bilgi talep etme, işlenme amacını ve amacına uygun kullanılıp kullanılmadığını öğrenme, yurt içinde veya yurt dışında aktarıldığı üçüncü kişileri bilme, eksik veya yanlış işlenmişse düzeltilmesini isteme, KVKK’nın 7. maddesindeki şartlar çerçevesinde silinmesini veya yok edilmesini isteme, düzeltme ve silme işlemlerinin verilerin aktarıldığı üçüncü kişilere bildirilmesini isteme, münhasıran otomatik sistemlerle analiz edilmesi suretiyle aleyhinize bir sonucun ortaya çıkmasına itiraz etme ve kanuna aykırı işleme sebebiyle zarara uğramanız hâlinde zararın giderilmesini talep etme haklarına sahipsiniz.</p>
-<p>Başvurularınızı, Veri Sorumlusuna Başvuru Usul ve Esasları Hakkında Tebliğ’e uygun olarak; kimliğinizi tespit edici bilgilerle birlikte yazılı olarak yukarıdaki adrese, KEP adresimize ({{kep}}), güvenli elektronik imza veya mobil imza ile ya da daha önce bize bildirdiğiniz ve sistemimizde kayıtlı e-posta adresinizden <strong>{{eposta_kvkk}}</strong> adresine iletebilirsiniz. Başvurular en geç 30 gün içinde ücretsiz sonuçlandırılır; işlemin ayrıca bir maliyet gerektirmesi hâlinde Kişisel Verileri Koruma Kurulu’nca belirlenen tarife uygulanabilir.</p>
-<p>Başvurunuzun reddedilmesi, verilen cevabı yetersiz bulmanız veya süresinde cevap verilmemesi hâlinde, KVKK’nın 14. maddesi uyarınca Kişisel Verileri Koruma Kurulu’na şikâyette bulunabilirsiniz.</p>
+<p>Başvurularınızı, Veri Sorumlusuna Başvuru Usul ve Esasları Hakkında Tebliğ’e uygun olarak; kimliğinizi tespit edici bilgilerle birlikte yazılı olarak yukarıdaki posta adresine, güvenli elektronik imza veya mobil imza ile ya da daha önce bize bildirdiğiniz ve sistemimizde kayıtlı e-posta adresinizden <strong>{{eposta_kvkk}}</strong> adresine iletebilirsiniz. Başvurular en geç 30 gün içinde ücretsiz sonuçlandırılır; işlemin ayrıca bir maliyet gerektirmesi hâlinde Kişisel Verileri Koruma Kurulu’nca belirlenen tarife uygulanabilir.</p>
+<p>Başvurunuz reddedilirse ya da cevabımızı yetersiz bulursanız, cevabı öğrendiğiniz tarihten itibaren 30 gün içinde ve her hâlde ilk başvuru tarihinizden itibaren 60 gün içinde KVKK’nın 14. maddesi uyarınca Kişisel Verileri Koruma Kurulu’na şikâyette bulunabilirsiniz. İlk 30 gün içinde cevap verilmezse, bu süre dolduktan sonra ve ilk başvuru tarihinizden itibaren 60 gün içinde şikâyette bulunabilirsiniz. Geç gelen bir cevap bu süreyi yeniden başlatmaz.</p>
 </article></div>

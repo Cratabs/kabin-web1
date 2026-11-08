@@ -133,6 +133,12 @@ def form(kind: str, open_: bool, eposta_link: str) -> str:
         'aria-describedby="pilot-mesaj-not"></textarea>'
         '<p class="fine" id="pilot-mesaj-not">Ticari sır, müşteri verisi ya da başka kişilere ait kişisel veri '
         "eklemeyin. En fazla 1000 karakter.</p>"
+        # Katmanlı aydınlatma: özet veri toplama anında görünür, tam metin bağlantıda (hukuk incelemesi 2026-11-08).
+        '<p class="fine" id="pilot-aydinlatma-ozet">Bu bilgileri, pilot talebinizi değerlendirmek ve size dönmek için '
+        "Kabin kurucu ortakları (müşterek veri sorumlusu) işler: kendi adınıza başvuruda sözleşmenin kurulması "
+        "(KVKK m.5/2-c), bir kuruluş adına başvuruda meşru menfaat (m.5/2-f). Veriler barındırma sağlayıcımızın "
+        "yurt dışındaki veri merkezinde tutulur, başka kimseyle paylaşılmaz ve pazarlama için kullanılmaz. Yurt dışı "
+        "aktarımın dayanağı, haklarınız ve saklama süreleri tam metinde.</p>"
         + _check("aydinlatma", aydinlatma)
     )
     button = "Pilot talebini gönder"

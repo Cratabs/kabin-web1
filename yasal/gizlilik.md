@@ -9,7 +9,7 @@ GİZLİLİK
 
 # Gizlilik Politikası
 
-Web sitesi ve Kabin uygulaması · Sürüm 0.1 · Son güncelleme: 7 Kasım 2026
+Web sitesi ve Kabin uygulaması · Sürüm 0.2 · Son güncelleme: 8 Kasım 2026
 
 Bu metin taslaktır; yayın öncesinde hukuk danışmanı tarafından gözden geçirilecektir.
 
@@ -19,75 +19,98 @@ Bu metin taslaktır; yayın öncesinde hukuk danışmanı tarafından gözden ge
 1. [Web sitesi](#site)
 1. [Kabin uygulaması](#uygulama)
 1. [Fotoğrafla ölçü](#fotograf)
-1. [Yapay zekâ ve üçüncü taraflar](#yapay-zeka)
+1. [Mağaza bağlantısı ve Chrome eklentisi](#magaza)
+1. [Üçüncü taraflar ve yurt dışına aktarım](#yapay-zeka)
 1. [Saklama ve silme](#saklama)
 1. [Güvenlik](#guvenlik)
+1. [18 yaş sınırı](#cocuklar)
 1. [Haklarınız ve iletişim](#haklar)
 
-Bu politika, veri sorumlusu **Berkay Korkmaz, Merve Kaplan ve Müfide Tuvana Taşar (Kabin kurucu ortakları; henüz tüzel kişilik kurulmamıştır)** (“Kabin”, “biz”) tarafından işletilen web sitesinde ve Kabin mobil uygulamasında kişisel verilerinizin nasıl işlendiğini anlatır. Web sitesindeki marka pilot formu için ayrıntılı bilgilendirme [KVKK Aydınlatma Metni](https://kabincommunity.com/yasal/kvkk-aydinlatma.html)’ndedir.
+Bu politika, veri sorumlusu **Berkay Korkmaz, Merve Kaplan ve Müfide Tuvana Taşar (Kabin kurucu ortakları; henüz tüzel kişilik kurulmamıştır)** (“Kabin”, “biz”) tarafından işletilen web sitesinde, Kabin mobil uygulamasında ve web sürümünde, Chrome eklentisinde ve mağazalardaki Kabin beden önerisi penceresinde kişisel verilerinizin nasıl işlendiğini anlatır. Web sitesindeki marka pilot formu için ayrıntılı bilgilendirme [KVKK Aydınlatma Metni](https://kabincommunity.com/yasal/kvkk-aydinlatma.html)’ndedir.
 
 ## 1. İlkelerimiz
 
-- **En az veri:** Yalnız hizmeti sunmak için gereken veriyi işleriz. Ölçüleriniz ve dolabınız varsayılan olarak cihazınızda saklanır.
+- **En az veri:** Yalnız seçtiğiniz özelliği sunmak için gereken veriyi işleriz. Fotoğraftan tahmin edilen ölçüler cihazınızda kalır.
 - **Satış ve reklam yok:** Kişisel verilerinizi satmayız; reklam, profilleme ya da kredi değerlendirmesi için kullanmayız ve bu amaçlarla kimseye aktarmayız.
-- **Ölçüler özeldir:** Ölçüleriniz topluluk alanında ve paylaşımlarınızda gösterilmez.
-- **Fotoğraflar saklanmaz:** Ölçü tahmini için gönderdiğiniz vücut fotoğrafları yalnız analiz süresince işlenir, saklanmaz ve üçüncü taraf yapay zekâ hizmetlerine gönderilmez.
+- **Ölçüler özeldir:** Kabin ölçülerinizi topluluk alanında ve paylaşımlarınızda göstermez. Yorumlarınıza ya da görsellerinize kendiniz yazdığınız bilgiler bu taahhüdün dışındadır.
+- **Vücut fotoğrafları saklanmaz:** Ölçü tahmini için gönderdiğiniz fotoğraflar yalnız o analizde, bellekte işlenir; kaydedilmez, kimlik tespiti için kullanılmaz ve hiçbir üçüncü tarafa gönderilmez ([madde 4](#fotograf)).
+- **Mağazaya ölçü gitmez:** Mağazayla yalnız sizin seçtiğiniz beden ve bir öneri kimliği paylaşılır; vücut ölçüleriniz paylaşılmaz ([madde 5](#magaza)).
 
 ## 2. Web sitesi
 
-Bu site çerez, yerel depolama, analiz, reklam ya da sosyal medya takip aracı kullanmaz. Yazı tipleri ve görseller kendi sunucumuzdan yüklenir; ziyaretiniz sırasında üçüncü taraf bir alana istek gönderilmez. Barındırma sağlayıcımız güvenlik ve işletim amacıyla sunucu erişim kayıtları tutar. Marka pilot formunda işlenen veriler [KVKK Aydınlatma Metni](https://kabincommunity.com/yasal/kvkk-aydinlatma.html)’nde açıklanmıştır.
+Bu tanıtım sitesi analiz, reklam ya da sosyal medya takip aracı kullanmaz. Yazı tipleri ve görseller kendi sunucumuzdan yüklenir; ziyaretiniz sırasında üçüncü taraf bir alana istek gönderilmez. Barındırma sağlayıcımız güvenlik ve işletim amacıyla sunucu erişim kayıtları tutar. Çerezler için bkz. [Çerez Politikası](https://kabincommunity.com/yasal/cerez.html). Marka pilot formunda işlenen veriler [KVKK Aydınlatma Metni](https://kabincommunity.com/yasal/kvkk-aydinlatma.html)’nde açıklanmıştır.
 
 ## 3. Kabin uygulaması
 
 | Veri | Ne için | Nerede ve kim görebilir |
 | --- | --- | --- |
-| **Hesap:** kullanıcı adı, görünen ad, isteğe bağlı kısa tanıtım yazısı, parolanın tek yönlü özeti (Argon2id) ve oturum bilgileri. | Hesabınızı oluşturmak ve giriş yapmanızı sağlamak. | Sunucumuzda. Kullanıcı adı ve görünen ad diğer kullanıcılara görünür; diğerleri yalnız size. |
-| **Fotoğrafla ölçü:** önden ve yandan vücut fotoğrafı; boy, kilo, yaş ve cinsiyet. | Vücut ölçülerinizi tahmin etmek. | Fotoğraflar yalnız analiz süresince sunucumuzun belleğinde işlenir ve saklanmaz. Sonuç cihazınıza döner (bkz. [madde 4](#fotograf)). |
-| **Ölçüler:** fotoğraftan tahmin edilen ve mezurayla girdiğiniz değerler. | Beden önerisi hesaplamak. | Cihazınızda. Toplulukta ve paylaşımlarda görünmez. |
-| **Beden önerisi:** ölçüleriniz, girdiğiniz beden tablosu, kalıp ve esneklik seçimi; önerilere verdiğiniz geri bildirimler. | Önerilen bedeni ve bölgesel uyumu hesaplamak. | Öneri sunucumuzda hesaplanır, istek saklanmaz. Öneri geçmişi ve geri bildirimler cihazınızda tutulur. |
-| **Dolap ve kombinler:** eklediğiniz kıyafet görselleri ve bilgileri, kurduğunuz kombinler. | Dolabınızı ve kombin uyum puanını sunmak. | Cihazınızda. Kombin puanı için kıyafet görselinden çıkarılan sayısal özellikler sunucumuzda önbelleğe alınır; görselin kendisi saklanmaz. |
-| **Topluluk:** paylaşımlarınız ve görselleri, yorumlarınız, beğenileriniz, takip ve engelleme listeleriniz, gönderdiğiniz içerik bildirimleri. | Topluluğu işletmek ve moderasyon yapmak. | Sunucumuzda. Paylaşım ve yorumlar diğer kullanıcılara; engelleme listeleri ve bildirimler yalnız size ve moderasyon ekibine görünür. |
-| **Model geliştirme (isteğe bağlı):** ayrıca onay verirseniz beden önerisi geri bildirimleriniz, kombinleriniz ve mezura doğrulama kayıtlarınız (fotoğraftan tahmin edilen ve mezurayla ölçülen değerler; fotoğraflar değil). | Ölçü, beden ve kombin modellerimizin doğruluğunu ölçmek ve iyileştirmek. | Sunucumuzda, yalnız yetkili ekibimiz. Onayınızı uygulamadan istediğiniz an geri alabilirsiniz; geri alındığında bu amaçla tutulan kayıtlar silinir. |
-| **Teknik ve güvenlik kayıtları:** istek zamanı, hata kayıtları, hız sınırlama sayaçları. | Hizmetin güvenliğini ve sürekliliğini sağlamak, kötüye kullanımı önlemek. | Sunucumuzda, yalnız yetkili ekibimiz. |
+| **Hesap:** kullanıcı adı, görünen ad, isteğe bağlı kısa tanıtım yazısı, parolanın tek yönlü özeti (Argon2id), oturum bilgileri; uygulama sınırlı erişimdeyken davet bilgisi (hangi davetle katıldığınız) ve hesap onay durumu. | Hesabınızı oluşturmak, giriş yapmanızı sağlamak ve kapalı betaya erişimi yönetmek. | Sunucumuzda. Kullanıcı adı ve görünen ad diğer kullanıcılara görünür; diğerleri yalnız size ve yetkili ekibimize. |
+| **Fotoğrafla ölçü:** önden ve yandan vücut fotoğrafı; boy, kilo, yaş ve cinsiyet. | Seçtiğiniz fotoğrafla ölçü özelliği için vücut ölçülerinizi tahmin etmek. | Fotoğraflar yalnız analiz süresince sunucumuzun belleğinde işlenir, kaydedilmez. Tahmin edilen ölçüler cihazınıza döner ve orada kalır ([madde 4](#fotograf)). |
+| **Ölçü profili:** mezurayla ölçüp hesabınıza kaydettiğiniz değerler. | Beden önerisi hesaplamak. | Sunucumuzda, hesabınıza bağlı. Yalnız size görünür; yönetici paneli bu verileri göstermez. Toplulukta ve paylaşımlarda görünmez. |
+| **Beden önerisi:** girdiğiniz ya da ürün sayfasından okunan beden tablosu, ürün adı ve adresi, kalıp ve esneklik seçimi; önerilere verdiğiniz geri bildirimler. | Önerilen bedeni ve bölgesel uyumu hesaplamak. | Öneri sunucumuzda, hesabınızdaki ölçü profiliyle hesaplanır; öneri isteği saklanmaz. Kaydettiğiniz ürünler ve beden tabloları hesabınızda; öneri geçmişi ve geri bildirimler cihazınızda tutulur. |
+| **Dolap ve kombinler:** eklediğiniz kıyafet görselleri, kategori, renk ve ürün bilgileri; kurduğunuz kombinler. | Dolabınızı cihazlarınız arasında eşitlemek ve kombin uyum puanını sunmak. | Dolap sunucumuzda, hesabınıza bağlı; kıyafet görselleri yalnız size görünür. Kombin puanı için görselden sayısal özellikler kendi sunucumuzda çıkarılır ve önbelleğe alınır. |
+| **Hava durumu (isteğe bağlı):** izin verirseniz konumunuz ya da aradığınız şehir adı. | Günün hava durumuna göre kombin önermek. | Konum kaydedilmez. Hava durumu sağlayıcısına yalnız yuvarlanmış konum gider ([madde 6](#yapay-zeka)). |
+| **Topluluk:** paylaşımlarınız ve görselleri, yorumlarınız, beğenileriniz, takip ve engelleme listeleriniz, gönderdiğiniz içerik ve hesap bildirimleri. | Topluluğu işletmek ve moderasyon yapmak. | Sunucumuzda. Paylaşım ve yorumlar diğer kullanıcılara; engelleme listeleri ve bildirimler yalnız size ve moderasyon ekibine görünür. |
+| **Model geliştirme (isteğe bağlı):** ayrıca açık rıza verirseniz beden önerisi geri bildirimleriniz, kombin geri bildirimleriniz ve mezura doğrulama kayıtlarınız (fotoğraftan tahmin edilen ve mezurayla ölçülen değerler). Vücut fotoğrafları bu kapsama hiçbir koşulda girmez. | Ölçü, beden ve kombin modellerimizin doğruluğunu ölçmek ve iyileştirmek. | Sunucumuzda, hesabınızdan türetilen takma adlı bir kimlikle; yalnız yetkili ekibimiz. Rızanızı uygulamadan istediğiniz an geri alabilirsiniz ([madde 7](#saklama)). |
+| **Teknik ve güvenlik kayıtları:** istek zamanı, hata kayıtları, hız sınırlama sayaçları. | Hizmetin güvenliğini ve sürekliliğini sağlamak, kötüye kullanımı önlemek. | Sunucumuzda, yalnız yetkili ekibimiz. İstek gövdeleri ve görseller kayıtlara yazılmaz. |
 
-Topluluğa yüklediğiniz görsellerden konum, cihaz ve tarih gibi gömülü üst veriler (EXIF, XMP, IPTC) sunucuda kaydedilmeden önce temizlenir. Uygulama sunucularının konumu: Türkiye.
+Dolaba ve topluluğa yüklediğiniz görsellerden konum, cihaz ve tarih gibi gömülü üst veriler (EXIF, XMP, IPTC) sunucuda kaydedilmeden önce temizlenir. Uygulama sunucularının konumu: Türkiye.
 
-**Hukuki sebepler:** Hesap, fotoğrafla ölçü, beden önerisi, kombin puanı ve topluluk işlemleri, sizinle aramızdaki [Kullanıcı Sözleşmesi](https://kabincommunity.com/yasal/kullanici-sozlesmesi.html)’nin kurulması ve ifası için (KVKK m.5/2-c); güvenlik kayıtları meşru menfaatimiz (m.5/2-f) ve hukuki yükümlülüklerimiz (m.5/2-ç) için; model geliştirme ise yalnız açık rızanızla (m.5/1) işlenir. Açık rıza vermemeniz uygulamayı kullanmanıza engel değildir.
+**Web sürümü:** Uygulamanın tarayıcıda çalışan sürümü, oturumunuzu yenilemek için kesinlikle gerekli bir çerez ve seçtiğiniz özellikler (ör. dolabın bu cihazdaki kopyası) için tarayıcı depolaması kullanır. Ayrıntılar: [Çerez Politikası](https://kabincommunity.com/yasal/cerez.html).
+
+**Hukuki sebepler:** Hesap, fotoğrafla ölçü, ölçü profili, beden önerisi, dolap, kombin puanı, hava durumu ve topluluk işlemleri, sizinle aramızdaki [Kullanıcı Sözleşmesi](https://kabincommunity.com/yasal/kullanici-sozlesmesi.html)’nin kurulması ve kullanmayı seçtiğiniz özelliğin ifası için (KVKK m.5/2-c). Fotoğrafla ölçü isteğe bağlıdır; kamera kullanmadan ölçülerinizi mezurayla girebilirsiniz. Güvenlik kayıtları meşru menfaatimiz (m.5/2-f) ve hukuki yükümlülüklerimiz (m.5/2-ç) için; model geliştirme ve mağaza profil bağlantısı yalnız açık rızanızla (m.5/1) işlenir. Açık rıza vermemeniz uygulamayı kullanmanıza engel değildir.
 
 **Otomatik değerlendirme:** Ölçü tahmini ve beden önerisi otomatik olarak hesaplanır ve tahminidir. Hiçbir zaman sizin adınıza bir satın alma kararı vermez ve hesabınız hakkında aleyhinize bir karar üretmez.
 
 ## 4. Fotoğrafla ölçü
 
+- Kamerayı açmadan önce fotoğraflarınızın sunucumuzda işleneceği gösterilir; mezura seçeneği her zaman açıktır.
 - Fotoğraflar uygulamadan doğrudan sunucumuza, şifreli bağlantıyla (TLS) gönderilir.
-- Yalnız analiz süresince bellekte işlenir; diske, veritabanına ya da kayıtlara yazılmaz. Analiz bitince bellekten atılır.
-- Hiçbir üçüncü taraf yapay zekâ hizmetine gönderilmez; analiz kendi sunucumuzda çalışan modelle yapılır.
-- Analizden çıkan ölçü değerleri cihazınıza döner ve orada saklanır. Mezurayla ölçtüğünüz değerler her zaman önceliklidir.
+- Yalnız analiz süresince bellekte işlenir; diske, veritabanına, kayıtlara ya da yedeklere yazılmaz. Analiz bittiğinde ya da hata, iptal veya zaman aşımıyla sona erdiğinde bellekten atılır.
+- Analiz, vücut oranlarından ölçü tahmin eder. Yüz tanıma, kimlik tespiti ya da doğrulaması yapılmaz; sağlık değerlendirmesi yapılmaz.
+- Hiçbir üçüncü taraf hizmetine gönderilmez; analiz kendi sunucumuzda çalışan modelle yapılır.
+- Tahmin edilen ölçüler cihazınıza döner ve orada saklanır. Sunucudaki beden önerisi, yalnız mezurayla ölçüp hesabınıza kaydettiğiniz değerlerle hesaplanır.
+- Vücut fotoğrafları topluluk içeriğine ve model geliştirmeye hiçbir koşulda dahil edilmez.
 - Fotoğrafla ölçü yalnız 18 yaşını doldurmuş kullanıcılar içindir. Başka birinin fotoğrafını onun izni olmadan kullanmayın.
 
-## 5. Yapay zekâ ve üçüncü taraflar
+## 5. Mağaza bağlantısı ve Chrome eklentisi
+
+- **Misafir kullanım:** Bir mağazadaki Kabin penceresine giriş yapmadan ölçü girerseniz, ölçüler yalnız o öneriyi hesaplamak için işlenir ve saklanmaz.
+- **Profil bağlantısı (açık rıza):** Kabin hesabınızdaki ölçüleri bir mağazada kullanmak isterseniz ayrı bir Kabin penceresinde giriş yaparsınız; marka, ürün ve izin süresi (en fazla 15 dakika) gösterilir ve başlangıçta işaretsiz kutuyla onayınız istenir. Onay vermeden alışverişe devam edebilirsiniz. Bağlantıyı “Aktif bağlantılarım” bölümünden istediğiniz an kaldırabilirsiniz.
+- **Mağazaya giden veri:** Yalnız “Bu bedeni seç” dediğinizde seçtiğiniz beden, ürün kodu ve öneri kimliği. Vücut ölçüleriniz, kalıp farkları, hesap kimliğiniz ve adınız mağazaya verilmez.
+- **Mağazadan gelen veri:** Mağaza, bu öneriyle alınan ürünün satın alındığını ya da beden nedeniyle iade edildiğini rastgele bir sipariş referansıyla bize iletebilir; adınız, e-postanız, adresiniz ya da gerçek sipariş numaranız iletilmez. Bu kayıtlar öneri doğruluğunu ölçmek ve markaya toplu, anonim istatistik sunmak için kullanılır.
+- **Mağazanın kendi işlemesi:** Mağazanın aldığı verileri nasıl işlediği mağazanın kendi aydınlatma metnine tabidir; satış sözleşmenizin tarafı mağazadır.
+- **Chrome eklentisi:** Eklenti, açtığınız ürün sayfasından yalnız ürün adı, adresi ve beden tablosunu okur; sayfadaki kişisel bilgileri (ad, sepet, adres) okumaz. Hesabınıza, uygulamada ürettiğiniz tek kullanımlık kodla bağlanır; bu bağlantıyı uygulamadan istediğiniz an kaldırabilirsiniz.
+
+## 6. Üçüncü taraflar ve yurt dışına aktarım
 
 - Ölçü tahmini, beden önerisi ve kombin puanı kendi sunucularımızda çalışan modellerle hesaplanır.
 - Kıyafet görselleri: Kıyafet görselleri yalnız kendi sunucularımızda işlenir; üçüncü taraf yapay zekâ hizmetlerine gönderilmez.
+- **Dil işleme (NVIDIA Corporation, ABD):** “Yorumdan doldur” özelliğini kullandığınızda yazdığınız beden yorumu, içindeki sayılar çıkarılarak; katalog aramasında yazdığınız arama metni çeviri için NVIDIA’nın dil modeli hizmetine sunucumuz üzerinden gönderilir. Ölçüleriniz, fotoğraflarınız, hesap bilgileriniz ve IP adresiniz gönderilmez. Yorumunuza kişisel bilgi yazmayın. Bu yurt dışı aktarımın dayanağı: [DOLDURULACAK: NVIDIA (ABD) dil işleme aktarımının KVKK m.9 dayanağı (hukukçu belirler). Özellikler kapatılırsa gizlilik.html'deki NVIDIA maddesi kaldırılır. Bkz. karar H2.]
+- **Hava durumu (Open-Meteo):** Konumunuz yaklaşık 1 km hassasiyetle yuvarlanarak sunucumuz üzerinden Open-Meteo’ya iletilir; IP adresiniz ve hesap bilginiz iletilmez. Konumdan şehir adı cihazınızda, işletim sisteminizin konum hizmetiyle bulunur.
 - Barındırma: web sitesi Hostinger International Ltd. (Kıbrıs) (Fransa (Avrupa Birliği)); uygulama sunucuları Türkiye.
-- Yurt dışına aktarım: Web sitesi ve marka pilot talepleri Fransa'daki (AB) veri merkezinde barındırıldığından yurt dışına aktarılır. Bu aktarım KVKK m.9 uyarınca, barındırma sağlayıcısıyla imzalanan ve Kişisel Verileri Koruma Kurulu'na bildirilen standart sözleşme güvencesiyle yapılır. Kabin uygulamasının verileri Türkiye'deki sunucularda tutulur.
+- Web sitesinin yurt dışına aktarımı: Web sitesi ve marka pilot talepleri, barındırma sağlayıcımız Hostinger'ın Fransa'daki (AB) veri merkezinde; kabincommunity.com e-posta yazışmaları da aynı sağlayıcının yurt dışındaki sunucularında işlenir. Bu nedenle bu kanallardan ilettiğiniz kişisel veriler yurt dışına aktarılır ve yurt dışında işlenir. Kabin uygulamasının verileri Türkiye'deki sunucularda tutulur.
 
-## 6. Saklama ve silme
+## 7. Saklama ve silme
 
-- Hesabınızı uygulamanın hesap ayarlarından istediğiniz an silebilirsiniz. Silme işlemi sunucudaki hesabınızı, oturumlarınızı, paylaşım, yorum ve beğenilerinizi, yüklediğiniz görselleri ve takip/engelleme kayıtlarınızı kalıcı olarak kaldırır.
-- Cihazınızdaki ölçüler, öneri geçmişi ve dolap, uygulamadaki silme seçenekleriyle ya da uygulamayı kaldırarak silinir.
-- Model geliştirme onayını geri aldığınızda bu amaçla sunucuda tutulan kayıtlarınız silinir.
-- Güvenlik kayıtları: en fazla 90 gün.
+- **Hesap silme:** Hesabınızı uygulamada Profil → Hesap bölümünden ya da tarayıcıdan [DOLDURULACAK: Uygulamanın web sürümünün hesap sayfası (ör. https://app.kabincommunity.com/account). Google Play hesap silme bağlantısı olarak gizlilik.html#hesap-silme verilir.] adresinde giriş yapıp aynı bölümden silebilirsiniz. Uygulamaya erişemiyorsanız kayıtlı kullanıcı adınızla berkay@kabincommunity.com adresine yazın; kimliğinizi doğruladıktan sonra hesabınızı en geç 30 gün içinde sileriz.
+- **Silinenler:** Hesabınız, oturumlarınız, ölçü profiliniz, dolabınız ve kıyafet görselleriniz, kaydettiğiniz ürünler, paylaşım, yorum ve beğenileriniz, takip ve engelleme kayıtlarınız, eklenti ve mağaza bağlantılarınız ile model geliştirme için paylaştığınız kayıtlar derhal kalıcı olarak silinir.
+- **Yedekler:** Yedek kopyalardaki verileriniz en geç 14 gün içinde yedek döngüsüyle silinir.
+- **Cihazınızdaki veriler:** Hesabınızı sildiğiniz cihazdaki ölçü, öneri geçmişi ve dolap kopyaları da silinir. Başka cihazlardaki kopyalar için uygulamayı o cihazdan kaldırın ya da tarayıcı verilerini silin.
+- **Mağazadaki kopyalar:** Mağazaya iletilen seçili beden ve öneri kimliği mağazanın kendi saklama politikasına tabidir. Bize iletilen satın alma ve iade sonuçları 90 gün içinde silinir; markalara yalnız toplu istatistik olarak yansır.
+- **Model geliştirme rızası:** Rızanızı geri aldığınızda bu amaçla sunucuda tutulan kayıtlarınız silinir. Bu kayıtlarla daha önce eğitilmiş model ağırlıkları kişisel veri içermez ve geriye dönük olarak değiştirilmez.
+- **Mevzuat gereği saklama:** Güvenlik kayıtları en fazla 90 gün saklanır. Bunun dışında hesabınız silindikten sonra veri saklamayız; yetkili makamın talebi gibi kanuni bir zorunluluk doğarsa yalnız o kapsamla sınırlı tutarız.
 
-## 7. Güvenlik
+## 8. Güvenlik
 
 Veriler aktarım sırasında TLS ile şifrelenir; parolalar yalnız tek yönlü özetleriyle saklanır; her istekte hesap sahipliği sunucuda denetlenir; giriş ve hassas işlemler hız sınırlamasıyla korunur. Hiçbir sistem tamamen risksiz değildir; bir veri ihlali fark ettiğimizde KVKK m.12 uyarınca Kurul’a ve etkilenen kişilere mevzuattaki sürelerde bildirim yaparız. Bir güvenlik açığı bulduğunuzu düşünüyorsanız lütfen berkay@kabincommunity.com adresine yazın.
 
-## 8. 18 yaş sınırı
+## 9. 18 yaş sınırı
 
-Kabin uygulaması 18 yaşını doldurmuş kişiler içindir. 18 yaşından küçük birine ait veri işlediğimizi fark edersek bu veriyi sileriz.
+Kabin uygulaması 18 yaşını doldurmuş kişiler içindir; hesap açarken bunu beyan edersiniz. 18 yaşından küçük birine ait veri işlediğimizi fark edersek bu veriyi sileriz.
 
-## 9. Haklarınız ve iletişim
+## 10. Haklarınız ve iletişim
 
 KVKK m.11’de sayılan haklarınızı ve başvuru yollarını [KVKK Aydınlatma Metni](https://kabincommunity.com/yasal/kvkk-aydinlatma.html#haklar)’nde bulabilirsiniz. Gizlilikle ilgili sorularınız için: berkay@kabincommunity.com.
 
-Bu politikayı güncellediğimizde sayfanın üstündeki tarihi değiştiririz; önemli değişiklikleri kullanıcılarımıza uygulama içinde önceden bildiririz.
+Bu politikayı güncellediğimizde sayfanın üstündeki tarihi değiştiririz. Haklarınızı etkileyen değişiklikleri yürürlüğe girmeden önce uygulama içinde bildiririz; yeni bir işleme amacı açık rıza gerektiriyorsa rızanızı ayrıca isteriz.

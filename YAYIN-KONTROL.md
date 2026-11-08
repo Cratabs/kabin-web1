@@ -10,6 +10,8 @@ yine yayında olabilir: pilot talepleri e-postayla alınır, sitede form görün
       ve form kapalı kalır)
 
 ## B. Hukuk — ENGELLEYİCİ (hukukçuya sorulacaklar)
+> 2026-11-08: Metinler v0.2'ye revize edildi (iki dış inceleme + kod denetimi). Kararlar (H1–H6), kod önkoşulları (K1–K9)
+> ve hangi cümlenin hangi işe bağlı olduğu: `App-mvp/docs/hukuk/YASAL-SON-INCELEME.md`. §C tablosu o belgeye göre güncellenecek (V3).
 - [ ] **Yurt dışı aktarım beyanı şu an doğru DEĞİL.** `yurt_disi_guvence` alanı "Hostinger ile imzalanan ve
       Kurul'a bildirilen standart sözleşme" diyor. Site sunucusu Fransa'da. Bu beyan ancak (1) Hostinger ile
       KVKK standart sözleşmesi imzalandıktan ve (2) imzadan sonra 5 iş günü içinde Kurul'a bildirildikten sonra

@@ -9,7 +9,7 @@ YASAL
 
 # Yasal metinler
 
-Sürüm 0.1 · Son güncelleme: 7 Kasım 2026
+Sürüm 0.2 · Son güncelleme: 8 Kasım 2026
 
 Bu metin taslaktır; yayın öncesinde hukuk danışmanı tarafından gözden geçirilecektir.
 
