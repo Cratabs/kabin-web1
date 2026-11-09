@@ -25,7 +25,7 @@ function kabin_eposta_gecerli(mixed $v): bool
  * Ayar dosyasını okur ve doğrular. Dosya yoksa ya da geçersizse null döner: uç kapalı kalır (fail closed).
  *
  * @return array{secret: string, notify_to: string, mail_from: string, allowed_hosts: list<string>,
- *               accepting: bool, daily_cap: int, require_https: bool}|null
+ *               accepting: bool, beta_accepting: bool, daily_cap: int, require_https: bool}|null
  */
 function kabin_ayar(): ?array
 {
@@ -70,6 +70,8 @@ function kabin_ayar(): ?array
         'mail_from' => is_string($from) ? $from : '',
         'allowed_hosts' => $cleanHosts,
         'accepting' => ($c['accepting'] ?? false) === true,
+        // Beta bekleme listesi ayrı anahtarla açılır; pilot formunun hukuk kapısından bağımsızdır.
+        'beta_accepting' => ($c['beta_accepting'] ?? false) === true,
         'daily_cap' => $cap,
         'require_https' => ($c['require_https'] ?? true) !== false,
     ];

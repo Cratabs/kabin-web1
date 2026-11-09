@@ -9,7 +9,7 @@ GİZLİLİK
 
 # Gizlilik Politikası
 
-Web sitesi ve Kabin uygulaması · Sürüm 0.2 · Son güncelleme: 8 Kasım 2026
+Web sitesi ve Kabin uygulaması · Sürüm 0.3 · Son güncelleme: 9 Kasım 2026
 
 Bu metin taslaktır; yayın öncesinde hukuk danışmanı tarafından gözden geçirilecektir.
 
@@ -89,7 +89,7 @@ Dolaba ve topluluğa yüklediğiniz görsellerden konum, cihaz ve tarih gibi gö
 - **Dil işleme (NVIDIA Corporation, ABD):** “Yorumdan doldur” özelliğini kullandığınızda yazdığınız beden yorumu, içindeki sayılar çıkarılarak; katalog aramasında yazdığınız arama metni çeviri için NVIDIA’nın dil modeli hizmetine sunucumuz üzerinden gönderilir. Ölçüleriniz, fotoğraflarınız, hesap bilgileriniz ve IP adresiniz gönderilmez. Yorumunuza kişisel bilgi yazmayın. Bu yurt dışı aktarımın dayanağı: [DOLDURULACAK: NVIDIA (ABD) dil işleme aktarımının KVKK m.9 dayanağı (hukukçu belirler). Özellikler kapatılırsa gizlilik.html'deki NVIDIA maddesi kaldırılır. Bkz. karar H2.]
 - **Hava durumu (Open-Meteo):** Konumunuz yaklaşık 1 km hassasiyetle yuvarlanarak sunucumuz üzerinden Open-Meteo’ya iletilir; IP adresiniz ve hesap bilginiz iletilmez. Konumdan şehir adı cihazınızda, işletim sisteminizin konum hizmetiyle bulunur.
 - Barındırma: web sitesi Hostinger International Ltd. (Kıbrıs) (Fransa (Avrupa Birliği)); uygulama sunucuları Türkiye.
-- Web sitesinin yurt dışına aktarımı: Web sitesi ve marka pilot talepleri, barındırma sağlayıcımız Hostinger'ın Fransa'daki (AB) veri merkezinde; kabincommunity.com e-posta yazışmaları da aynı sağlayıcının yurt dışındaki sunucularında işlenir. Bu nedenle bu kanallardan ilettiğiniz kişisel veriler yurt dışına aktarılır ve yurt dışında işlenir. Kabin uygulamasının verileri Türkiye'deki sunucularda tutulur.
+- Web sitesinin yurt dışına aktarımı: Web sitesi, marka pilot talepleri ve beta bekleme listesi, barındırma sağlayıcımız Hostinger'ın Fransa'daki (AB) veri merkezinde; kabincommunity.com e-posta yazışmaları da aynı sağlayıcının yurt dışındaki sunucularında işlenir. Bu nedenle bu kanallardan ilettiğiniz kişisel veriler yurt dışına aktarılır ve yurt dışında işlenir. Kabin uygulamasının verileri Türkiye'deki sunucularda tutulur.
 
 ## 7. Saklama ve silme
 

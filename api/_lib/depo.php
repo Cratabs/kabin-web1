@@ -51,9 +51,9 @@ function kabin_sinir_izin(string $anahtar, int $saatlik, int $gunlukGenel): bool
     $path = kabin_veri_dizini() . '/sinir.json';
     return kabin_kilitli($path, static function ($fh) use ($anahtar, $saatlik, $gunlukGenel): bool {
         $raw = stream_get_contents($fh);
-        $data = json_decode(is_string($raw) && $raw !== '' ? $raw : '{}', true);
+        $data = json_decode(is_string($raw) && $raw !== '' ? $raw : '{}', true, 512, JSON_THROW_ON_ERROR);
         if (!is_array($data)) {
-            $data = [];
+            throw new RuntimeException('geçersiz sayaç');
         }
         $now = time();
         $temiz = [];
@@ -74,40 +74,48 @@ function kabin_sinir_izin(string $anahtar, int $saatlik, int $gunlukGenel): bool
             $temiz[$anahtar][] = $now;
             $temiz['_genel'][] = $now;
         }
-        ftruncate($fh, 0);
-        rewind($fh);
-        fwrite($fh, json_encode($temiz, JSON_THROW_ON_ERROR));
-        fflush($fh);
+        $encoded = json_encode($temiz, JSON_THROW_ON_ERROR);
+        if (!rewind($fh) || !ftruncate($fh, 0)
+            || fwrite($fh, $encoded) !== strlen($encoded) || !fflush($fh)) {
+            throw new RuntimeException('sayaç yazılamadı');
+        }
         return $izin;
     });
 }
 
 /**
- * Başvuruyu JSONL dosyasına ekler. $tekil ise aynı e-postayla önceki kayıt varsa eklemez.
+ * Başvuruyu JSONL dosyasına ekler. Eksik yazma başarı olarak bildirilmez.
+ * Beta listesinde aynı e-posta ikinci kez yazılmaz (yanıt yine başarıdır: kayıt varlığı sızmaz).
  *
  * @param array<string, string|bool> $kayit
  * @return bool yeni kayıt eklendiyse true
  */
-function kabin_kaydet(string $tur, array $kayit, bool $tekil): bool
+function kabin_kaydet(string $tur, array $kayit): bool
 {
-    if (!in_array($tur, ['pilot'], true)) {
+    if (!in_array($tur, ['pilot', 'beta'], true)) {
         throw new InvalidArgumentException('tür');
     }
     $path = kabin_veri_dizini() . '/basvurular-' . $tur . '.jsonl';
+    $tekil = $tur === 'beta' ? '"eposta":' . json_encode($kayit['eposta'] ?? '', JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . ',' : null;
     return kabin_kilitli($path, static function ($fh) use ($kayit, $tekil): bool {
-        if ($tekil) {
-            rewind($fh);
-            while (($line = fgets($fh)) !== false) {
-                $r = json_decode($line, true);
-                if (is_array($r) && ($r['eposta'] ?? null) === $kayit['eposta']) {
+        if ($tekil !== null) {
+            while (($satir = fgets($fh)) !== false) {
+                if (str_contains($satir, $tekil)) {
                     return false;
                 }
             }
         }
-        fseek($fh, 0, SEEK_END);
+        if (fseek($fh, 0, SEEK_END) !== 0) {
+            throw new RuntimeException('kayıt konumu');
+        }
         $satir = json_encode($kayit, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
-        fwrite($fh, $satir . "\n");
-        fflush($fh);
+        $start = ftell($fh);
+        if ($start === false) throw new RuntimeException('kayıt konumu');
+        if (fwrite($fh, $satir . "\n") !== strlen($satir) + 1 || !fflush($fh)) {
+            // Yarım JSON satırını geri al; kullanıcıya başarı dönme.
+            ftruncate($fh, $start);
+            throw new RuntimeException('kayıt yazılamadı');
+        }
         return true;
     });
 }

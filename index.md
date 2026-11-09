@@ -11,7 +11,7 @@ KİŞİSEL BEDEN VE STİL ASİSTANI
 
 Önden ve yandan iki fotoğrafla ölçülerini çıkar. Beğendiğin ürünün beden tablosunu gir; hangi bedenin neden uyabileceğini bölge bölge açıklayalım.
 
-[Nasıl çalışır?](#nasil) [Markalar için ↗](https://kabincommunity.com/markalar.html)
+[Beta’ya katıl](#beta) [Nasıl çalışır? ↓](#nasil) [Markalar için ↗](https://kabincommunity.com/markalar.html)
 
 Fotoğraftan çıkarılan ölçüler ve beden önerileri tahminidir;
 uyum garantisi değildir.
@@ -134,8 +134,18 @@ Uygulamadaki hesap ayarlarından hesabını ve bağlı tüm verilerini silebilir
 
 Soru, öneri ve iş birliği için e-posta adresimizden bize ulaşabilirsiniz. Moda markalarıyla pilot iş birliğinin ayrıntıları [Markalar için](https://kabincommunity.com/markalar.html#pilot) sayfasında.
 
+[Beta’ya katıl](#beta)
+
 E-POSTA
 
 [berkay@kabincommunity.com](mailto:berkay@kabincommunity.com)
 
 Kişisel verileriniz [KVKK Aydınlatma Metni](https://kabincommunity.com/yasal/kvkk-aydinlatma.html)’ne göre işlenir. [Hakkımızda](https://kabincommunity.com/hakkinda.html) · [İletişim bilgileri](https://kabincommunity.com/iletisim.html) · [Kullanım koşulları](https://kabincommunity.com/yasal/kullanim-kosullari.html)
+
+BETA LİSTESİ
+
+## İlk deneyenlerden *ol.*
+
+Kapalı beta açıldığında sana e-postayla davet gönderelim. Başka bir ileti göndermeyiz.
+
+_(Web sayfasında bu bölümde bir form yer alır.)_

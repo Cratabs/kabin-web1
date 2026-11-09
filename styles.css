@@ -72,3 +72,11 @@ mark.todo{background:#f3e2b8;color:#4a3a1c;padding:1px 4px;font-size:.92em;borde
 .contact-card .fine a{font-size:inherit}
 .footer-links{flex-wrap:wrap;justify-content:flex-end;gap:10px 25px;max-width:760px}
 @media(max-width:700px){.scope{grid-template-columns:1fr;gap:30px}.footer-links{justify-content:flex-start;gap:15px 23px}.contact-card{padding:24px 22px}.contact-mail{font-size:clamp(14px,4.3vw,18px)}.kunye dl{grid-template-columns:1fr}.kunye dd{margin-bottom:8px}.result-page{padding-block:50px}.result-page h1{font-size:40px}.legal p,.legal li{font-size:14px}.choice label{display:flex;margin-right:0}}
+/* Beta bekleme listesi penceresi. JS yoksa #beta bağlantısı :target ile sayfa içinde gösterir. */
+.beta-dialog{width:min(520px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow:auto;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:28px 30px 30px;box-shadow:0 20px 60px #30291c33}
+.beta-dialog::backdrop{background:#141413a6}
+.beta-dialog h2{font-size:32px;margin:10px 0 8px}
+.beta-head{display:flex;justify-content:space-between;align-items:center;gap:15px}
+.beta-kapat{border:0;background:none;font-size:26px;line-height:1;padding:6px 10px;min-width:44px;min-height:44px}
+#beta:target:not([open]){display:block;position:static;margin:40px auto;box-shadow:none}
+@media (max-width:600px){.beta-dialog{padding:22px 18px 24px}.beta-dialog h2{font-size:27px}}

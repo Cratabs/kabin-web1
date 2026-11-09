@@ -95,6 +95,11 @@ def sayfa_uret(parca: str, meta: dict[str, object], alanlar: dict[str, dict[str,
         ad, alt = m.group(1), m.group(2)
         if ad == "form" and alt == "pilot":
             return sablon.form(alt, form_acik, mailto(alanlar["eposta_iletisim"]))
+        beta_acik = meta.get("beta_listesi") is True
+        if ad == "form" and alt == "beta":
+            return sablon.beta_form(beta_acik)
+        if ad == "beta" and alt in ("dugme", "cizgi"):
+            return sablon.beta_dugme(beta_acik, "button" if alt == "dugme" else "button outline")
         if ad == "surum":
             return escape(str(meta["surum"]))
         if ad == "guncelleme":
@@ -168,7 +173,8 @@ def main() -> int:
     ajan.yaz(
         KOK / "api" / "_lib" / "yasal-durum.php",
         "<?php\n// _kaynak/build.py tarafından üretilir. Elle değiştirmeyin.\ndeclare(strict_types=1);\n"
-        f"return ['eksik' => {eksik_sayi}, 'surum' => '{meta['surum']}'];\n",
+        f"return ['eksik' => {eksik_sayi}, 'surum' => '{meta['surum']}', "
+        f"'beta' => {'true' if meta.get('beta_listesi') is True else 'false'}];\n",
     )
     guvenlik = duz["eposta_guvenlik"] or "[DOLDURULACAK: guvenlik e-postasi]"
     ajan.yaz(
@@ -186,6 +192,8 @@ def main() -> int:
         print(f"EKSİK künye alanı ({len(bos)}): {', '.join(sorted(bos))}")
     if not form_acik:
         print("Pilot formu KAPALI üretildi (e-posta yolu gösteriliyor); PHP uç noktası 503 dönecek.")
+    print("Beta listesi " + ("AÇIK (sunucuda beta_accepting de true olmalı)." if meta.get("beta_listesi") is True
+                             else "KAPALI: düğme ve pencere üretilmedi."))
     if not onay:
         print("Hukuk onayı yok: yasal sayfalarda taslak uyarısı gösteriliyor.")
     if kontrol and (bos or not onay):

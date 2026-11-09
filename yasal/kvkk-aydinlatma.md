@@ -9,7 +9,7 @@ KİŞİSEL VERİLERİN KORUNMASI
 
 # KVKK Aydınlatma Metni
 
-Web sitesi ve marka pilot talebi · Sürüm 0.2 · Son güncelleme: 8 Kasım 2026
+Web sitesi, marka pilot talebi ve beta bekleme listesi · Sürüm 0.3 · Son güncelleme: 9 Kasım 2026
 
 Bu metin taslaktır; yayın öncesinde hukuk danışmanı tarafından gözden geçirilecektir.
 
@@ -22,9 +22,9 @@ Bu metin taslaktır; yayın öncesinde hukuk danışmanı tarafından gözden ge
 1. [Saklama süreleri](#sure)
 1. [Haklarınız ve başvuru yolları](#haklar)
 
-Bu metin, 6698 sayılı Kişisel Verilerin Korunması Kanunu’nun (“KVKK”) 10. maddesi ve Aydınlatma Yükümlülüğünün Yerine Getirilmesinde Uyulacak Usul ve Esaslar Hakkında Tebliğ uyarınca, kabincommunity.com sitesini ziyaret eden ya da marka pilot talebi gönderen kişileri bilgilendirmek için hazırlanmıştır. Kabin uygulamasında işlenen veriler [Gizlilik Politikası](https://kabincommunity.com/yasal/gizlilik.html)’nda ayrıca anlatılır.
+Bu metin, 6698 sayılı Kişisel Verilerin Korunması Kanunu’nun (“KVKK”) 10. maddesi ve Aydınlatma Yükümlülüğünün Yerine Getirilmesinde Uyulacak Usul ve Esaslar Hakkında Tebliğ uyarınca, kabincommunity.com sitesini ziyaret eden, marka pilot talebi gönderen ya da beta bekleme listesine katılan kişileri bilgilendirmek için hazırlanmıştır. Kabin uygulamasında işlenen veriler [Gizlilik Politikası](https://kabincommunity.com/yasal/gizlilik.html)’nda ayrıca anlatılır.
 
-Bu metin bir açık rıza metni değildir; aşağıdaki işlemler için açık rızanıza dayanmıyoruz. Bu metnin özeti pilot formunda, veri toplanmadan önce gösterilir. Formdaki kutu yalnız metni okuduğunuzu teyit eder; bir onay ya da rıza beyanı değildir.
+Bu metin bir açık rıza metni değildir; aşağıdaki işlemler için açık rızanıza dayanmıyoruz. Bu metnin özeti pilot formunda ve beta listesi penceresinde, veri toplanmadan önce gösterilir. Formdaki kutu yalnız metni okuduğunuzu teyit eder; bir onay ya da rıza beyanı değildir.
 
 ## 1. Veri sorumlusu
 
@@ -37,6 +37,8 @@ Posta adresi: Yıldız Teknik Üniversitesi Davutpaşa Kampüsü, Esenler / İst
 | --- | --- | --- | --- |
 | Marka pilot talebi — kendi adınıza başvurursanız | Kimlik: ad soyad. İletişim: e-posta adresi. Mesleki bilgi: marka / şirket adı, ürün kategorisi, talep mesajınız, aydınlatma metnini okuduğunuza ilişkin teyit, talep zamanı. | Talebi değerlendirmek, size dönüş yapmak ve taraf olacağınız olası pilot sözleşmesini planlamak. | (c) Sözleşmenin kurulmasıyla doğrudan ilgili olması. |
 | Marka pilot talebi — bir kuruluş adına iletişim kurarsanız | Yukarıdaki veriler; iş iletişim bilgileriniz. | Temsil ettiğiniz kuruluşla pilot görüşmesini yürütmek. | (f) Temel hak ve özgürlüklerinize zarar vermemek kaydıyla, kuruluşunuzla iş görüşmesi yürütmeye yönelik meşru menfaatimiz. |
+| Beta bekleme listesi | Kimlik: ad. İletişim: e-posta adresi. Diğer: telefon türü (Android / iPhone / diğer), 18 yaşından büyük olduğunuza ve aydınlatma metnini okuduğunuza ilişkin teyit, kayıt zamanı. | Talebiniz üzerine, kapalı beta açıldığında size uygulama daveti göndermek ve davetleri telefon türüne göre planlamak. | (c) Talep ettiğiniz uygulama kullanımına ilişkin sözleşmenin kurulmasıyla doğrudan ilgili olması. |
+| Beta bekleme listesi — tanıtım kanalı | Sayfaya geldiğiniz bağlantıdaki kampanya etiketleri (utm_source, utm_medium, utm_campaign; ör. “instagram”, “reklam”). Çerez, piksel ya da cihaz tanımlayıcısı kullanılmaz. | Hangi tanıtım kanalından kaç kişinin listeye katıldığını toplu ve sayısal olarak ölçmek. | (f) Temel hak ve özgürlüklerinize zarar vermemek kaydıyla, tanıtım harcamalarımızı ölçmeye yönelik meşru menfaatimiz. |
 | Form güvenliği | İşlem güvenliği: IP adresinizden gizli bir anahtarla üretilen ve geri döndürülemeyen özet (HMAC) ile deneme zamanları. Bu özet, aynı kaynaktan gelen denemeleri ilişkilendirmek için kullanılır; IP adresinin kendisi başvuruyla birlikte saklanmaz. | Otomatik (bot) başvuruları, spam ve kötüye kullanımı sınırlamak. | (f) Temel hak ve özgürlüklerinize zarar vermemek kaydıyla, hizmetin güvenliğini sağlamaya yönelik meşru menfaatimiz. |
 | Siteyi ziyaret | İşlem güvenliği: barındırma sağlayıcısının sunucu erişim kayıtları (IP adresi, tarih-saat, istenen sayfa, tarayıcı bilgisi). Bu kayıtlar form güvenliği özetinden ayrıdır ve sağlayıcı tarafından tutulur. | Sitenin çalıştırılması, güvenliğinin sağlanması ve hataların giderilmesi. | (f) Meşru menfaat; mevzuatın öngördüğü hâllerde (ç) hukuki yükümlülük. |
 | E-posta yazışmaları | İletişim: e-posta adresi, yazışma içeriği. | Sorularınızı ve KVKK başvurularınızı yanıtlamak. | (f) Sorularınızı yanıtlamaya yönelik meşru menfaatimiz; (ç) KVKK başvurularında hukuki yükümlülük. |
@@ -45,20 +47,23 @@ Bu sitede analiz, reklam ya da sosyal medya takip aracı kullanılmaz; ziyaretin
 
 Talebiniz yalnız pilot görüşmesiyle ilgili iletişim için kullanılır. Size bülten, kampanya ya da başka bir ticari elektronik ileti göndermeyiz; ileride böyle bir ileti göndermek istersek önce 6563 sayılı Kanun kapsamında ayrıca onayınızı isteriz.
 
+Beta bekleme listesindeki e-posta adresinize yalnız talep ettiğiniz beta daveti ve buna ilişkin zorunlu bilgilendirme (ör. davetin süresi, kurulum adımı) gönderilir; bülten ya da kampanya iletisi gönderilmez. Listeden çıkmak için [berkay@kabincommunity.com](mailto:berkay@kabincommunity.com) adresine yazmanız yeterlidir.
+
 ## 3. Toplama yöntemi
 
-Veriler, bu sitedeki marka pilot formu ve e-posta yazışmaları aracılığıyla elektronik ortamda, sizin tarafınızdan doğrudan ve kısmen otomatik yollarla toplanır. Erişim kayıtları, siteyi ziyaret ettiğinizde barındırma altyapısı tarafından otomatik olarak oluşturulur. Talepler sunucuda, web kök dizininin dışındaki erişime kapalı bir klasörde saklanır; yöneticiye giden bildirim e-postası kişisel veri içermez.
+Veriler, bu sitedeki marka pilot formu, beta bekleme listesi penceresi ve e-posta yazışmaları aracılığıyla elektronik ortamda, sizin tarafınızdan doğrudan ve kısmen otomatik yollarla toplanır. Erişim kayıtları, siteyi ziyaret ettiğinizde barındırma altyapısı tarafından otomatik olarak oluşturulur. Talepler sunucuda, web kök dizininin dışındaki erişime kapalı bir klasörde saklanır; yöneticiye giden bildirim e-postası kişisel veri içermez.
 
 ## 4. Aktarım
 
-- **Barındırma ve e-posta hizmeti:** Site ve pilot talepleri, hizmet aldığımız barındırma sağlayıcısının (Hostinger International Ltd. (Kıbrıs)) sunucularında tutulur. Sunucu konumu: Fransa (Avrupa Birliği). Sağlayıcı verilere yalnız hizmeti sunmak için, talimatlarımız doğrultusunda erişebilir (veri işleyen).
-- **Yurt dışına aktarım:** Web sitesi ve marka pilot talepleri, barındırma sağlayıcımız Hostinger'ın Fransa'daki (AB) veri merkezinde; kabincommunity.com e-posta yazışmaları da aynı sağlayıcının yurt dışındaki sunucularında işlenir. Bu nedenle bu kanallardan ilettiğiniz kişisel veriler yurt dışına aktarılır ve yurt dışında işlenir. Kabin uygulamasının verileri Türkiye'deki sunucularda tutulur.
+- **Barındırma ve e-posta hizmeti:** Site, pilot talepleri ve beta bekleme listesi, hizmet aldığımız barındırma sağlayıcısının (Hostinger International Ltd. (Kıbrıs)) sunucularında tutulur. Sunucu konumu: Fransa (Avrupa Birliği). Sağlayıcı verilere yalnız hizmeti sunmak için, talimatlarımız doğrultusunda erişebilir (veri işleyen).
+- **Yurt dışına aktarım:** Web sitesi, marka pilot talepleri ve beta bekleme listesi, barındırma sağlayıcımız Hostinger'ın Fransa'daki (AB) veri merkezinde; kabincommunity.com e-posta yazışmaları da aynı sağlayıcının yurt dışındaki sunucularında işlenir. Bu nedenle bu kanallardan ilettiğiniz kişisel veriler yurt dışına aktarılır ve yurt dışında işlenir. Kabin uygulamasının verileri Türkiye'deki sunucularda tutulur.
 - **Yetkili kurumlar:** Hukuki yükümlülüğümüz bulunduğunda, talep hâlinde yetkili kamu kurum ve kuruluşları ile yargı mercilerine.
 
 Kişisel verilerinizi satmayız, reklam ya da pazarlama amacıyla üçüncü kişilerle paylaşmayız.
 
 ## 5. Saklama süreleri
 
+- Beta bekleme listesi: davetin gönderilmesinden itibaren 6 ay; beta açılmazsa kayıt tarihinden itibaren en geç 1 yıl. Listeden çıkma talebinizde kaydınız derhal silinir.
 - Marka pilot talebi: talebin sonuçlanmasından itibaren 2 yıl. Pilot görüşmesi sonuçlanmazsa süre, sizinle son yazışma tarihinden başlar. Bu süre, talep sonrasındaki olası soru ve uyuşmazlıklarda yazışmayı ispat edebilmek içindir.
 - IP özeti ve deneme zamanları: en fazla 24 saat; süre dolunca otomatik silinir.
 - Sunucu erişim kayıtları: barındırma sağlayıcısının (Hostinger) politikasında belirtilen süre.

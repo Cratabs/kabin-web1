@@ -13,8 +13,11 @@ const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 
 const PAGES = ['index.html', 'markalar.html', 'hakkinda.html', 'iletisim.html', 'basvuru-alindi.html', 'basvuru-hata.html', 'yasal/', 'yasal/kvkk-aydinlatma.html', 'yasal/gizlilik.html', 'yasal/cerez.html', 'yasal/kullanim-kosullari.html', 'yasal/kullanici-sozlesmesi.html', 'yasal/topluluk-kurallari.html'];
 // Dizine girmeyen sayfalar: canonical/JSON-LD/.md yok, noindex var.
 const DIZINSIZ = new Set(['basvuru-alindi.html', 'basvuru-hata.html']);
-// Sitede olmaması gereken kavramlar (kullanıcı kararı: beta yok, uygulamada çalışmayan özellik yok).
+// Sitede olmaması gereken kavramlar (kullanıcı kararı: uygulamada çalışmayan özellik yok). 2026-11-09: beta
+// bekleme listesi eklendi; "beta" yalnız ana sayfada (pencere), KVKK aydınlatma ve gizlilik metninde (yurt dışı aktarım) geçebilir.
 const YASAK = /\bbeta\b|tarayıcı eklenti|chrome uzant|davet kodu/i;
+const BETA_IZINLI = new Set(['index.html', 'yasal/kvkk-aydinlatma.html', 'yasal/gizlilik.html']);
+const yasakFor = (route) => (BETA_IZINLI.has(route) ? /tarayıcı eklenti|chrome uzant|davet kodu/i : YASAK);
 
 // Basit statik sunucu: .htaccess'in CSP başlığını da uygular ki CSP ihlalleri konsolda yakalansın.
 const htaccess = await readFile(join(ROOT, '.htaccess'), 'utf8');
@@ -64,7 +67,7 @@ try {
       }
       if (width === 1440) {
         const html = await res.text();
-        assert.doesNotMatch(html.replace(/<[^>]+>/g, ' '), YASAK, `yasak kavram yok: ${route}`);
+        assert.doesNotMatch(html.replace(/<[^>]+>/g, ' '), yasakFor(route), `yasak kavram yok: ${route}`);
         const dizinli = !DIZINSIZ.has(route);
         assert.equal(await page.locator('meta[name=robots][content*=noindex]').count(), dizinli ? 0 : 1, `noindex: ${route}`);
         assert.equal(await page.locator('link[rel=canonical]').count(), dizinli ? 1 : 0, `canonical: ${route}`);
@@ -79,7 +82,7 @@ try {
           const mt = await mr.text();
           assert.match(mt, /^---\ntitle: /, `md ön bilgi: ${md}`);
           assert.match(mt, /\n# /, `md başlık: ${md}`);
-          assert.doesNotMatch(mt, YASAK, `md yasak kavram yok: ${md}`);
+          assert.doesNotMatch(mt, yasakFor(route), `md yasak kavram yok: ${md}`);
           assert.doesNotMatch(mt, /<[a-z][^>]*>/i, `md içinde HTML etiketi yok: ${md}`);
           checks += 6;
         }
@@ -107,9 +110,44 @@ try {
       await page.keyboard.press('Escape');
       assert.equal(await toggle.getAttribute('aria-expanded'), 'false');
     }
-    // Ana sayfada başvuru formu yok; iletişim e-postası tıklanabilir.
-    assert.equal(await page.locator('form').count(), 0, 'ana sayfada form yok');
+    // Ana sayfada yalnız beta listesi formu var, pencere kapalı; iletişim e-postası tıklanabilir.
+    assert.equal(await page.locator('form').count(), 1, 'ana sayfada tek form (beta)');
     assert.match(await page.locator('#iletisim a[href^="mailto:"]').getAttribute('href') ?? '', /^mailto:[^@]+@kabincommunity\.com$/);
+    const beta = page.locator('dialog#beta');
+    assert.equal(await beta.isVisible(), false, 'beta penceresi başta kapalı');
+    await page.locator('.hero a[data-beta-ac]').click();
+    assert.equal(await beta.isVisible(), true, 'düğme pencereyi açar');
+    assert.equal(await page.evaluate(() => document.activeElement?.getAttribute('name')), 'ad', 'odak ad alanında');
+    const kutu = await beta.boundingBox();
+    assert.ok(kutu && kutu.x >= 0 && kutu.x + kutu.width <= width, `pencere ekrana sığar @${width}`);
+    await page.keyboard.press('Escape');
+    assert.equal(await beta.isVisible(), false, 'Esc kapatır');
+    // Reklam bağlantısı: utm etiketleri gizli alanlara, #beta pencereyi açar; geçersiz etiket alınmaz.
+    let betaPosted = '';
+    await page.route('**/api/basvuru.php', async (r) => {
+      betaPosted = r.request().postData() ?? '';
+      await r.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true,"kod":"TAMAM"}' });
+    });
+    await page.goto(`${base}/index.html?utm_source=Instagram&utm_medium=reklam&utm_campaign=%3Cscript%3E#beta`);
+    await beta.waitFor({ state: 'visible' });
+    assert.equal(new URL(page.url()).hash, '', 'adresteki #beta temizlenir');
+    await beta.locator('[name=ad]').fill('Deneme');
+    await beta.locator('[name=eposta]').fill('deneme@example.com');
+    await beta.locator('[name=platform]').selectOption('android');
+    await beta.locator('[name=yas18]').check();
+    await beta.locator('[name=aydinlatma]').check();
+    await beta.getByRole('button', { name: /Listeye katıl/ }).click();
+    await beta.locator('.form-done').waitFor();
+    assert.match(await beta.locator('.form-done').innerText(), /Listedesin/);
+    const bf = new URLSearchParams(betaPosted);
+    assert.equal(bf.get('tur'), 'beta');
+    assert.equal(bf.get('utm_source'), 'instagram');
+    assert.equal(bf.get('utm_medium'), 'reklam');
+    assert.equal(bf.get('utm_campaign'), '', 'geçersiz kampanya etiketi gönderilmez');
+    assert.equal(bf.get('web_sitesi'), '', 'tuzak alan boş gider');
+    await page.locator('[data-beta-kapat]').click();
+    assert.equal(await beta.isVisible(), false, 'kapat düğmesi kapatır');
+    await page.unroute('**/api/basvuru.php');
     // Pilot formu: hukuk onayı yokken kapalı, e-posta yolu gösterilir, ajan aracı olarak sunulmaz.
     await page.goto(`${base}/markalar.html`);
     const form = page.locator('form[data-basvuru="pilot"]');
@@ -124,6 +162,7 @@ try {
     await page.route('**/api/basvuru.php', async (r) => {
       posted = r.request().postData() ?? '';
       assert.equal(r.request().method(), 'POST');
+      assert.match(r.request().headers()['content-type'], /^application\/x-www-form-urlencoded/);
       await r.fulfill({ status: reply.status, contentType: 'application/json', body: JSON.stringify(reply.body) });
     });
     // İstemci akışını yine de sına: formu yalnız test için görünür ve etkin yap.
@@ -137,9 +176,10 @@ try {
     await page.waitForFunction(() => document.querySelector('.form-status')?.classList.contains('err'));
     assert.match(await form.locator('.form-status').innerText(), /bir saat sonra/);
     errors.splice(0, errors.length, ...errors.filter((e) => !/status of 429/.test(e)));
-    assert.match(posted, /name="eposta"[\s\S]*test@example\.com/);
-    assert.match(posted, /name="tur"\r\n\r\npilot\r\n/, 'tür pilot');
-    assert.match(posted, /name="web_sitesi"\r\n\r\n\r\n/, 'tuzak alan boş gider');
+    const fields = new URLSearchParams(posted);
+    assert.equal(fields.get('eposta'), 'test@example.com');
+    assert.equal(fields.get('tur'), 'pilot', 'tür pilot');
+    assert.equal(fields.get('web_sitesi'), '', 'tuzak alan boş gider');
     reply = { status: 200, body: { ok: true, kod: 'TAMAM' } };
     await form.getByRole('button', { name: /Pilot talebini gönder/ }).click();
     await page.locator('.form-done').waitFor();
@@ -149,7 +189,7 @@ try {
     assert.equal(await page.evaluate(() => localStorage.length + sessionStorage.length), 0, 'depolama yok');
     assert.deepEqual(errors, [], `konsol/CSP hatası yok @${width}`);
     assert.deepEqual(outgoing, [], `dış istek yok @${width}`);
-    checks += 16;
+    checks += 31;
     await context.close();
   }
   // Ajan dosyaları ve WebMCP (bir kez).

@@ -2,7 +2,7 @@
  * Site etkileşimleri: mobil menü, temsili beden demosu, pilot formunun JS ile gönderimi ve
  * yapay zekâ ajanları için salt-okunur WebMCP araçları (tarayıcı destekliyorsa).
  * Çerez, yerel depolama ya da izleme yok. Ağ isteği yalnız kullanıcı formu gönderdiğinde, aynı kökene
- * (/api/basvuru.php) yapılır. JS kapalıysa form normal HTML gönderimiyle aynı ucu kullanır.
+ * (/api/basvuru.php) yapılır. Beta penceresi reklam etiketlerini (utm_*) yalnız sayfa adresinden okur. JS kapalıysa form normal HTML gönderimiyle aynı ucu kullanır.
  * Sunucudan gelen metin DOM'a yalnız textContent ile yazılır.
  */
 
@@ -77,18 +77,56 @@ function errorCode(body: unknown): string | null {
   return typeof kod === 'string' ? kod : null;
 }
 
+const PILOT_DONE: readonly [string, string] = ['Talebiniz alındı.', 'Talebinizi kaydettik; en kısa sürede e-postayla dönüş yapacağız.'];
+const BETA_DONE: readonly [string, string] = ['Listedesin.', 'Kapalı beta açıldığında e-posta adresine davet göndereceğiz.'];
+
 function showDone(form: HTMLFormElement): void {
+  const [baslik, metin] = form.dataset['basvuru'] === 'beta' ? BETA_DONE : PILOT_DONE;
   const done = document.createElement('div');
   done.className = 'form-done';
   done.setAttribute('role', 'status');
   done.tabIndex = -1;
   const title = document.createElement('strong');
-  title.textContent = 'Talebiniz alındı.';
+  title.textContent = baslik;
   const text = document.createElement('p');
-  text.textContent = 'Talebinizi kaydettik; en kısa sürede e-postayla dönüş yapacağız.';
+  text.textContent = metin;
   done.append(title, text);
   form.replaceWith(done);
   done.focus();
+}
+
+/**
+ * Beta bekleme listesi penceresi. Reklam bağlantısı `...?utm_source=x#beta` ise pencere kendiliğinden açılır.
+ * Kampanya etiketleri yalnız bu sayfa adresinden okunur, formla birlikte gönderilir; hiçbir yerde saklanmaz.
+ */
+const UTM = /^[a-z0-9._-]{1,60}$/;
+const betaDialog = document.querySelector<HTMLDialogElement>('dialog#beta');
+if (betaDialog) {
+  const params = new URLSearchParams(window.location.search);
+  for (const key of ['utm_source', 'utm_medium', 'utm_campaign']) {
+    const value = (params.get(key) ?? '').trim().toLowerCase();
+    const input = betaDialog.querySelector<HTMLInputElement>(`input[name="${key}"]`);
+    if (input && UTM.test(value)) input.value = value;
+  }
+  const open = (): void => {
+    if (betaDialog.open) return;
+    // Adresteki #beta kalırsa geri tuşu/yenileme pencereyi yine açar; kampanya parametreleri adreste kalır.
+    if (window.location.hash === '#beta') history.replaceState(null, '', window.location.pathname + window.location.search);
+    betaDialog.showModal();
+    betaDialog.querySelector<HTMLInputElement>('input[name="ad"]')?.focus();
+  };
+  document.querySelectorAll<HTMLAnchorElement>('a[data-beta-ac]').forEach((a) =>
+    a.addEventListener('click', (event) => {
+      event.preventDefault();
+      open();
+    }),
+  );
+  betaDialog.querySelector('[data-beta-kapat]')?.addEventListener('click', () => betaDialog.close());
+  // Pencere dışına (arka plana) tıklamak kapatır.
+  betaDialog.addEventListener('click', (event) => {
+    if (event.target === betaDialog) betaDialog.close();
+  });
+  if (window.location.hash === '#beta') open();
 }
 
 document.querySelectorAll<HTMLFormElement>('form[data-basvuru]').forEach((form) => {
@@ -104,7 +142,10 @@ document.querySelectorAll<HTMLFormElement>('form[data-basvuru]').forEach((form) 
     if (body?.disabled === true) return;
     if (!form.reportValidity()) return;
     // Önce veriyi topla: devre dışı bırakılan alanlar FormData'ya girmez.
-    const data = new FormData(form);
+    const data = new URLSearchParams();
+    for (const [key, value] of new FormData(form)) {
+      if (typeof value === 'string') data.append(key, value);
+    }
     if (body) body.disabled = true;
     setStatus('Gönderiliyor…', false);
     fetch(form.action, {

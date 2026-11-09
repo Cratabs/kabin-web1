@@ -16,7 +16,11 @@ return [
     'allowed_hosts' => ['alanadiniz.com', 'www.alanadiniz.com'],
     // Başvuruları açmak için true yapın. Yasal metinlerde eksik alan varsa yine de kapalı kalır.
     'accepting' => false,
+    // Beta bekleme listesini açmak için true yapın (kunye.json "beta_listesi": true da gerekir).
+    // Pilot formunun hukuk kapısından bağımsızdır.
+    'beta_accepting' => false,
     // Tüm site için 24 saatte kabul edilecek en fazla deneme (kötüye kullanıma karşı tavan).
+    // Reklam döneminde beta listesi için yükseltin (ör. 2000); üst sınır 10000.
     'daily_cap' => 300,
     // Yalnız yerel testte false yapın.
     'require_https' => true,

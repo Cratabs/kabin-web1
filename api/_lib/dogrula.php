@@ -58,6 +58,46 @@ function kabin_onay(mixed $v): bool
     return $v === 'evet';
 }
 
+/** Reklam kampanyası etiketi (utm_*): yalnız küçük harf, rakam, . _ - ; geçersiz ya da boşsa ''. */
+function kabin_etiket(mixed $v): string
+{
+    if (!is_string($v) || strlen($v) > 60) {
+        return '';
+    }
+    $v = strtolower(trim($v));
+    return preg_match('/^[a-z0-9._-]{1,60}$/', $v) === 1 ? $v : '';
+}
+
+/**
+ * Beta bekleme listesi: ad, e-posta, telefon türü, 18 yaş ve aydınlatma teyidi, kampanya etiketi.
+ *
+ * @param array<array-key, mixed> $p
+ * @return array{ad: string, eposta: string, platform: string, yas18: bool, aydinlatma: bool,
+ *               utm_source: string, utm_medium: string, utm_campaign: string}|null
+ */
+function kabin_beta_dogrula(array $p): ?array
+{
+    $ad = kabin_metin($p['ad'] ?? null, 2, 100);
+    $eposta = kabin_eposta($p['eposta'] ?? null);
+    $platform = kabin_secim($p['platform'] ?? null, ['android', 'ios', 'diger']);
+    if ($ad === null || $eposta === null || $platform === null) {
+        return null;
+    }
+    if (!kabin_onay($p['yas18'] ?? null) || !kabin_onay($p['aydinlatma'] ?? null)) {
+        return null;
+    }
+    return [
+        'ad' => $ad,
+        'eposta' => $eposta,
+        'platform' => $platform,
+        'yas18' => true,
+        'aydinlatma' => true,
+        'utm_source' => kabin_etiket($p['utm_source'] ?? null),
+        'utm_medium' => kabin_etiket($p['utm_medium'] ?? null),
+        'utm_campaign' => kabin_etiket($p['utm_campaign'] ?? null),
+    ];
+}
+
 /**
  * @param array<array-key, mixed> $p
  * @return array{ad: string, sirket: string, eposta: string, kategori: string, mesaj: string, aydinlatma: bool}|null

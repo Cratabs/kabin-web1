@@ -1,9 +1,10 @@
 {
   "_not": "Yayın öncesi TÜM boş 'deger' alanlarını doldurun. Boş alan sitede [DOLDURULACAK] olarak görünür ve başvuru formu kapalı kalır (api/basvuru.php 503 döner). Uygulanmayan alan için 'Yok' yazın. Doldurduktan sonra: python3 _kaynak/build.py",
   "hukuk_onayi": false,
-  "surum": "0.2",
-  "guncelleme": "8 Kasım 2026",
-  "guncelleme_iso": "2026-11-08",
+  "beta_listesi": true,
+  "surum": "0.3",
+  "guncelleme": "9 Kasım 2026",
+  "guncelleme_iso": "2026-11-09",
   "alanlar": {
     "unvan": {
       "deger": "Berkay Korkmaz, Merve Kaplan ve Müfide Tuvana Taşar (Kabin kurucu ortakları; henüz tüzel kişilik kurulmamıştır)",
@@ -54,7 +55,7 @@
       "aciklama": "Kabin uygulama sunucusunun (API, ölçü profili, dolap) barındırılacağı ülke ve sağlayıcı"
     },
     "yurt_disi_guvence": {
-      "deger": "Web sitesi ve marka pilot talepleri, barındırma sağlayıcımız Hostinger'ın Fransa'daki (AB) veri merkezinde; kabincommunity.com e-posta yazışmaları da aynı sağlayıcının yurt dışındaki sunucularında işlenir. Bu nedenle bu kanallardan ilettiğiniz kişisel veriler yurt dışına aktarılır ve yurt dışında işlenir. Kabin uygulamasının verileri Türkiye'deki sunucularda tutulur.",
+      "deger": "Web sitesi, marka pilot talepleri ve beta bekleme listesi, barındırma sağlayıcımız Hostinger'ın Fransa'daki (AB) veri merkezinde; kabincommunity.com e-posta yazışmaları da aynı sağlayıcının yurt dışındaki sunucularında işlenir. Bu nedenle bu kanallardan ilettiğiniz kişisel veriler yurt dışına aktarılır ve yurt dışında işlenir. Kabin uygulamasının verileri Türkiye'deki sunucularda tutulur.",
       "aciklama": "Gerçek durumu söyler; aktarım dayanağı İDDİA ETMEZ. Hostinger ile KVKK standart sözleşmesi imzalanıp 5 iş günü içinde Kurul'a bildirildikten SONRA şu cümle eklenir: 'Bu aktarım KVKK m.9 uyarınca, sağlayıcıyla imzalanan ve Kişisel Verileri Koruma Kurulu'na bildirilen standart sözleşme güvencesiyle yapılır.' Site Türkiye'ye taşınırsa: 'Web sitesi Türkiye'deki sunucularda barındırılır; yurt dışına aktarım yapılmaz.' Bkz. App-mvp/docs/hukuk/YASAL-SON-INCELEME.md karar H1."
     },
     "kiyafet_gorsel_analizi": {

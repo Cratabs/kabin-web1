@@ -48,6 +48,18 @@ Değişiklikten sonra **her zaman** `_kaynak/` içinde `npm run build` çalışt
    form görünür olur ve WebMCP `toolname` niteliği eklenir).
 4. `YAYIN-KONTROL.md` listesinin tamamını işaretleyin (B bölümünde engelleyici maddeler var).
 
+## Beta bekleme listesi (2026-11-09)
+
+Ana sayfada “Beta’ya katıl” düğmesi bir pencere açar: ad, e-posta, telefon türü, 18 yaş ve aydınlatma teyidi.
+Pilot formunun hukuk kapısından **bağımsızdır** (kullanıcı kararı); aydınlatma metninde ayrı bölümü var (`#beta-listesi`).
+
+- Açmak için iki anahtar: `_kaynak/kunye.json` → `"beta_listesi": true` (düğme ve pencere üretilir) **ve** sunucudaki
+  `kabin-private/config.php` → `'beta_accepting' => true`. Reklam döneminde `daily_cap` değerini yükseltin.
+- Reklam bağlantısı: `https://kabincommunity.com/?utm_source=instagram&utm_medium=reklam&utm_campaign=kasim1#beta`
+  (`#beta` pencereyi kendiliğinden açar). Etiketler yalnız `a-z 0-9 . _ -`; çerez/piksel yok.
+- Kayıtlar: `kabin-private/veri/basvurular-beta.jsonl` (aynı e-posta ikinci kez yazılmaz, kayıt başına bildirim
+  e-postası gönderilmez). Sayılar: dosyayı indirip `python3 _kaynak/beta_ozet.py basvurular-beta.jsonl`.
+
 ## GitHub'a gönderme (sizin yapacağınız adımlar)
 
 Uzak depo: `Cratabs/kabin-web1` (private önerilir). Her değişiklikten sonra kendi terminalinizden:
@@ -117,6 +129,13 @@ Site arama motorlarına ve yapay zekâ ajanlarına açıktır. Hepsi `build.py` 
 - `404.html` ve `basvuru-*.html` `noindex`'tir ve sitemap/llms.txt dışında tutulur.
 
 ## Güvenlik özeti
+
+- `api/.user.ini` ile `enable_post_data_reading=Off` zorunludur. PHP CGI/FastCGI dışındaki
+  kurulumlarda bu ayarı sunucu PHP yapılandırmasına uygulayın; uç ayar etkin değilse kapalı kalır.
+  `.user.ini` değişikliklerinin PHP önbelleğine yansımasını bekleyip doğrulayın. Form yalnız
+  `application/x-www-form-urlencoded` gönderir; multipart Apache/LiteSpeed katmanında reddedilir.
+  Gövde hem sunucuda hem uygulamada 16 KB ile sınırlanır. Sunucu/proxy istek gövdesi loglamasını
+  kapalı tutun; geçici disk davranışı ve bu ayarların uygulanması canlı ortamda ayrıca doğrulanmalıdır.
 
 - CSP: yalnız kendi kökü; satır içi betik/stil yok, `frame-ancestors 'none'`. Meta CSP ikinci savunma hattıdır.
 - Çerez, yerel depolama, analiz, CDN, dış yazı tipi yok (QA bunları her çalıştırmada denetler).

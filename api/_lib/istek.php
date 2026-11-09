@@ -8,6 +8,32 @@ require_once __DIR__ . '/depo.php';
 const KABIN_SAATLIK_DENEME = 10;
 const KABIN_GOVDE_SINIRI = 16384;
 
+/** Otomatik multipart ayrıştırması kapalıyken yalnız sınırlı metin gövdesini RAM'de okur. */
+function kabin_form_oku(bool $json): array
+{
+    // .user.ini uygulanmamışsa fail closed. Bu ayar ini_set ile geç değiştirilemez.
+    if (filter_var(ini_get('enable_post_data_reading'), FILTER_VALIDATE_BOOLEAN)) {
+        throw new RuntimeException('gövde yapılandırması');
+    }
+    $type = strtolower(trim(explode(';', (string) ($_SERVER['CONTENT_TYPE'] ?? ''))[0]));
+    if ($type !== 'application/x-www-form-urlencoded') {
+        kabin_yanit(415, 'GECERSIZ', $json);
+    }
+    $raw = file_get_contents('php://input', false, null, 0, KABIN_GOVDE_SINIRI + 1);
+    if (!is_string($raw)) {
+        throw new RuntimeException('gövde okunamadı');
+    }
+    if (strlen($raw) > KABIN_GOVDE_SINIRI || substr_count($raw, '&') >= 12) {
+        kabin_yanit(413, 'BUYUK', $json);
+    }
+    parse_str($raw, $form);
+    unset($raw);
+    foreach ($form as $value) {
+        if (!is_string($value)) kabin_yanit(400, 'GECERSIZ', $json);
+    }
+    return $form;
+}
+
 function kabin_json_istiyor(): bool
 {
     $accept = $_SERVER['HTTP_ACCEPT'] ?? '';
@@ -59,10 +85,17 @@ function kabin_kaynak_gecerli(array $hosts, bool $requireHttps): bool
         if (!is_array($p) || !isset($p['host'], $p['scheme'])) {
             return false;
         }
-        if ($requireHttps && $p['scheme'] !== 'https') {
+        if (!in_array($p['scheme'], ['http', 'https'], true) || ($requireHttps && $p['scheme'] !== 'https')) {
             return false;
         }
-        if (!in_array(strtolower($p['host']), $hosts, true)) {
+        // İzinli iki alan adı bile farklı origin'dir; port dahil tam eşleşme gerekir.
+        $authority = strtolower((string) ($_SERVER['HTTP_HOST'] ?? ''));
+        $target = parse_url($p['scheme'] . '://' . $authority);
+        $defaultPort = $p['scheme'] === 'https' ? 443 : 80;
+        if (!is_array($target) || strtolower($p['host']) !== $host
+            || ($p['port'] ?? $defaultPort) !== ($target['port'] ?? $defaultPort)
+            || isset($p['user']) || isset($p['pass']) || isset($p['query']) || isset($p['fragment'])
+            || isset($p['path'])) {
             return false;
         }
     }
@@ -99,10 +132,20 @@ function kabin_istek(): void
         if ((int) ($_SERVER['CONTENT_LENGTH'] ?? 0) > KABIN_GOVDE_SINIRI || count($_POST) > 12) {
             kabin_yanit(413, 'BUYUK', $json);
         }
+        $_POST = kabin_form_oku($json);
         $ayar = kabin_ayar();
         $yasal = require __DIR__ . '/yasal-durum.php';
-        // Kapı: ayar yoksa, başvurular kapalıysa ya da yasal metinlerde eksik alan varsa veri kabul edilmez.
-        if ($ayar === null || !$ayar['accepting'] || !is_array($yasal) || ($yasal['eksik'] ?? 1) !== 0) {
+        $tur = $_POST['tur'] ?? null;
+        // Yalnız iki tür; başka tür aydınlatma metninin kapsamında değildir.
+        if ($tur !== 'pilot' && $tur !== 'beta') {
+            kabin_yanit(400, 'GECERSIZ', $json);
+        }
+        // Kapı: ayar yoksa ya da tür kapalıysa veri kabul edilmez. Pilot: künye eksiksiz + hukuk onayı.
+        // Beta listesi: künyedeki ayrı bayrak (aydınlatma metninde bölümü var) + sunucu ayarı.
+        $acik = $ayar !== null && is_array($yasal) && ($tur === 'pilot'
+            ? $ayar['accepting'] && ($yasal['eksik'] ?? 1) === 0
+            : $ayar['beta_accepting'] && ($yasal['beta'] ?? false) === true);
+        if (!$acik) {
             kabin_yanit(503, 'KAPALI', $json);
         }
         if (!kabin_kaynak_gecerli($ayar['allowed_hosts'], $ayar['require_https'])) {
@@ -117,12 +160,7 @@ function kabin_istek(): void
         if (($_POST['web_sitesi'] ?? '') !== '') {
             kabin_yanit(200, 'TAMAM', $json);
         }
-        $tur = $_POST['tur'] ?? null;
-        // Yalnız marka pilot talebi kabul edilir; başka tür aydınlatma metninin kapsamında değildir.
-        if ($tur !== 'pilot') {
-            kabin_yanit(400, 'GECERSIZ', $json);
-        }
-        $alanlar = kabin_pilot_dogrula($_POST);
+        $alanlar = $tur === 'pilot' ? kabin_pilot_dogrula($_POST) : kabin_beta_dogrula($_POST);
         if ($alanlar === null) {
             kabin_yanit(400, 'GECERSIZ', $json);
         }
@@ -132,7 +170,8 @@ function kabin_istek(): void
             'zaman' => gmdate('c'),
             'aydinlatma_surumu' => (string) ($yasal['surum'] ?? ''),
         ] + $alanlar;
-        if (kabin_kaydet($tur, $kayit, false)) {
+        // Beta listesi reklamla büyüyebilir: kayıt başına bildirim e-postası gönderilmez.
+        if (kabin_kaydet($tur, $kayit) && $tur === 'pilot') {
             kabin_bildir($ayar, $tur, $kayit['id']);
         }
         kabin_yanit(200, 'TAMAM', $json);

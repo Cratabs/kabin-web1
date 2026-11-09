@@ -9,7 +9,7 @@ lang: tr
 
 # Çerez Politikası
 
-Sürüm 0.2 · Son güncelleme: 8 Kasım 2026
+Sürüm 0.3 · Son güncelleme: 9 Kasım 2026
 
 Bu metin taslaktır; yayın öncesinde hukuk danışmanı tarafından gözden geçirilecektir.
 

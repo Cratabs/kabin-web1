@@ -18,6 +18,12 @@ AddCharset utf-8 .md .txt .xml
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
+  # PHP çalışmadan dosya yüklemelerini reddet. Form yalnız URL-encoded metindir.
+  RewriteCond %{REQUEST_URI} ^/api/basvuru\.php$
+  RewriteCond %{REQUEST_METHOD} =POST
+  RewriteCond %{HTTP:Content-Type} !^application/x-www-form-urlencoded(;.*)?$ [NC]
+  RewriteRule ^ - [R=415,L]
+
   # 1) Her zaman HTTPS (Hostinger CDN arkasında X-Forwarded-Proto da kontrol edilir).
   RewriteCond %{HTTPS} !=on
   RewriteCond %{HTTP:X-Forwarded-Proto} !=https
@@ -47,6 +53,10 @@ AddCharset utf-8 .md .txt .xml
   RewriteCond %{DOCUMENT_ROOT}/$1.md -f
   RewriteRule ^(.+)\.html$ $1.md [L]
 </IfModule>
+
+<Files "basvuru.php">
+  LimitRequestBody 16384
+</Files>
 
 # mod_rewrite yoksa ikinci savunma hattı.
 <FilesMatch "(^\.|\.(py|ts|json|lock|sh|mjs|map|jsonl|log)$|\.example\.php$|^(README|YAYIN-KONTROL)[^/]*$)">

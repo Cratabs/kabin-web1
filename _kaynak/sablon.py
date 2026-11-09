@@ -173,3 +173,53 @@ def form(kind: str, open_: bool, eposta_link: str) -> str:
         '<p class="form-status" role="status" aria-live="polite"></p>'
         "</form>"
     )
+
+
+def beta_dugme(open_: bool, sinif: str = "button") -> str:
+    """Beta bekleme listesi düğmesi. Liste kapalıyken hiç üretilmez."""
+    if not open_:
+        return ""
+    return f'<a class="{sinif}" href="#beta" data-beta-ac>Beta’ya katıl <span aria-hidden="true">↗</span></a>'
+
+
+def beta_form(open_: bool) -> str:
+    """Beta bekleme listesi açılır penceresi (<dialog>). JS kapalıyken #beta bağlantısı :target ile gösterir.
+
+    Kampanya etiketleri (utm_*) sayfa adresinden JS ile gizli alanlara yazılır; çerez/izleme yok.
+    """
+    if not open_:
+        return ""
+    aydinlatma = (
+        '<a href="/yasal/kvkk-aydinlatma.html#beta-listesi" target="_blank" rel="noopener">KVKK Aydınlatma '
+        "Metni</a>’ni okudum. Bilgilerimin bu metinde belirtilen amaçlarla işleneceğini biliyorum."
+    )
+    utm = "".join(f'<input type="hidden" name="{k}" value="">' for k in ("utm_source", "utm_medium", "utm_campaign"))
+    return (
+        '<dialog class="beta-dialog" id="beta" aria-labelledby="beta-baslik">'
+        '<div class="beta-head"><span class="eyebrow">BETA LİSTESİ</span>'
+        '<button type="button" class="beta-kapat" data-beta-kapat aria-label="Kapat">×</button></div>'
+        '<h2 id="beta-baslik">İlk deneyenlerden <em>ol.</em></h2>'
+        '<p class="fine">Kapalı beta açıldığında sana e-postayla davet gönderelim. Başka bir ileti göndermeyiz.</p>'
+        '<form class="apply" action="/api/basvuru.php" method="post" data-basvuru="beta">'
+        '<fieldset class="form-body"><input type="hidden" name="tur" value="beta">' + utm +
+        '<label for="beta-ad">Adın</label>'
+        '<input id="beta-ad" name="ad" autocomplete="given-name" minlength="2" maxlength="100" required>'
+        '<label for="beta-eposta">E-posta adresin</label>'
+        '<input id="beta-eposta" name="eposta" type="email" autocomplete="email" maxlength="254" required>'
+        '<label for="beta-platform">Telefonun</label>'
+        '<select id="beta-platform" name="platform" required><option value="">Seç</option>'
+        '<option value="android">Android</option><option value="ios">iPhone</option>'
+        '<option value="diger">Diğer</option></select>'
+        '<p class="fine" id="beta-aydinlatma-ozet">Adını, e-postanı ve telefon türünü, beta açıldığında sana davet '
+        "göndermek için; geldiğin tanıtım kanalını da yalnız sayısal olarak ölçmek için Kabin kurucu ortakları "
+        "(müşterek veri sorumlusu) işler. Veriler barındırma sağlayıcımızın yurt dışındaki (AB) veri merkezinde "
+        "tutulur, kimseyle paylaşılmaz; bülten ya da kampanya gönderilmez. Hukuki sebepler, haklarınız ve saklama "
+        "süresi tam metinde.</p>"
+        + _check("yas18", "18 yaşından büyüğüm.")
+        + _check("aydinlatma", aydinlatma)
+        + _honeypot().replace("{k}", "beta")
+        + '<button class="button" type="submit">Listeye katıl <span aria-hidden="true">↗</span></button>'
+        "</fieldset>"
+        '<p class="form-status" role="status" aria-live="polite"></p>'
+        "</form></dialog>"
+    )
