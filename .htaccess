@@ -56,6 +56,11 @@ AddCharset utf-8 .md .txt .xml
 
 <Files "basvuru.php">
   LimitRequestBody 16384
+  # api/.user.ini'nin yedeği: Hostinger (LiteSpeed) .user.ini'yi bu ayar için uygulamadı (2026-11-09:
+  # canlı uç fail-closed 500). PHP_INI_PERDIR ayarı LiteSpeed'de .htaccess ile verilir; başka sunucu yok sayar.
+  <IfModule LiteSpeed>
+    php_flag enable_post_data_reading off
+  </IfModule>
 </Files>
 
 # mod_rewrite yoksa ikinci savunma hattı.
