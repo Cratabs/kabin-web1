@@ -2,8 +2,8 @@
   "_not": "Yayın öncesi TÜM boş 'deger' alanlarını doldurun. Boş alan sitede [DOLDURULACAK] olarak görünür ve başvuru formu kapalı kalır (api/basvuru.php 503 döner). Uygulanmayan alan için 'Yok' yazın. Doldurduktan sonra: python3 _kaynak/build.py",
   "hukuk_onayi": false,
   "beta_listesi": true,
-  "surum": "0.3",
-  "guncelleme": "9 Kasım 2026",
+  "surum": "0.4",
+  "guncelleme": "10 Kasım 2026",
   "guncelleme_iso": "2026-11-09",
   "alanlar": {
     "unvan": {

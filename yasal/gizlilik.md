@@ -9,7 +9,7 @@ GİZLİLİK
 
 # Gizlilik Politikası
 
-Web sitesi ve Kabin uygulaması · Sürüm 0.3 · Son güncelleme: 9 Kasım 2026
+Web sitesi ve Kabin uygulaması · Sürüm 0.4 · Son güncelleme: 10 Kasım 2026
 
 Bu metin taslaktır; yayın öncesinde hukuk danışmanı tarafından gözden geçirilecektir.
 
@@ -30,7 +30,7 @@ Bu politika, veri sorumlusu **Berkay Korkmaz, Merve Kaplan ve Müfide Tuvana Ta�
 
 ## 1. İlkelerimiz
 
-- **En az veri:** Yalnız seçtiğiniz özelliği sunmak için gereken veriyi işleriz. Fotoğraftan tahmin edilen ölçüler cihazınızda kalır.
+- **En az veri:** Yalnız seçtiğiniz özelliği sunmak için gereken veriyi işleriz. Fotoğraftan tahmin edilen ölçüler, yalnız sizin görebildiğiniz ölçü profilinize “tahmini” olarak kaydedilir; mağazalarla paylaşılmaz ve hesabınızı sildiğinizde ya da “Beden profilimi sil” dediğinizde silinir.
 - **Satış ve reklam yok:** Kişisel verilerinizi satmayız; reklam, profilleme ya da kredi değerlendirmesi için kullanmayız ve bu amaçlarla kimseye aktarmayız.
 - **Ölçüler özeldir:** Kabin ölçülerinizi topluluk alanında ve paylaşımlarınızda göstermez. Yorumlarınıza ya da görsellerinize kendiniz yazdığınız bilgiler bu taahhüdün dışındadır.
 - **Vücut fotoğrafları saklanmaz:** Ölçü tahmini için gönderdiğiniz fotoğraflar yalnız o analizde, bellekte işlenir; kaydedilmez, kimlik tespiti için kullanılmaz ve hiçbir üçüncü tarafa gönderilmez ([madde 4](#fotograf)).

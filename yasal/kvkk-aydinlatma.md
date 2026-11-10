@@ -9,7 +9,7 @@ KİŞİSEL VERİLERİN KORUNMASI
 
 # KVKK Aydınlatma Metni
 
-Web sitesi, marka pilot talebi ve beta bekleme listesi · Sürüm 0.3 · Son güncelleme: 9 Kasım 2026
+Web sitesi, marka pilot talebi ve beta bekleme listesi · Sürüm 0.4 · Son güncelleme: 10 Kasım 2026
 
 Bu metin taslaktır; yayın öncesinde hukuk danışmanı tarafından gözden geçirilecektir.
 
