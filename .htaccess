@@ -29,6 +29,11 @@ AddCharset utf-8 .md .txt .xml
   RewriteCond %{HTTP:X-Forwarded-Proto} !=https
   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
+  # 1b) Tek kanonik adres: www → kök alan adı (sayfalardaki rel=canonical zaten kök adresi gösterir;
+  #     aynı içeriğin iki adreste yaşaması HSTS/çerez/önbellek sınırını ikiye böler). Form ucu dahil.
+  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+
   # 2) Gizli dosya ve klasörler (.git, .gitignore, .htaccess …) — .well-known hariç (SSL doğrulaması ve security.txt).
   RewriteCond %{REQUEST_URI} !^/\.well-known/
   RewriteRule (^|/)\. - [R=404,L]
@@ -69,7 +74,9 @@ AddCharset utf-8 .md .txt .xml
 </FilesMatch>
 
 <IfModule mod_headers.c>
-  Header always set Strict-Transport-Security "max-age=31536000"
+  # includeSubDomains: api./app. (VPS, Caddy) ve www. zaten yalnız HTTPS (2026-11-10 doğrulandı: http → 308).
+  # "preload" bilerek yok: tarayıcı listesine girince geri alınamaz; alan adı kesinleşince eklenir.
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
   Header always set X-Content-Type-Options "nosniff"
   Header always set X-Frame-Options "DENY"
   Header always set Referrer-Policy "strict-origin-when-cross-origin"

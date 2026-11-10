@@ -92,7 +92,8 @@ Kaynak: Hostinger belgeleri, [Git ile dağıtım](https://docs.hostinger.com/web
    Pilot talepleri `kabin-private/veri/basvurular-pilot.jsonl` dosyasına yazılır (izin 600).
    Bildirim e-postası kişisel veri içermez; başvuruları Dosya Yöneticisi'nden indirerek okuyun.
 6. **SSL:** hPanel → Güvenlik → SSL → sertifikayı kurun ve *Force HTTPS* açın (`.htaccess` de yönlendirir).
-   `.htaccess` HSTS (1 yıl) gönderir; SSL çalışmadan alan adını yayına almayın.
+   `.htaccess` HSTS (1 yıl, `includeSubDomains`) gönderir ve `www.` adresini kök alan adına yönlendirir;
+   SSL çalışmadan alan adını yayına almayın ve her alt alan adı (api., app.) yalnız HTTPS sunmalı.
 7. **E-posta doğrulaması:** hPanel → E-postalar → DNS'te SPF/DKIM/DMARC kayıtlarının etkin olduğunu kontrol edin;
    aksi hâlde bildirimler spam'e düşebilir.
 8. **Canlı denetim** (alan adınızla):
