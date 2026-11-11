@@ -69,4 +69,10 @@ kontrol "beta: 18 yaş teyidi yok 400" "$(curl "${H[@]}" -d tur=beta -d ad=Ali -
 kontrol "beta: geçersiz telefon 400" "$(curl "${H[@]}" "${B[@]}" -d platform=windows -d eposta=a@ornek.com "$U")" 400
 kontrol "beta: pilot hâlâ kapalı (eksik künye) 503" "$(curl "${H[@]}" "${P[@]}" -d eposta=g@marka.com "$U")" 503
 kontrol "beta: veri izinleri 600" "$(stat -c %a "$BV")" 600
+# Düz HTML gönderimi (JS kapalı): sonuç sayfası formun dilinde; yalnız dil=en İngilizce sayfaya gider.
+R=(-s -o /dev/null -w '%{http_code} %{redirect_url}')
+kontrol "dil=en başarı → İngilizce sayfa" "$(curl "${R[@]}" "${B[@]}" -d dil=en -d platform=ios -d eposta=en@ornek.com "$U")" "303 http://127.0.0.1:8099/en/application-received.html"
+kontrol "dil=en hata → İngilizce sayfa" "$(curl "${R[@]}" -d tur=beta -d dil=en -d ad=Ali -d platform=ios -d aydinlatma=evet -d eposta=a@ornek.com "$U")" "303 http://127.0.0.1:8099/en/application-error.html"
+kontrol "bilinmeyen dil → Türkçe sayfa" "$(curl "${R[@]}" "${B[@]}" -d dil=//kotu.example -d platform=ios -d eposta=tr@ornek.com "$U")" "303 http://127.0.0.1:8099/basvuru-alindi.html"
+kontrol "dil yok → Türkçe hata sayfası" "$(curl "${R[@]}" -d tur=beta -d ad=Ali "$U")" "303 http://127.0.0.1:8099/basvuru-hata.html"
 echo "PHP testleri geçti: $gecti denetim"

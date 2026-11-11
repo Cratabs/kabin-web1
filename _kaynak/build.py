@@ -3,14 +3,17 @@
 Kullanım:  python3 _kaynak/build.py            (üretir, eksik künye alanlarını listeler)
            python3 _kaynak/build.py --kontrol  (eksik alan ya da hukuk onayı yoksa 1 ile çıkar; yayın öncesi)
 
-Sayfa parçaları _kaynak/sayfalar/*.html içindedir ve şu işaretleri kullanabilir:
+Sayfa parçaları _kaynak/sayfalar/*.html (İngilizce: sayfalar/en/*.html) içindedir ve şu işaretleri kullanabilir:
   {{alan}}        künye değeri (boşsa görünür [DOLDURULACAK] işareti)
   {{alan_link}}   e-posta alanı için mailto bağlantısı
-  {{form:pilot}}  marka pilot formu
+  {{form:pilot}}  marka pilot formu        {{form:beta}} / {{beta:dugme}} / {{beta:cizgi}}  beta listesi
   {{surum}} / {{guncelleme}}               yasal metin sürüm bilgisi
   {{taslak}}      hukuk onayı yoksa taslak uyarısı
 
 Ayrıca makine-okur çıktılar üretir (bkz. ajan.py): JSON-LD, sitemap.xml, llms.txt, sayfa başına .md.
+
+Dil: "en/" ile başlayan çıktılar İngilizcedir. ESLER, iki dilde karşılığı olan sayfaları eşler (hreflang,
+dil değiştirici, sitemap). Yasal metinlerin İngilizcesi yoktur; İngilizce sayfalar Türkçe /yasal/ metnine gider.
 """
 from __future__ import annotations
 
@@ -54,9 +57,55 @@ SAYFALAR = [
      "Kabin uygulamasını kullananlar ile aramızdaki sözleşme.", "yasal"),
     ("yasal/topluluk-kurallari.html", "topluluk-kurallari.html", "Topluluk Kuralları — Kabin",
      "Kabin topluluğu kuralları ve moderasyon süreci.", "yasal"),
+    # İngilizce sürüm (yasal metinler çevrilmez).
+    ("en/index.html", "en/index.html", "Kabin — Not the size on the label. The size that fits you.",
+     "Measurement estimates from two photos, an area-by-area comparison with the item’s size chart, and a size "
+     "recommendation that explains why.", ""),
+    ("en/brands.html", "en/brands.html", "Kabin for brands — Let’s validate size recommendations together",
+     "An explainable size recommendation pilot for fashion brands.", "markalar"),
+    ("en/about.html", "en/about.html", "About us — Kabin", "Who is building Kabin, why and how.", ""),
+    ("en/contact.html", "en/contact.html", "Contact — Kabin", "Email and address details for the Kabin team.", ""),
+    ("en/application-received.html", "en/application-received.html", "Request received — Kabin",
+     "Your pilot request has been recorded.", ""),
+    ("en/application-error.html", "en/application-error.html", "Request not sent — Kabin",
+     "The pilot request could not be sent.", ""),
 ]
 # Arama motoru dizinine ve sitemap/llms.txt'ye girmeyen sayfalar.
-DIZINSIZ = {"404.html", "basvuru-alindi.html", "basvuru-hata.html"}
+DIZINSIZ = {"404.html", "basvuru-alindi.html", "basvuru-hata.html",
+            "en/application-received.html", "en/application-error.html"}
+# Türkçe sayfa → İngilizce eşi. Eşi olmayan sayfanın dil değiştiricisi diğer dilin ana sayfasına gider.
+ESLER_TR_EN = {
+    "index.html": "en/index.html",
+    "markalar.html": "en/brands.html",
+    "hakkinda.html": "en/about.html",
+    "iletisim.html": "en/contact.html",
+    "basvuru-alindi.html": "en/application-received.html",
+    "basvuru-hata.html": "en/application-error.html",
+}
+ESLER = {**ESLER_TR_EN, **{en: tr for tr, en in ESLER_TR_EN.items()}}
+# Künyedeki unvanın İngilizcesi: yalnız bilinen kalıpta çevrilir; künye değişirse unvan olduğu gibi kullanılır.
+UNVAN_EK_TR = " (Kabin kurucu ortakları; henüz tüzel kişilik kurulmamıştır)"
+UNVAN_EK_EN = " (the Kabin co-founders; no legal entity has been established yet)"
+
+
+def sayfa_dili(cikti: str) -> str:
+    return "en" if cikti.startswith("en/") else "tr"
+
+
+def dil_adresleri(cikti: str) -> dict[str, str]:
+    """Dil değiştirici: her dil için eş sayfa; eşi yoksa o dilin ana sayfası (404'te kendi dili de ana sayfa)."""
+    dil = sayfa_dili(cikti)
+    ana = {"tr": "index.html", "en": "en/index.html"}
+    kendi = ana[dil] if cikti == "404.html" else cikti
+    diger = "tr" if dil == "en" else "en"
+    return {dil: ajan.sayfa_url("", kendi), diger: ajan.sayfa_url("", ESLER.get(cikti, ana[diger]))}
+
+
+def unvan_en(alan: dict[str, str]) -> str:
+    deger = alan["deger"].strip()
+    if deger.endswith(UNVAN_EK_TR):
+        return escape(deger[: -len(UNVAN_EK_TR)].replace(" ve ", " and ") + UNVAN_EK_EN)
+    return html_deger(alan)
 
 
 def kisa_ozet(path: Path) -> str:
@@ -90,16 +139,19 @@ def mailto(alan: dict[str, str]) -> str:
 
 
 def sayfa_uret(parca: str, meta: dict[str, object], alanlar: dict[str, dict[str, str]],
-               form_acik: bool, kullanilan: set[str]) -> str:
+               form_acik: bool, kullanilan: set[str], dil: str = "tr") -> str:
     def degistir(m: re.Match[str]) -> str:
         ad, alt = m.group(1), m.group(2)
         if ad == "form" and alt == "pilot":
-            return sablon.form(alt, form_acik, mailto(alanlar["eposta_iletisim"]))
+            return sablon.form(alt, form_acik, mailto(alanlar["eposta_iletisim"]), dil)
         beta_acik = meta.get("beta_listesi") is True
         if ad == "form" and alt == "beta":
-            return sablon.beta_form(beta_acik)
+            return sablon.beta_form(beta_acik, dil)
         if ad == "beta" and alt in ("dugme", "cizgi"):
-            return sablon.beta_dugme(beta_acik, "button" if alt == "dugme" else "button outline")
+            return sablon.beta_dugme(beta_acik, "button" if alt == "dugme" else "button outline", dil)
+        if ad == "unvan" and dil == "en":
+            kullanilan.add(ad)
+            return unvan_en(alanlar[ad])
         if ad == "surum":
             return escape(str(meta["surum"]))
         if ad == "guncelleme":
@@ -126,6 +178,8 @@ def css_uret() -> None:
 def main() -> int:
     kontrol = "--kontrol" in sys.argv[1:]
     meta, alanlar = kunye_yukle()
+    if not set(ESLER) <= {c for c, *_ in SAYFALAR}:
+        raise SystemExit("ESLER: SAYFALAR listesinde olmayan bir sayfayı eşliyor")
     css_uret()
     if not (KOK / "app.js").exists():
         raise SystemExit("app.js yok: önce `npm run build:ts` çalıştırın")
@@ -141,31 +195,37 @@ def main() -> int:
     yapisal = meta["yapisal"]
     if not isinstance(yapisal, dict):
         raise SystemExit("kunye.json: yapisal nesnesi eksik")
-    alt_bilgi_alan = {k: html_deger(alanlar[k]) for k in ("kisa_ad", "unvan")}
-    alt_bilgi_alan["eposta_link"] = mailto(alanlar["eposta_iletisim"])
+    alt_bilgi_tr = {k: html_deger(alanlar[k]) for k in ("kisa_ad", "unvan")}
+    alt_bilgi_tr["eposta_link"] = mailto(alanlar["eposta_iletisim"])
+    alt_bilgi = {"tr": alt_bilgi_tr, "en": {**alt_bilgi_tr, "unvan": unvan_en(alanlar["unvan"])}}
     kullanilan: set[str] = set()
     dizinli: list[tuple[str, str, str]] = []
+    # hreflang yalnız iki eşi de dizine giren sayfalar için (noindex sayfa alternatif olarak gösterilmez).
+    dizinli_esler = {a: b for a, b in ESLER.items() if a not in DIZINSIZ and b not in DIZINSIZ}
     for cikti, parca_adi, baslik, aciklama, etkin in SAYFALAR:
         parca = (KAYNAK / "sayfalar" / parca_adi).read_text(encoding="utf-8")
-        govde = sayfa_uret(parca, meta, alanlar, form_acik, kullanilan)
+        dil = sayfa_dili(cikti)
+        govde = sayfa_uret(parca, meta, alanlar, form_acik, kullanilan, dil)
         acik = cikti not in DIZINSIZ
         html = (
             "<!-- Bu dosya _kaynak/build.py ile üretilir; doğrudan düzenlemeyin. -->\n"
             + sablon.head(
-                baslik, aciklama, surum,
+                baslik, aciklama, surum, dil=dil,
                 canonical=ajan.sayfa_url(kok, cikti) if acik else None,
                 md_href="/" + ajan.md_yolu(cikti) if acik else None,
-                jsonld=ajan.jsonld(kok, cikti, baslik, aciklama, govde, duz, same_as, yapisal) if acik else None,
+                jsonld=ajan.jsonld(kok, cikti, baslik, aciklama, govde, duz, same_as, yapisal, dil) if acik else None,
+                alternates=ajan.hreflang_ciftleri(kok, cikti, dizinli_esler) if acik else None,
             )
-            + sablon.header(etkin)
+            + sablon.header(etkin, dil, dil_adresleri(cikti))
             + f'<main id="icerik">{govde}</main>'
-            + sablon.footer(alt_bilgi_alan)
+            + sablon.footer(alt_bilgi[dil], dil)
         )
         ajan.yaz(KOK / cikti, html + "\n")
         if acik:
-            ajan.yaz(KOK / ajan.md_yolu(cikti), ajan.md_sayfa(kok, cikti, baslik, aciklama, govde))
+            ajan.yaz(KOK / ajan.md_yolu(cikti), ajan.md_sayfa(kok, cikti, baslik, aciklama, govde, dil))
             dizinli.append((cikti, baslik, aciklama))
-    ajan.yaz(KOK / "sitemap.xml", ajan.sitemap(kok, [c for c, _, _ in dizinli], str(meta["guncelleme_iso"])))
+    ajan.yaz(KOK / "sitemap.xml", ajan.sitemap(kok, [c for c, _, _ in dizinli], str(meta["guncelleme_iso"]),
+                                               dizinli_esler))
     ajan.yaz(KOK / "llms.txt", ajan.llms(kok, dizinli, duz))
     ajan.yaz(KOK / "robots.txt", ajan.robots(kok))
     # Yayın kapısı: PHP, künyede eksik alan varken ya da hukuk onayı yokken başvuru kabul etmez.

@@ -59,7 +59,13 @@ function kabin_yanit(int $status, string $kod, bool $json): never
         echo json_encode(['ok' => $status === 200, 'kod' => $kod]);
         exit;
     }
-    header('Location: ' . ($status === 200 ? '/basvuru-alindi.html' : '/basvuru-hata.html'), true, 303);
+    // Sonuç sayfası formun dilinde: yalnız sabit 'en' değeri İngilizce sayfaya gider (açık yönlendirme yok).
+    // Gövde okunmadan önce verilen yanıtlarda $_POST boştur → Türkçe sayfa (önceki davranış).
+    $en = ($_POST['dil'] ?? null) === 'en';
+    $sayfa = $status === 200
+        ? ($en ? '/en/application-received.html' : '/basvuru-alindi.html')
+        : ($en ? '/en/application-error.html' : '/basvuru-hata.html');
+    header('Location: ' . $sayfa, true, 303);
     exit;
 }
 

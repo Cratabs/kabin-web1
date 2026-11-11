@@ -4,7 +4,71 @@
  * Çerez, yerel depolama ya da izleme yok. Ağ isteği yalnız kullanıcı formu gönderdiğinde, aynı kökene
  * (/api/basvuru.php) yapılır. Beta penceresi reklam etiketlerini (utm_*) yalnız sayfa adresinden okur. JS kapalıysa form normal HTML gönderimiyle aynı ucu kullanır.
  * Sunucudan gelen metin DOM'a yalnız textContent ile yazılır.
+ * Kullanıcıya görünen metinler sayfa diline (<html lang>) göre TEXT sözlüğünden gelir: tr (varsayılan) ya da en.
  */
+
+interface FitExample {
+  title: string;
+  description: string;
+  chest: string;
+  waist: string;
+}
+
+interface SiteText {
+  menuOpen: string;
+  menuClose: string;
+  examples: Record<string, FitExample>;
+  /** Sunucunun bilinen hata kodları → kullanıcıya gösterilecek mesaj. */
+  errors: Record<string, string>;
+  generic: string;
+  sending: string;
+  pilotDone: readonly [string, string];
+  betaDone: readonly [string, string];
+}
+
+const TEXT: { tr: SiteText; en: SiteText } = {
+  tr: {
+    menuOpen: 'Menüyü aç',
+    menuClose: 'Menüyü kapat',
+    examples: {
+      S: { title: 'S · Daha yakın bir kalıp', description: 'Örnek profilde hareket payı sınırlı; katmanlı kullanım için dar olabilir.', chest: 'Yakın / sınırlı pay', waist: 'Daha yakın' },
+      M: { title: 'M · Dengeli bir seçenek', description: 'Örnek ölçü profilinde günlük kullanım için rahat pay.', chest: 'Rahat', waist: 'Dengeli' },
+      L: { title: 'L · Daha bol bir görünüm', description: 'Örnek profilde daha fazla bolluk; bol kesim tercihi için düşünülebilir.', chest: 'Bol', waist: 'Bol' },
+    },
+    errors: {
+      GECERSIZ: 'Lütfen zorunlu alanları kontrol et; e-posta adresi geçerli olmalı.',
+      SINIR: 'Kısa sürede çok fazla deneme yapıldı. Lütfen bir saat sonra tekrar dene.',
+      KAPALI: 'Talepler şu an bu formdan alınamıyor. Lütfen bize e-postayla yaz.',
+      KAYNAK: 'Başvuru bu sayfadan gönderilemedi. Sayfayı yenileyip tekrar dene.',
+      BUYUK: 'Gönderilen bilgi çok uzun.',
+    },
+    generic: 'Talep gönderilemedi. Bağlantını kontrol edip tekrar dene.',
+    sending: 'Gönderiliyor…',
+    pilotDone: ['Talebiniz alındı.', 'Talebinizi kaydettik; en kısa sürede e-postayla dönüş yapacağız.'],
+    betaDone: ['Listedesin.', 'Kapalı beta açıldığında e-posta adresine davet göndereceğiz.'],
+  },
+  en: {
+    menuOpen: 'Open menu',
+    menuClose: 'Close menu',
+    examples: {
+      S: { title: 'S · A closer fit', description: 'Limited room to move in the sample profile; may feel tight for layering.', chest: 'Close / limited ease', waist: 'Closer' },
+      M: { title: 'M · A balanced option', description: 'Comfortable ease for everyday wear in the sample measurement profile.', chest: 'Comfortable', waist: 'Balanced' },
+      L: { title: 'L · A looser look', description: 'More room in the sample profile; worth considering if you prefer a loose cut.', chest: 'Loose', waist: 'Loose' },
+    },
+    errors: {
+      GECERSIZ: 'Please check the required fields; the email address must be valid.',
+      SINIR: 'Too many attempts in a short time. Please try again in an hour.',
+      KAPALI: 'Requests can’t be received through this form right now. Please email us instead.',
+      KAYNAK: 'The request couldn’t be sent from this page. Please refresh the page and try again.',
+      BUYUK: 'The information you sent is too long.',
+    },
+    generic: 'The request couldn’t be sent. Please check your connection and try again.',
+    sending: 'Sending…',
+    pilotDone: ['Your request has been received.', 'We’ve recorded your request and will get back to you by email as soon as possible.'],
+    betaDone: ['You’re on the list.', 'We’ll send an invitation to your email address when the closed beta opens.'],
+  },
+};
+const T: SiteText = document.documentElement.lang === 'en' ? TEXT.en : TEXT.tr;
 
 const menu = document.querySelector<HTMLButtonElement>('.menu-toggle');
 const nav = document.querySelector<HTMLElement>('#nav-links');
@@ -12,14 +76,14 @@ const nav = document.querySelector<HTMLElement>('#nav-links');
 function closeMenu(): void {
   nav?.classList.remove('open');
   menu?.setAttribute('aria-expanded', 'false');
-  menu?.setAttribute('aria-label', 'Menüyü aç');
+  menu?.setAttribute('aria-label', T.menuOpen);
 }
 
 menu?.addEventListener('click', () => {
   const isOpen = menu.getAttribute('aria-expanded') !== 'true';
   nav?.classList.toggle('open', isOpen);
   menu.setAttribute('aria-expanded', String(isOpen));
-  menu.setAttribute('aria-label', isOpen ? 'Menüyü kapat' : 'Menüyü aç');
+  menu.setAttribute('aria-label', isOpen ? T.menuClose : T.menuOpen);
 });
 nav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
 document.addEventListener('keydown', (event) => {
@@ -29,23 +93,10 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
-interface FitExample {
-  title: string;
-  description: string;
-  chest: string;
-  waist: string;
-}
-
-const examples: Record<string, FitExample> = {
-  S: { title: 'S · Daha yakın bir kalıp', description: 'Örnek profilde hareket payı sınırlı; katmanlı kullanım için dar olabilir.', chest: 'Yakın / sınırlı pay', waist: 'Daha yakın' },
-  M: { title: 'M · Dengeli bir seçenek', description: 'Örnek ölçü profilinde günlük kullanım için rahat pay.', chest: 'Rahat', waist: 'Dengeli' },
-  L: { title: 'L · Daha bol bir görünüm', description: 'Örnek profilde daha fazla bolluk; bol kesim tercihi için düşünülebilir.', chest: 'Bol', waist: 'Bol' },
-};
-
 const sizes = document.querySelectorAll<HTMLButtonElement>('[data-size]');
 sizes.forEach((button) =>
   button.addEventListener('click', () => {
-    const example = examples[button.dataset['size'] ?? ''];
+    const example = T.examples[button.dataset['size'] ?? ''];
     if (example === undefined) return;
     sizes.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
     const values: Record<string, string> = {
@@ -61,27 +112,14 @@ sizes.forEach((button) =>
   }),
 );
 
-/** Sunucunun bilinen hata kodları → kullanıcıya gösterilecek Türkçe mesaj. */
-const ERRORS: Record<string, string> = {
-  GECERSIZ: 'Lütfen zorunlu alanları kontrol et; e-posta adresi geçerli olmalı.',
-  SINIR: 'Kısa sürede çok fazla deneme yapıldı. Lütfen bir saat sonra tekrar dene.',
-  KAPALI: 'Talepler şu an bu formdan alınamıyor. Lütfen bize e-postayla yaz.',
-  KAYNAK: 'Başvuru bu sayfadan gönderilemedi. Sayfayı yenileyip tekrar dene.',
-  BUYUK: 'Gönderilen bilgi çok uzun.',
-};
-const GENERIC = 'Talep gönderilemedi. Bağlantını kontrol edip tekrar dene.';
-
 function errorCode(body: unknown): string | null {
   if (typeof body !== 'object' || body === null || !('kod' in body)) return null;
   const kod: unknown = body.kod;
   return typeof kod === 'string' ? kod : null;
 }
 
-const PILOT_DONE: readonly [string, string] = ['Talebiniz alındı.', 'Talebinizi kaydettik; en kısa sürede e-postayla dönüş yapacağız.'];
-const BETA_DONE: readonly [string, string] = ['Listedesin.', 'Kapalı beta açıldığında e-posta adresine davet göndereceğiz.'];
-
 function showDone(form: HTMLFormElement): void {
-  const [baslik, metin] = form.dataset['basvuru'] === 'beta' ? BETA_DONE : PILOT_DONE;
+  const [baslik, metin] = form.dataset['basvuru'] === 'beta' ? T.betaDone : T.pilotDone;
   const done = document.createElement('div');
   done.className = 'form-done';
   done.setAttribute('role', 'status');
@@ -147,7 +185,7 @@ document.querySelectorAll<HTMLFormElement>('form[data-basvuru]').forEach((form) 
       if (typeof value === 'string') data.append(key, value);
     }
     if (body) body.disabled = true;
-    setStatus('Gönderiliyor…', false);
+    setStatus(T.sending, false);
     fetch(form.action, {
       method: 'POST',
       body: data,
@@ -168,11 +206,11 @@ document.querySelectorAll<HTMLFormElement>('form[data-basvuru]').forEach((form) 
           return;
         }
         const kod = errorCode(parsed);
-        setStatus((kod !== null ? ERRORS[kod] : undefined) ?? GENERIC, true);
+        setStatus((kod !== null ? T.errors[kod] : undefined) ?? T.generic, true);
         if (body) body.disabled = false;
       })
       .catch(() => {
-        setStatus(GENERIC, true);
+        setStatus(T.generic, true);
         if (body) body.disabled = false;
       });
   });

@@ -10,14 +10,27 @@ const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const OUT = join(ROOT, '_test', 'artifacts');
 const { chromium } = await import(process.env.KABIN_PLAYWRIGHT ?? new URL('../_kaynak/node_modules/playwright/index.mjs', import.meta.url).href);
 const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.svg': 'image/svg+xml', '.ttf': 'font/ttf', '.txt': 'text/plain; charset=utf-8', '.md': 'text/markdown; charset=utf-8', '.xml': 'application/xml' };
-const PAGES = ['index.html', 'markalar.html', 'hakkinda.html', 'iletisim.html', 'basvuru-alindi.html', 'basvuru-hata.html', 'yasal/', 'yasal/kvkk-aydinlatma.html', 'yasal/gizlilik.html', 'yasal/cerez.html', 'yasal/kullanim-kosullari.html', 'yasal/kullanici-sozlesmesi.html', 'yasal/topluluk-kurallari.html'];
+const PAGES = ['index.html', 'markalar.html', 'hakkinda.html', 'iletisim.html', 'basvuru-alindi.html', 'basvuru-hata.html', 'yasal/', 'yasal/kvkk-aydinlatma.html', 'yasal/gizlilik.html', 'yasal/cerez.html', 'yasal/kullanim-kosullari.html', 'yasal/kullanici-sozlesmesi.html', 'yasal/topluluk-kurallari.html',
+  'en/', 'en/brands.html', 'en/about.html', 'en/contact.html', 'en/application-received.html', 'en/application-error.html'];
 // Dizine girmeyen sayfalar: canonical/JSON-LD/.md yok, noindex var.
-const DIZINSIZ = new Set(['basvuru-alindi.html', 'basvuru-hata.html']);
+const DIZINSIZ = new Set(['basvuru-alindi.html', 'basvuru-hata.html', 'en/application-received.html', 'en/application-error.html']);
+// TR ↔ EN eş sayfalar. Eşi olmayan sayfanın (yasal, 404) dil değiştiricisi diğer dilin ana sayfasına gider.
+const ESLER = { 'index.html': 'en/', 'markalar.html': 'en/brands.html', 'hakkinda.html': 'en/about.html', 'iletisim.html': 'en/contact.html', 'basvuru-alindi.html': 'en/application-received.html', 'basvuru-hata.html': 'en/application-error.html' };
+const ES = new Map([...Object.entries(ESLER), ...Object.entries(ESLER).map(([tr, en]) => [en, tr])]);
+const SITE = 'https://kabincommunity.com';
+const dilOf = (route) => (route.startsWith('en/') ? 'en' : 'tr');
+const yolOf = (route) => '/' + (route === 'index.html' ? '' : route);
+const dilAdresleri = (route) => {
+  const dil = dilOf(route);
+  const diger = dil === 'tr' ? 'en' : 'tr';
+  return { [dil]: yolOf(route), [diger]: yolOf(ES.get(route) ?? (diger === 'en' ? 'en/' : 'index.html')) };
+};
+const hreflangler = new Map();
 // Sitede olmaması gereken kavramlar (kullanıcı kararı: uygulamada çalışmayan özellik yok). 2026-11-09: beta
 // bekleme listesi eklendi; "beta" yalnız ana sayfada (pencere), KVKK aydınlatma ve gizlilik metninde (yurt dışı aktarım) geçebilir.
-const YASAK = /\bbeta\b|tarayıcı eklenti|chrome uzant|davet kodu/i;
-const BETA_IZINLI = new Set(['index.html', 'yasal/kvkk-aydinlatma.html', 'yasal/gizlilik.html']);
-const yasakFor = (route) => (BETA_IZINLI.has(route) ? /tarayıcı eklenti|chrome uzant|davet kodu/i : YASAK);
+const YASAK = /\bbeta\b|tarayıcı eklenti|chrome uzant|davet kodu|browser extension|chrome extension|invite code/i;
+const BETA_IZINLI = new Set(['index.html', 'en/', 'yasal/kvkk-aydinlatma.html', 'yasal/gizlilik.html']);
+const yasakFor = (route) => (BETA_IZINLI.has(route) ? /tarayıcı eklenti|chrome uzant|davet kodu|browser extension|chrome extension|invite code/i : YASAK);
 
 // Basit statik sunucu: .htaccess'in CSP başlığını da uygular ki CSP ihlalleri konsolda yakalansın.
 const htaccess = await readFile(join(ROOT, '.htaccess'), 'utf8');
@@ -58,6 +71,17 @@ try {
       assert.equal(res?.status(), 200, route);
       await page.evaluate(() => document.fonts.ready);
       assert.equal(await page.locator('h1').count(), 1, `tek h1: ${route}`);
+      // Dil: <html lang>, dil değiştirici (eş sayfa ya da diğer dilin ana sayfası), etkin dil aria-current.
+      const dil = dilOf(route);
+      assert.equal(await page.evaluate(() => document.documentElement.lang), dil, `lang: ${route}`);
+      const sw = await page.locator('header .lang-switch a').evaluateAll((as) => as.map((a) => {
+        const r = a.getBoundingClientRect();
+        return { href: a.getAttribute('href'), lang: a.lang, hreflang: a.hreflang, current: a.getAttribute('aria-current'), text: a.textContent, sag: r.right, sol: r.left, gorunur: r.width > 0 && r.height > 0 };
+      }));
+      const beklenen = dilAdresleri(route);
+      assert.deepEqual(sw.map((a) => [a.text, a.lang, a.hreflang, a.href]), [['TR', 'tr', 'tr', beklenen.tr], ['EN', 'en', 'en', beklenen.en]], `dil değiştirici: ${route}`);
+      assert.deepEqual(sw.map((a) => a.current), [dil === 'tr' ? 'true' : null, dil === 'en' ? 'true' : null], `etkin dil aria-current: ${route}`);
+      assert.ok(sw.every((a) => a.gorunur && a.sol >= 0 && a.sag <= width), `dil değiştirici görünür ve ekrana sığar: ${route} @${width}`);
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, `taşma yok: ${route} @${width}`);
       assert.equal(await page.locator('img').evaluateAll((imgs) => imgs.every((i) => i.complete && i.naturalWidth > 0)), true, `görseller: ${route}`);
       const broken = await page.locator('a[href^="/"]').evaluateAll((as) => as.map((a) => a.getAttribute('href')));
@@ -71,24 +95,45 @@ try {
         const dizinli = !DIZINSIZ.has(route);
         assert.equal(await page.locator('meta[name=robots][content*=noindex]').count(), dizinli ? 0 : 1, `noindex: ${route}`);
         assert.equal(await page.locator('link[rel=canonical]').count(), dizinli ? 1 : 0, `canonical: ${route}`);
+        const alt = await page.locator('link[rel=alternate][hreflang]').evaluateAll((ls) => ls.map((l) => [l.hreflang, l.getAttribute('href')]));
+        if (dizinli) {
+          const canonical = await page.locator('link[rel=canonical]').getAttribute('href');
+          assert.equal(canonical, SITE + yolOf(route), `canonical adresi: ${route}`);
+          assert.equal(await page.locator('meta[property="og:locale"]').getAttribute('content'), dil === 'en' ? 'en_US' : 'tr_TR', `og:locale: ${route}`);
+          if (ES.has(route)) {
+            const m = Object.fromEntries(alt);
+            assert.deepEqual(Object.keys(m).sort(), ['en', 'tr', 'x-default'], `hreflang kümesi: ${route}`);
+            assert.equal(m[dil], canonical, `hreflang kendini gösterir: ${route}`);
+            assert.equal(m['x-default'], m.tr, `x-default Türkçe: ${route}`);
+            hreflangler.set(route, alt);
+          } else {
+            assert.deepEqual(alt, [], `eşi olmayan sayfada hreflang yok: ${route}`);
+          }
+          checks += 4;
+        } else {
+          assert.deepEqual(alt, [], `noindex sayfada hreflang yok: ${route}`);
+        }
         if (dizinli) {
           const ld = JSON.parse(await page.locator('script[type="application/ld+json"]').textContent() ?? '');
           const types = ld['@graph'].map((n) => n['@type']);
           assert.ok(types.includes('Organization') && types.includes('WebSite'), `JSON-LD: ${route}`);
-          if (route === 'index.html') assert.ok(types.includes('FAQPage'), 'JSON-LD FAQPage');
+          if (route === 'index.html' || route === 'en/') assert.ok(types.includes('FAQPage'), `JSON-LD FAQPage: ${route}`);
+          const webPage = ld['@graph'].find((n) => n['@id']?.endsWith('#sayfa'));
+          assert.equal(webPage?.inLanguage, dil === 'en' ? 'en' : 'tr-TR', `JSON-LD inLanguage: ${route}`);
           const md = await page.locator('link[rel=alternate][type="text/markdown"]').getAttribute('href');
           const mr = await page.request.get(`${base}${md}`);
           assert.equal(mr.status(), 200, `md: ${md}`);
           const mt = await mr.text();
           assert.match(mt, /^---\ntitle: /, `md ön bilgi: ${md}`);
+          assert.match(mt, new RegExp(`\\nlang: ${dil}\\n`), `md dili: ${md}`);
           assert.match(mt, /\n# /, `md başlık: ${md}`);
           assert.doesNotMatch(mt, yasakFor(route), `md yasak kavram yok: ${md}`);
           assert.doesNotMatch(mt, /<[a-z][^>]*>/i, `md içinde HTML etiketi yok: ${md}`);
-          checks += 6;
+          checks += 8;
         }
         checks += 3;
       }
-      checks += 5;
+      checks += 9;
       if (width === 390 || width === 1440) await page.screenshot({ path: join(OUT, `${route.replace(/\//g, '_') || 'yasal'}-${width}.png`), fullPage: true });
     }
     // 404 (beklenen tek kaynak hatası, sonra ayıklanır)
@@ -96,6 +141,7 @@ try {
     const nf = await page.goto(`${base}/yok-boyle-bir-sayfa`);
     assert.equal(nf?.status(), 404);
     assert.equal(await page.locator('h1').innerText(), 'Bu sayfa bulunamadı.');
+    assert.deepEqual(await page.locator('.lang-switch a').evaluateAll((as) => as.map((a) => a.getAttribute('href'))), ['/', '/en/'], '404 dil değiştirici ana sayfalara gider');
     errors.splice(0, errors.length, ...errors.filter((e) => !/status of 404/.test(e)));
     // Ana sayfa etkileşimleri
     await page.goto(`${base}/index.html`);
@@ -185,6 +231,75 @@ try {
     await page.locator('.form-done').waitFor();
     assert.match(await page.locator('.form-done').innerText(), /Talebiniz alındı/);
     await page.unroute('**/api/basvuru.php');
+    // İngilizce sayfalar: demo, beta penceresi ve pilot formu metinleri sayfa dilinde; yasal kapı burada da kapalı.
+    await page.goto(`${base}/en/`);
+    await page.getByRole('button', { name: 'L', exact: true }).click();
+    assert.match(await page.locator('#fit-chest').innerText(), /^Loose$/, 'EN demo metni');
+    assert.equal(await page.locator('form').count(), 1, 'EN ana sayfada tek form (beta)');
+    assert.match(await page.locator('#contact a[href^="mailto:"]').getAttribute('href') ?? '', /^mailto:[^@]+@kabincommunity\.com$/);
+    assert.equal(await page.locator('footer a[href^="/yasal/"]:not([hreflang="tr"])').count(), 0, 'EN alt bilgide yasal bağlantılar hreflang=tr');
+    assert.match(await page.locator('footer').innerText(), /legal texts are available in Turkish only/i, 'EN yasal metin notu');
+    if (width <= 700) {
+      const toggle = page.locator('.menu-toggle');
+      assert.equal(await toggle.getAttribute('aria-label'), 'Open menu');
+      await toggle.click();
+      assert.equal(await toggle.getAttribute('aria-label'), 'Close menu');
+      await page.keyboard.press('Escape');
+      // Klavye: dil değiştirici menü kapalıyken de Tab ile erişilebilir.
+      // Yeni yükleme: Tab sırası belgenin başından başlar (Esc sonrası odak menü düğmesindedir).
+      await page.goto(`${base}/en/`);
+      let ulasti = false;
+      for (let i = 0; i < 6 && !ulasti; i += 1) {
+        await page.keyboard.press('Tab');
+        ulasti = await page.evaluate(() => Boolean(document.activeElement?.closest('.lang-switch')));
+      }
+      assert.ok(ulasti, `dil değiştirici klavyeyle erişilebilir @${width}`);
+    }
+    let enPosted = '';
+    await page.route('**/api/basvuru.php', async (r) => {
+      enPosted = r.request().postData() ?? '';
+      await r.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true,"kod":"TAMAM"}' });
+    });
+    await page.locator('.hero a[data-beta-ac]').click();
+    assert.equal(await beta.isVisible(), true, 'EN düğme pencereyi açar');
+    await beta.locator('[name=ad]').fill('Test');
+    await beta.locator('[name=eposta]').fill('test@example.com');
+    await beta.locator('[name=platform]').selectOption('ios');
+    await beta.locator('[name=yas18]').check();
+    await beta.locator('[name=aydinlatma]').check();
+    await beta.getByRole('button', { name: /Join the list/ }).click();
+    await beta.locator('.form-done').waitFor();
+    assert.match(await beta.locator('.form-done').innerText(), /You’re on the list/);
+    const ef = new URLSearchParams(enPosted);
+    assert.equal(ef.get('tur'), 'beta');
+    assert.equal(ef.get('dil'), 'en', 'EN form dil alanı');
+    await page.unroute('**/api/basvuru.php');
+    await page.goto(`${base}/en/brands.html`);
+    const enForm = page.locator('form[data-basvuru="pilot"]');
+    assert.equal(await enForm.isVisible(), false, 'EN: yasal kapı kapalıyken form görünmez');
+    assert.notEqual(await enForm.locator('fieldset.form-body').getAttribute('disabled'), null, 'EN: fieldset kapalı');
+    assert.equal(await enForm.getAttribute('toolname'), null, 'EN: kapalı form WebMCP aracı değil');
+    assert.equal(await page.locator('.pilot-mail a[href^="mailto:"]').isVisible(), true, 'EN: e-posta yolu görünür');
+    let enReply = { status: 429, body: { ok: false, kod: 'SINIR' } };
+    await page.route('**/api/basvuru.php', async (r) => {
+      await r.fulfill({ status: enReply.status, contentType: 'application/json', body: JSON.stringify(enReply.body) });
+    });
+    await enForm.evaluate((f) => { f.hidden = false; f.querySelector('fieldset')?.removeAttribute('disabled'); });
+    await enForm.locator('[name=ad]').fill('Test Person');
+    await enForm.locator('[name=sirket]').fill('Sample Brand');
+    await enForm.locator('[name=eposta]').fill('test@example.com');
+    await enForm.locator('[name=kategori]').selectOption('kadin');
+    await enForm.locator('[name=aydinlatma]').check();
+    await enForm.getByRole('button', { name: /Send pilot request/ }).click();
+    await page.waitForFunction(() => document.querySelector('.form-status')?.classList.contains('err'));
+    assert.match(await enForm.locator('.form-status').innerText(), /try again in an hour/);
+    errors.splice(0, errors.length, ...errors.filter((e) => !/status of 429/.test(e)));
+    enReply = { status: 200, body: { ok: true, kod: 'TAMAM' } };
+    await enForm.getByRole('button', { name: /Send pilot request/ }).click();
+    await page.locator('.form-done').waitFor();
+    assert.match(await page.locator('.form-done').innerText(), /Your request has been received/);
+    await page.unroute('**/api/basvuru.php');
+    checks += 18 + (width <= 700 ? 3 : 0);
     assert.deepEqual(await context.cookies(), [], 'çerez yok');
     assert.equal(await page.evaluate(() => localStorage.length + sessionStorage.length), 0, 'depolama yok');
     assert.deepEqual(errors, [], `konsol/CSP hatası yok @${width}`);
@@ -207,6 +322,22 @@ try {
       checks += 3;
     }
     const sitemap = await (await page.request.get(`${base}/sitemap.xml`)).text();
+    // Sitemap: İngilizce sayfalar ve eşler xhtml:link ile; llms.txt İngilizce .md'leri listeler.
+    for (const [tr, en] of Object.entries(ESLER).filter(([t]) => !DIZINSIZ.has(t))) {
+      const blok = new RegExp(`<url><loc>${SITE}${yolOf(en)}</loc>.*?</url>`).exec(sitemap)?.[0] ?? '';
+      assert.ok(blok.includes(`hreflang="tr" href="${SITE}${yolOf(tr)}"`) && blok.includes(`hreflang="en" href="${SITE}${yolOf(en)}"`) && blok.includes(`hreflang="x-default" href="${SITE}${yolOf(tr)}"`), `sitemap eşleri: ${en}`);
+      checks += 1;
+    }
+    assert.match(sitemap, /xmlns:xhtml="http:\/\/www\.w3\.org\/1999\/xhtml"/, 'sitemap xhtml ad alanı');
+    for (const route of PAGES.filter((r) => r.startsWith('en/'))) assert.equal(sitemap.includes(`<loc>${SITE}${yolOf(route)}</loc>`), !DIZINSIZ.has(route), `sitemap: ${route}`);
+    const llms = await (await page.request.get(`${base}/llms.txt`)).text();
+    for (const md of ['/en/index.md', '/en/brands.md', '/en/about.md', '/en/contact.md']) assert.ok(llms.includes(`${SITE}${md}`), `llms.txt: ${md}`);
+    checks += 2 + PAGES.filter((r) => r.startsWith('en/')).length + 4;
+    // hreflang karşılıklılığı: eş sayfaların alternatif kümeleri aynıdır.
+    for (const [tr, en] of Object.entries(ESLER).filter(([t]) => !DIZINSIZ.has(t))) {
+      assert.deepEqual(hreflangler.get(en), hreflangler.get(tr), `hreflang karşılıklı: ${tr} ↔ ${en}`);
+      checks += 1;
+    }
     for (const loc of sitemap.matchAll(/<loc>https:\/\/kabincommunity\.com(\/[^<]*)<\/loc>/g)) {
       assert.equal((await page.request.get(`${base}${loc[1]}`)).status(), 200, `sitemap adresi: ${loc[1]}`);
       checks += 1;

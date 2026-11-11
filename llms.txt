@@ -22,3 +22,12 @@
 - [Web Sitesi Kullanım Koşulları — Kabin](https://kabincommunity.com/yasal/kullanim-kosullari.md): Kabin web sitesi kullanım koşulları.
 - [Kullanıcı Sözleşmesi — Kabin](https://kabincommunity.com/yasal/kullanici-sozlesmesi.md): Kabin uygulamasını kullananlar ile aramızdaki sözleşme.
 - [Topluluk Kuralları — Kabin](https://kabincommunity.com/yasal/topluluk-kurallari.md): Kabin topluluğu kuralları ve moderasyon süreci.
+
+## English
+
+English versions of the main pages. Legal texts are available in Turkish only; the Turkish version is the governing one.
+
+- [Kabin — Not the size on the label. The size that fits you.](https://kabincommunity.com/en/index.md): Measurement estimates from two photos, an area-by-area comparison with the item’s size chart, and a size recommendation that explains why.
+- [Kabin for brands — Let’s validate size recommendations together](https://kabincommunity.com/en/brands.md): An explainable size recommendation pilot for fashion brands.
+- [About us — Kabin](https://kabincommunity.com/en/about.md): Who is building Kabin, why and how.
+- [Contact — Kabin](https://kabincommunity.com/en/contact.md): Email and address details for the Kabin team.

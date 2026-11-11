@@ -80,3 +80,10 @@ mark.todo{background:#f3e2b8;color:#4a3a1c;padding:1px 4px;font-size:.92em;borde
 .beta-kapat{border:0;background:none;font-size:26px;line-height:1;padding:6px 10px;min-width:44px;min-height:44px}
 #beta:target:not([open]){display:block;position:static;margin:40px auto;box-shadow:none}
 @media (max-width:600px){.beta-dialog{padding:22px 18px 24px}.beta-dialog h2{font-size:27px}}
+/* Dil değiştirici (TR | EN): menü dışında, her genişlikte görünür. Yalnız mevcut renk değişkenleri. */
+.lang-switch{display:flex;align-items:center;flex-shrink:0;margin-left:auto;font-size:11px;letter-spacing:1px}
+.lang-switch a{display:inline-flex;align-items:center;justify-content:center;min-width:34px;min-height:44px;padding:0 7px;color:var(--muted)}
+.lang-switch a+a{border-left:1px solid var(--line)}
+.lang-switch a[aria-current]{color:var(--ink);font-weight:600}
+.lang-switch a:hover{text-decoration:underline;text-underline-offset:5px}
+@media(max-width:700px){.nav{gap:10px}.menu-toggle{padding-inline:6px}}

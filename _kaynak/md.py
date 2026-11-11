@@ -12,12 +12,14 @@ from html.parser import HTMLParser
 ATLA = {"svg", "script", "style", "button", "form", "noscript", "select", "textarea", "img"}
 BOS_ETIKET = {"br", "img", "input", "meta", "link", "hr", "source", "wbr"}
 BLOK = {"p", "section", "article", "div", "header", "footer", "aside", "nav", "dl", "details"}
+FORM_NOTU = {"tr": "Web sayfasında bu bölümde bir form yer alır.", "en": "The web page has a form in this section."}
 
 
 class _Cevirici(HTMLParser):
-    def __init__(self, kok_url: str) -> None:
+    def __init__(self, kok_url: str, dil: str = "tr") -> None:
         super().__init__(convert_charrefs=True)
         self.kok = kok_url.rstrip("/")
+        self.form_notu = FORM_NOTU[dil]
         self.out: list[str] = []
         self.atla = 0  # atlanan alt ağacın derinliği
         self.liste: list[str] = []
@@ -37,7 +39,7 @@ class _Cevirici(HTMLParser):
             return
         if tag in ATLA or a.get("aria-hidden") == "true" or a.get("data-md") == "atla":
             if tag == "form":
-                self.out.append("\n\n_(Web sayfasında bu bölümde bir form yer alır.)_\n\n")
+                self.out.append(f"\n\n_({self.form_notu})_\n\n")
             if tag not in BOS_ETIKET:
                 self.atla = 1
             return
@@ -123,8 +125,8 @@ class _Cevirici(HTMLParser):
             self._yaz(re.sub(r"\s+", " ", data))
 
 
-def html_to_md(govde: str, kok_url: str) -> str:
-    c = _Cevirici(kok_url)
+def html_to_md(govde: str, kok_url: str, dil: str = "tr") -> str:
+    c = _Cevirici(kok_url, dil)
     c.feed(govde)
     c.close()
     metin = "".join(c.out)
