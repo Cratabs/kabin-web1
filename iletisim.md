@@ -1,6 +1,6 @@
 ---
-title: "İletişim — Kabin"
-description: "Kabin ekibinin e-posta ve adres bilgileri."
+title: "İletişim · Kabin"
+description: "Soru, öneri, iş birliği ya da basın için e-posta yazın. Adres, KVKK ve güvenlik bildirimi bilgileri."
 url: https://kabincommunity.com/iletisim.html
 lang: tr
 ---
@@ -9,7 +9,7 @@ lang: tr
 
 # İletişim
 
-Soru, öneri, iş birliği ve basın talepleri için bize e-postayla ulaşabilirsiniz.
+Soru, öneri, iş birliği ya da basın için e-posta yazın.
 
 ## İletişim bilgileri
 
@@ -21,7 +21,7 @@ Soru, öneri, iş birliği ve basın talepleri için bize e-postayla ulaşabilir
 
 ## Moda markaları
 
-Pilot iş birliği için [Markalar için](https://kabincommunity.com/markalar.html#pilot) sayfasındaki ayrıntılara bakın ya da doğrudan [berkay@kabincommunity.com](mailto:berkay@kabincommunity.com) adresine yazın.
+Pilot için [Markalar için](https://kabincommunity.com/markalar.html#pilot) sayfasına bakın ya da [berkay@kabincommunity.com](mailto:berkay@kabincommunity.com) adresine yazın.
 
 ## Yasal metinler
 

@@ -1,0 +1,158 @@
+/* Kabin web · Yön D · ana sayfa bölümleri: adımlar, uygulama ekranları, dar·tam·bol, dolap, markalar çağrısı, davet.
+   Her bölümün düzeni farklı (sol sabit telefon · kayan şerit · sahne + kart · ray · mürekkep panel · form): aynı kalıp tekrar etmez. */
+.kucuk-baslik { font: 600 1rem/1.3 var(--font); color: var(--textSecondary); margin-bottom: 0; }
+
+/* ADIMLAR */
+.adim-izgara { display: grid; gap: 2.5rem; }
+.adim-panel { position: relative; background: var(--tone); border-radius: 2.5rem; padding: 2rem 0 0; overflow: hidden; display: grid; justify-items: center; }
+.adim-cakil { position: absolute; border-radius: 46% 54% 58% 42% / 52% 44% 56% 48%; }
+.ac1 { width: 15rem; height: 12.5rem; background: var(--blush); left: -3rem; top: 3.5rem; }
+.ac2 { width: 12rem; height: 13rem; background: var(--mist); right: -2.5rem; bottom: 4rem; }
+.adim-teller { position: relative; display: grid; width: 360px; max-width: 100%; --tel-boy: 640px; }
+.adim-teller > .tel { grid-area: 1 / 1; opacity: 0; transition: opacity 450ms ease, transform 450ms cubic-bezier(0.2, 0.7, 0.2, 1); transform: translateY(18px); border-radius: 40px 40px 0 0; }
+.adim-teller > .tel.on { opacity: 1; transform: none; }
+.adim-liste { list-style: none; margin: 0; padding: 0; display: grid; gap: 3rem; }
+.adim { display: grid; gap: 0.875rem; align-content: center; }
+.adim-no { font: 500 1.75rem/1 var(--serif); color: var(--textSecondary); }
+.adim .lead { max-width: 22em; }
+@media (min-width: 900px) {
+  .adim-izgara { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(3rem, 7vw, 7rem); align-items: start; }
+  .adim-sahne { position: sticky; top: max(1.5rem, calc(50vh - 22.5rem * var(--z))); }
+  .adim-yazi { padding-top: 1rem; }
+  .adim-liste { gap: 0; margin-top: -2rem; }
+  /* bekleyen adım: açık ama okunur (başlık ve metin ≥ 4,5:1); etkin adım koyu başlıkla öne çıkar */
+  .adim { min-height: 78vh; opacity: 0.9; transition: opacity 350ms ease; }
+  .adim > h3 { transition: color 350ms ease; }
+  .adim:not(.on) > h3 { color: var(--textSecondary); }
+  .adim.on { opacity: 1; }
+  .adim-teller { --tel-boy: 660px; }
+}
+@media (max-width: 899px) {
+  .adim-sahne { order: 2; }
+  .adim-panel { padding-top: 1.5rem; }
+  .adim-teller { zoom: calc(var(--z) * 0.86); }
+}
+
+/* UYGULAMA: üç telefon, basamaklı */
+.uygulama { padding-bottom: calc(var(--bolum) * 0.6); }
+/* dar ekranda kaydırmalı adımlar (js/site.js .kay ekler; hareket azaltmada ve betiksiz eklenmez, liste düz kalır).
+   Yükseklikler svh: adres çubuğu açılıp kapanınca zıplamaz. Adım başına ~75svh kaydırma. */
+.adim-centik { display: none; }
+@media (max-width: 899px) {
+  .adimlar.kay { padding-block: 0; height: 325vh; height: 325svh; }
+  .adimlar.kay .adim-izgara { position: sticky; top: 0; height: 100vh; height: 100svh; gap: 0.75rem; padding-block: 0.875rem 1rem; align-content: start; grid-template-columns: minmax(0, 1fr); }
+  .adimlar.kay .adim-yazi { display: contents; }
+  .adimlar.kay .kucuk-baslik { order: 1; }
+  .adimlar.kay .adim-sahne { order: 2; height: min(54vh, 100vh - 17.5rem); height: min(54svh, 100svh - 17.5rem); }
+  .adimlar.kay .adim-panel { height: 100%; padding-top: 0; align-items: end; border-radius: 2rem; }
+  .adimlar.kay .adim-centik { order: 3; display: flex; gap: 0.375rem; margin-top: 0.25rem; }
+  .adim-centik i { width: 1.5rem; height: 3px; border-radius: 3px; background: var(--borderStrong); opacity: 0.4; transition: width 300ms ease, opacity 300ms ease, background-color 300ms ease; }
+  .adim-centik i.on { width: 2.5rem; background: var(--text); opacity: 1; }
+  .adimlar.kay .adim-liste { order: 4; gap: 0; }
+  .adimlar.kay .adim { grid-area: 1 / 1; gap: 0.5rem; align-content: start; opacity: 0; transform: translateY(0.75rem); transition: opacity 320ms ease, transform 320ms ease; pointer-events: none; }
+  .adimlar.kay .adim.on { opacity: 1; transform: none; pointer-events: auto; }
+  .adimlar.kay .adim .b2 { font-size: clamp(1.875rem, 9vw, 2.5rem); }
+  .adimlar.kay .adim .lead { font-size: 1.0625rem; }
+  .adimlar.kay .adim-no { font-size: 1.5rem; }
+}
+
+.tel-serit { display: flex; gap: 28px; justify-content: center; align-items: flex-start; padding: 44px 24px 64px; --tel-boy: 720px; }
+.tel-serit .tel:nth-child(2) { margin-top: 72px; }
+.tel-serit .tel:nth-child(3) { margin-top: 28px; }
+@media (max-width: 1180px) {
+  .tel-serit { justify-content: flex-start; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-inline: 20px; }
+  .tel-serit::-webkit-scrollbar { display: none; }
+  .tel-serit .tel { scroll-snap-align: center; width: 330px; }
+  .tel-serit .tel:nth-child(n) { margin-top: 0; }
+}
+
+/* DAR · TAM · BOL */
+.uyum-izgara { display: grid; gap: 2.5rem; align-items: center; }
+.uyum-sahne { background: var(--tone); border-radius: 2.5rem; aspect-ratio: 1 / 1.02; overflow: hidden; }
+.uyum-odak { position: absolute; height: 64%; aspect-ratio: 1; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+.uyum .sahne-yedek { inset: 16%; }
+.uyum-yazi { display: grid; gap: 1.25rem; justify-items: start; }
+.uyum-kart { width: min(380px, 100%); }
+.uyum-kart .kart { gap: var(--s4); }
+.uyum-kart .bedenler { gap: 8px; }
+.uyum-kart .beden { border: 0; cursor: pointer; min-height: 48px; font-size: 16px; }
+.uyum-kart .beden.oner:not(.on) { background: transparent; color: var(--text); box-shadow: inset 0 0 0 1.5px var(--borderStrong); }
+.uyum-kart .bolge { width: 100%; border: 0; background: none; padding: 6px 8px; margin: -6px -8px; border-radius: 18px; text-align: left; cursor: pointer; box-sizing: content-box; }
+.uyum-kart .bolge[aria-pressed='true'] { background: var(--background); }
+.uyum-kart .bolge-iz > span { transition: background-color 200ms ease, box-shadow 200ms ease; }
+.uyum-kart .uyum-soz { min-height: 2.9em; }
+.uyum-kart .oneri-harf { font-size: 64px; }
+.uyum-ipucu { font: 400 13px/1.4 var(--font); color: var(--textSecondary); margin: 0; text-wrap: balance; }
+@media (min-width: 900px) {
+  .uyum-izgara { grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: clamp(3rem, 6vw, 6rem); }
+}
+/* dar ekran, dikey: önce başlık ve tek cümle, sonra sahne, hemen altında kart. Sahne kartla birlikte ekrana sığacak kadar alçalır
+   (bölgeye dokununca mezura görünür kalır); kart ekrandan uzunsa sahne kaydırırken üstte durur. */
+@media (max-width: 899px) and (orientation: portrait), (max-width: 559px) {
+  .uyum-izgara { gap: 1rem; }
+  .uyum-yazi { display: contents; }
+  .uyum-izgara > .uyum-sahne { order: 2; aspect-ratio: auto; height: clamp(12rem, calc(100svh - 30rem), min(calc(100vw - 2 * var(--kenar)), 34rem)); border-radius: 2rem; }
+  .uyum-yazi > h2 { order: 0; }
+  .uyum-yazi > .lead { order: 1; margin-top: -0.25rem; }
+  .uyum-yazi > .uyum-kart { order: 3; justify-self: center; }
+  .uyum-yazi > .ince { order: 4; justify-self: center; }
+}
+/* dar ekran, yatay (telefon yan): iki sütun; sahne solda, ekran boyunda ve kaydırırken yerinde durur */
+@media (max-width: 899px) and (orientation: landscape) and (min-width: 560px) {
+  .uyum-izgara { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.5rem; align-items: start; }
+  .uyum-izgara > .uyum-sahne { position: sticky; top: 0.75rem; aspect-ratio: auto; height: calc(100svh - 1.5rem); border-radius: 2rem; }
+}
+
+/* DOLAP: geniş askı rayı */
+.dolap-bas { display: grid; gap: 2rem; }
+.dolap-yazi { display: grid; gap: 1.25rem; }
+/* görsel bloklar (dünkü üretilmiş görseller): kendi krem zeminleriyle, kart diliyle aynı köşe; üstlerine yazı binmez */
+.gorsel-blok { border-radius: 2.5rem; overflow: hidden; background: #FAF6F1; }
+.gorsel-blok .gorsel { display: block; width: 100%; height: auto; }
+.ray { margin-top: clamp(2rem, 5vw, 4rem); zoom: calc(var(--z) * 2.3); }
+.ray .aski-serit { --o: 132px; }
+.ray .aski-liste { -webkit-mask-image: none; mask-image: none; padding-bottom: 14px; }
+.ray .aski-cubuk { left: 0; right: 0; }
+.ray .aski-cubuk::before, .ray .aski-cubuk::after { display: none; }
+.ray .aski-ad { font: 500 9px/1.3 var(--font); color: var(--textSecondary); }
+@media (min-width: 900px) { .dolap-bas { grid-template-columns: minmax(0, 6fr) minmax(0, 4fr); align-items: center; gap: clamp(3rem, 6vw, 6rem); } }
+@media (max-width: 719px) { .ray { zoom: 1.5; } .ray .aski-ad { font-size: 11px; } }
+
+/* MARKALAR ÇAĞRISI: tek mürekkep yüzey */
+.marka-cagri { padding-block: 0; }
+.murekkep-panel { background: var(--primary); color: var(--onPrimary); border-radius: 2.5rem; padding: clamp(2rem, 6vw, 5rem); display: grid; gap: 2rem; position: relative; overflow: hidden; }
+/* panelde süs lekesi yok: beyaz yazının altına açık renk gelmesin */
+.murekkep-panel .b2 { position: relative; z-index: 1; }
+.murekkep-sag { display: grid; gap: 1.5rem; justify-items: start; position: relative; z-index: 1; }
+@media (min-width: 900px) { .murekkep-panel { grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); align-items: center; gap: clamp(3rem, 6vw, 6rem); } }
+/* paneldeki görsel ufak bir kart: sağda, dikey ortalı; dar ekranda metnin altına iner */
+.murekkep-panel .gorsel-blok { border-radius: 1.75rem; width: min(100%, 21rem); justify-self: end; }
+.murekkep-sag .dugme, .murekkep-sag .yaz-eposta { margin-top: 0.75rem; }
+@media (min-width: 900px) { .murekkep-yazi { grid-template-columns: minmax(0, 1fr) auto; } }
+.yaz-eposta { overflow-wrap: anywhere; }
+@media (max-width: 899px) { .murekkep-panel .gorsel-blok { justify-self: start; width: min(100%, 16rem); } }
+
+/* DAVET */
+.davet-izgara { display: grid; gap: 2.5rem; }
+.davet-yazi { display: grid; gap: 1.25rem; align-content: start; }
+.davet-yazi .davet-form { margin-top: 1rem; }
+/* form dar bir sütun, başlıkla aynı sol hizada; dar ekranda tam genişlik */
+.davet-form { max-width: 27.5rem; display: grid; gap: 1.125rem; background: var(--surface); border-radius: 2rem; padding: clamp(1.5rem, 3vw, 2.5rem); box-shadow: var(--golge); }
+.davet-form .dugme { justify-self: start; }
+@media (min-width: 900px) { .davet-izgara { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); align-items: center; gap: clamp(3rem, 6vw, 6rem); } }
+@media (max-width: 899px) { .davet-form { max-width: none; } }
+.davet-gorsel .gorsel { display: block; width: 100%; height: auto; }
+@media (min-width: 900px) { .davet-izgara { row-gap: 1.25rem; } .davet-yazi { display: contents; } .davet-yazi > * { grid-column: 1; } .davet-gorsel { grid-column: 2; grid-row: 3; align-self: center; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .adim-teller > .tel, .adim, .uyum-kart .bolge-iz > span { transition: none; }
+}
+
+/* betik kapalıyken maket çizilmez; boş panel gösterilmez */
+.betiksiz .adim-sahne { display: none; }
+/* çok geniş ekran (≥ 1800 px): görseller panel ve formla orantılı büyür (yazı tarafı 150 % kök boyla zaten büyüyor) */
+@media (min-width: 1800px) {
+  .murekkep-panel .gorsel-blok { width: min(100%, 26rem); }
+  .dolap-bas { grid-template-columns: minmax(0, 5fr) minmax(0, 4fr); }
+  .davet-izgara { grid-template-columns: minmax(0, 4fr) minmax(0, 6fr); }
+}

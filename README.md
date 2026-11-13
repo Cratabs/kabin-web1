@@ -12,10 +12,11 @@ işlenir. Kaynak, test ve belge dosyaları `.htaccess` ile dışarıya kapatılm
 
 | Yol | Ne | Web'den erişim |
 |---|---|---|
-| `index.html`, `markalar.html`, `hakkinda.html`, `iletisim.html`, `yasal/*.html`, `404.html`, `basvuru-*.html` | Üretilmiş sayfalar (elle düzenlemeyin) | açık |
+| `index.html`, `markalar.html`, `hakkinda.html`, `iletisim.html`, `sorular.html`, `yasal/*.html`, `404.html`, `basvuru-*.html`, `en/*.html` | Üretilmiş sayfalar (elle düzenlemeyin) | açık |
 | `*.md`, `yasal/*.md` (README ve YAYIN-KONTROL hariç) | Sayfaların Markdown sürümleri (üretilir) | açık, `noindex` |
 | `robots.txt`, `sitemap.xml`, `llms.txt` | Tarayıcı ve ajan keşif dosyaları (üretilir) | açık |
-| `styles.css`, `app.js`, `assets/` | Üretilmiş stil, derlenmiş betik, yazı tipleri, görseller | açık |
+| `app.js` | Derlenmiş form betiği (`_kaynak/app.ts`'ten üretilir) | açık |
+| `css/`, `js/`, `fonts/`, `gorsel/`, `model/`, `assets/` | Elle yazılan stil ve betikler (üretilmez; doğrudan düzenlenir), yazı tipleri (woff2), görseller, 3B gömlek modeli (`.gltf` + `.bin` + `.jpg`), logo ve yazı tipi lisansları | açık |
 | `api/basvuru.php` | Pilot talebi ucu (POST, yalnız `tur=pilot`) | açık, `api/` altında tek dosya |
 | `api/_lib/` | PHP kitaplığı + `yasal-durum.php` (üretilir) | kapalı |
 | `_kaynak/` | Sayfa parçaları, şablon (`sablon.py`), ajan çıktıları (`ajan.py`, `md.py`), `kunye.json`, `app.ts`, `config.example.php` | kapalı |
@@ -31,7 +32,7 @@ uygulaması sanıp `app.js`'i (tarayıcı betiği) sunucuda çalıştırmaya kal
 cd _kaynak
 npm install            # typescript + playwright (yalnız geliştirme için; sunucuya gitmez)
 npm run build          # app.ts → ../app.js, sayfalar → depo kökü
-npm run qa             # 13 sayfa × 4 genişlik: çerez/depolama/dış istek/CSP/taşma, JSON-LD, .md, sitemap, WebMCP
+npm run qa             # tüm sayfalar × 5 genişlik: çerez/depolama/dış istek/CSP/taşma, JSON-LD, .md, sitemap, WebMCP
 npm run kontrol        # YAYIN KAPISI: künye eksik ya da hukuk onayı yoksa 1 ile çıkar
 cd .. && bash _test/php-test.sh   # PHP ucu testleri (php 8.1+ ve curl gerekir)
 ```
@@ -50,13 +51,13 @@ Değişiklikten sonra **her zaman** `_kaynak/` içinde `npm run build` çalışt
 
 ## Beta bekleme listesi (2026-11-09)
 
-Ana sayfada “Beta’ya katıl” düğmesi bir pencere açar: ad, e-posta, telefon türü, 18 yaş ve aydınlatma teyidi.
+Ana sayfanın sonundaki “Davet isteyin” bölümünde (`#davet`, eski bağlantılar için `#beta`) form sayfanın içindedir: ad, e-posta, telefon türü, 18 yaş ve aydınlatma teyidi.
 Pilot formunun hukuk kapısından **bağımsızdır** (kullanıcı kararı); aydınlatma metninde ayrı bölümü var (`#beta-listesi`).
 
-- Açmak için iki anahtar: `_kaynak/kunye.json` → `"beta_listesi": true` (düğme ve pencere üretilir) **ve** sunucudaki
+- Açmak için iki anahtar: `_kaynak/kunye.json` → `"beta_listesi": true` (form üretilir) **ve** sunucudaki
   `kabin-private/config.php` → `'beta_accepting' => true`. Reklam döneminde `daily_cap` değerini yükseltin.
 - Reklam bağlantısı: `https://kabincommunity.com/?utm_source=instagram&utm_medium=reklam&utm_campaign=kasim1#beta`
-  (`#beta` pencereyi kendiliğinden açar). Etiketler yalnız `a-z 0-9 . _ -`; çerez/piksel yok.
+  (`#beta` davet formuna iner). Etiketler yalnız `a-z 0-9 . _ -`; çerez/piksel yok.
 - Kayıtlar: `kabin-private/veri/basvurular-beta.jsonl` (aynı e-posta ikinci kez yazılmaz, kayıt başına bildirim
   e-postası gönderilmez). Sayılar: dosyayı indirip `python3 _kaynak/beta_ozet.py basvurular-beta.jsonl`.
 
@@ -148,3 +149,11 @@ Site arama motorlarına ve yapay zekâ ajanlarına açıktır. Hepsi `build.py` 
   e-posta başlıklarına kullanıcı girdisi girmez.
 - Bilinen sınır: Hostinger CDN açıksa `REMOTE_ADDR` CDN düğümü olabilir; o durumda IP başına sınır gevşer,
   günlük genel tavan yine geçerlidir.
+
+## Görünüm (2026-11-14 taşıması)
+
+Stil ve sayfa betikleri artık üretilmez: `css/*.css` ve `js/*.js` elle düzenlenir (kaynağı `App-mvp/docs/tasarim-v3/web-d/`
+taslağıdır; taşımada eklenenler `css/ek.css` ve `js/dil.js`). `build.py` bu dosyaların ve `app.js`'in özetinden tek bir
+sürüm eki (`?v=`) üretir; biri değişince hepsinin adresi yenilenir. CSP gereği sayfada satır içi betik/stil yoktur; 3B model
+bu yüzden sıkıştırılmamış `.gltf` + ayrı `.bin`/`.jpg` dosyalarıdır. İngilizce sayfalarda betikle çizilen telefon ve mağaza
+maketlerinin metni `js/dil.js` sözlüğünden gelir; maket metni değişirse sözlük de güncellenir.

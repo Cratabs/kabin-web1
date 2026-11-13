@@ -1,69 +1,74 @@
 """Şablonun dile bağlı metinleri: tek sözlük, iki dil (tr, en).
 
 sablon.py yalnız bu sözlükten okur; metin eklerken iki dili birlikte güncelleyin.
-Türkçe değerler mevcut sitenin metinleriyle birebir aynıdır (üretilen TR sayfaları değişmesin).
+Türkçe değerler onaylı metin listesinden, İngilizce değerler onaylı İngilizce listeden gelir. Aydınlatma özetleri
+(b_ozet, p_ozet), pilot formunun onay cümlesi ve kapalı form notu hukuk incelemesinden geçmiş metinlerdir: değiştirmeyin.
 İngilizce sayfalardaki yasal bağlantılar Türkçe /yasal/ metinlerine gider (yasal metin çevirisi yok).
 """
 from __future__ import annotations
 
 DILLER = ("tr", "en")
 
-# Menü: (anahtar, adres, etiket). Anahtar etkin menüyü (aria-current) belirler.
+# Üst menü: (anahtar, adres, etiket). Anahtar etkin menüyü (aria-current) belirler.
 NAV: dict[str, list[tuple[str, str, str]]] = {
     "tr": [
-        ("nasil", "/index.html#nasil", "Nasıl çalışır?"),
-        ("olcu", "/index.html#olcu", "Fotoğrafla ölçü"),
+        ("nasil", "/#nasil", "Nasıl çalışır"),
+        ("uyum", "/#uyum", "Nasıl olur"),
+        ("dolap", "/#dolap", "Dolap"),
         ("markalar", "/markalar.html", "Markalar için"),
-        ("yasal", "/yasal/", "Yasal"),
     ],
     "en": [
-        ("nasil", "/en/index.html#how-it-works", "How it works"),
-        ("olcu", "/en/index.html#measurements", "Photo measurements"),
+        ("nasil", "/en/#how-it-works", "How it works"),
+        ("uyum", "/en/#fit", "How it fits"),
+        ("dolap", "/en/#wardrobe", "Wardrobe"),
         ("markalar", "/en/brands.html", "For brands"),
-        ("yasal", "/yasal/", "Legal"),
     ],
 }
 
-# Alt bilgi bağlantıları: (adres, etiket, yasal mı). Yasal bağlantılar İngilizce sayfada hreflang="tr" alır.
-ALT_LINKLER: dict[str, list[tuple[str, str, bool]]] = {
+# Alt bilgi bağlantıları: (adres, etiket, yasal mı, çıktı yolu). Yasal bağlantılar İngilizce sayfada hreflang="tr" alır;
+# çıktı yolu o anki sayfayı (aria-current="page") işaretlemek içindir.
+ALT_LINKLER: dict[str, list[tuple[str, str, bool, str]]] = {
     "tr": [
-        ("/index.html#nasil", "Nasıl çalışır?", False), ("/markalar.html", "Markalar için", False),
-        ("/hakkinda.html", "Hakkımızda", False), ("/iletisim.html", "İletişim", False),
-        ("/yasal/kvkk-aydinlatma.html", "KVKK aydınlatma", True), ("/yasal/gizlilik.html", "Gizlilik", True),
-        ("/yasal/kullanici-sozlesmesi.html", "Kullanıcı sözleşmesi", True),
-        ("/yasal/cerez.html", "Çerezler", True), ("/yasal/kullanim-kosullari.html", "Kullanım koşulları", True),
-        ("/yasal/", "Tüm yasal metinler", True),
+        ("/", "Ana sayfa", False, "index.html"), ("/hakkinda.html", "Hakkında", False, "hakkinda.html"),
+        ("/sorular.html", "Sorular", False, "sorular.html"), ("/iletisim.html", "İletişim", False, "iletisim.html"),
+        ("/markalar.html", "Markalar için", False, "markalar.html"),
+        ("/yasal/gizlilik.html", "Gizlilik", True, "yasal/gizlilik.html"),
+        ("/yasal/kvkk-aydinlatma.html", "KVKK", True, "yasal/kvkk-aydinlatma.html"),
+        ("/yasal/kullanim-kosullari.html", "Kullanım koşulları", True, "yasal/kullanim-kosullari.html"),
+        ("/yasal/", "Tüm yasal metinler", True, "yasal/index.html"),
     ],
     "en": [
-        ("/en/index.html#how-it-works", "How it works", False), ("/en/brands.html", "For brands", False),
-        ("/en/about.html", "About us", False), ("/en/contact.html", "Contact", False),
-        ("/yasal/kvkk-aydinlatma.html", "KVKK information notice", True), ("/yasal/gizlilik.html", "Privacy", True),
-        ("/yasal/kullanici-sozlesmesi.html", "User agreement", True),
-        ("/yasal/cerez.html", "Cookies", True), ("/yasal/kullanim-kosullari.html", "Terms of use", True),
-        ("/yasal/", "All legal texts", True),
+        ("/en/", "Home", False, "en/index.html"), ("/en/about.html", "About", False, "en/about.html"),
+        ("/en/questions.html", "Questions", False, "en/questions.html"),
+        ("/en/contact.html", "Contact", False, "en/contact.html"),
+        ("/en/brands.html", "For brands", False, "en/brands.html"),
+        ("/yasal/gizlilik.html", "Privacy", True, ""), ("/yasal/kvkk-aydinlatma.html", "KVKK notice", True, ""),
+        ("/yasal/kullanim-kosullari.html", "Terms of use", True, ""), ("/yasal/", "All legal texts", True, ""),
     ],
 }
 
 METIN: dict[str, dict[str, str]] = {
     "tr": {
         "og_locale": "tr_TR",
+        "og_locale_diger": "en_US",
         # Üst bilgi
         "skip": "İçeriğe geç",
-        "nav_aria": "Ana menü",
-        "brand_aria": "Kabin ana sayfa",
-        "menu_aria": "Menüyü aç",
-        "menu": "Menü ☰",
-        "cta_href": "/index.html#iletisim",
-        "cta": "İletişim",
-        "home": "/index.html",
+        "nav_aria": "Site",
+        "brand_aria": "Kabin, ana sayfa",
+        "menu_aria": "Menü",
+        "home": "/",
+        "davet_href": "/#davet",
+        "davet": "Davet isteyin",
+        "pilot_dugme": "Pilot için yazın",
         # Dil değiştirici (her iki dilde aynı grup adı; bağlantı adları kendi dilinde)
         "dil_grup": "Dil / Language",
         "dil_tr": "TR, Türkçe",
         "dil_en": "EN, English",
         # Alt bilgi
-        "alt_telif": "© 2026 {kisa_ad} · Veri sorumluları: {unvan} · {eposta_link}",
-        "alt_tahmin": "Fotoğraftan ölçüler ve beden önerileri tahminidir; uyum garantisi değildir.",
+        "alt_aria": "Alt bağlantılar",
+        "alt_eposta_id": "iletisim",
         "alt_yasal_not": "",
+        "icindekiler": "İçindekiler",
         # Pilot formu
         "aydinlatma_ad": "KVKK Aydınlatma Metni",
         "aydinlatma_on": "",
@@ -97,17 +102,14 @@ METIN: dict[str, dict[str, str]] = {
             "verisi ya da başka kişilere ait kişisel veri eklemeyin. Kişisel verileriniz "
         ),
         "p_kapali_link_son": "’ne göre işlenir.",
-        # Beta listesi
-        "b_dugme": "Beta’ya katıl",
-        "b_baslik_ust": "BETA LİSTESİ",
-        "b_kapat": "Kapat",
-        "b_baslik": "İlk deneyenlerden <em>ol.</em>",
-        "b_giris": "Kapalı beta açıldığında sana e-postayla davet gönderelim. Başka bir ileti göndermeyiz.",
-        "b_ad": "Adın",
-        "b_eposta": "E-posta adresin",
-        "b_platform": "Telefonun",
-        "b_sec": "Seç",
+        # Davet (beta bekleme) listesi
+        "b_ad": "Adınız",
+        "b_eposta": "E-posta",
+        "b_platform": "Hangi telefon?",
+        "b_sec": "Seçin",
         "b_diger": "Diğer",
+        "b_aydinlatma_on": "",
+        "b_aydinlatma_son": "’ni okudum.",
         "b_ozet": (
             "Adını, e-postanı ve telefon türünü, beta açıldığında sana davet göndermek için; geldiğin tanıtım "
             "kanalını da yalnız sayısal olarak ölçmek için Kabin kurucu ortakları (müşterek veri sorumlusu) işler. "
@@ -115,24 +117,26 @@ METIN: dict[str, dict[str, str]] = {
             "bülten ya da kampanya gönderilmez. Hukuki sebepler, haklarınız ve saklama süresi tam metinde."
         ),
         "b_yas": "18 yaşından büyüğüm.",
-        "b_gonder": "Listeye katıl",
+        "b_gonder": "Davet isteyin",
     },
     "en": {
         "og_locale": "en_US",
+        "og_locale_diger": "tr_TR",
         "skip": "Skip to content",
-        "nav_aria": "Main menu",
-        "brand_aria": "Kabin home page",
-        "menu_aria": "Open menu",
-        "menu": "Menu ☰",
-        "cta_href": "/en/index.html#contact",
-        "cta": "Contact",
-        "home": "/en/index.html",
+        "nav_aria": "Site",
+        "brand_aria": "Kabin, home",
+        "menu_aria": "Menu",
+        "home": "/en/",
+        "davet_href": "/en/#invite",
+        "davet": "Request an invite",
+        "pilot_dugme": "Ask about a pilot",
         "dil_grup": "Dil / Language",
         "dil_tr": "TR, Türkçe",
         "dil_en": "EN, English",
-        "alt_telif": "© 2026 {kisa_ad} · Data controllers: {unvan} · {eposta_link}",
-        "alt_tahmin": "Measurements from photos and size recommendations are estimates, not a guarantee of fit.",
+        "alt_aria": "Footer links",
+        "alt_eposta_id": "contact",
         "alt_yasal_not": "Our legal texts are available in Turkish only; the Turkish version is the governing one.",
+        "icindekiler": "Contents",
         "aydinlatma_ad": "KVKK Information Notice",
         "aydinlatma_on": "I have read the ",
         "aydinlatma_son": " (in Turkish) and understand that my information will be processed for the purposes set out in it.",
@@ -170,16 +174,13 @@ METIN: dict[str, dict[str, str]] = {
             "is processed in line with the "
         ),
         "p_kapali_link_son": " (in Turkish).",
-        "b_dugme": "Join the beta",
-        "b_baslik_ust": "BETA LIST",
-        "b_kapat": "Close",
-        "b_baslik": "Be among the first <em>to try it.</em>",
-        "b_giris": "We’ll email you an invitation when the closed beta opens. We won’t send you anything else.",
         "b_ad": "Your name",
-        "b_eposta": "Your email address",
-        "b_platform": "Your phone",
+        "b_eposta": "Email",
+        "b_platform": "Which phone?",
         "b_sec": "Select",
         "b_diger": "Other",
+        "b_aydinlatma_on": "I’ve read the ",
+        "b_aydinlatma_son": " (in Turkish).",
         "b_ozet": (
             "The Kabin co-founders (joint data controllers) process your name, email and phone type to send you an "
             "invitation when the beta opens, and the promotional channel you came from only to count it in "
@@ -187,8 +188,8 @@ METIN: dict[str, dict[str, str]] = {
             "anyone; no newsletters or promotions are sent. The legal bases, your rights and the retention period "
             "are set out in the full notice (in Turkish)."
         ),
-        "b_yas": "I am over 18.",
-        "b_gonder": "Join the list",
+        "b_yas": "I’m over 18.",
+        "b_gonder": "Request an invite",
     },
 }
 

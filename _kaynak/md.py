@@ -3,6 +3,8 @@
 Yapay zekâ ajanları `Accept: text/markdown` ile istediğinde ya da llms.txt bağlantılarından okunur.
 Yalnız sitede kullanılan etiketleri tanır; bilinmeyen etiketlerin metni korunur.
 Dekoratif öğeler (aria-hidden="true", data-md="atla", svg, form vb.) atlanır.
+role="img" taşıyan öğenin yerine aria-label metni yazılır (ör. "Göğüs: tam" çubuğu).
+Liste maddesinin içindeki başlık kalın yazılır, ardındaki paragraf aynı satırda sürer ("1. **Başlık** açıklama").
 """
 from __future__ import annotations
 
@@ -27,6 +29,7 @@ class _Cevirici(HTMLParser):
         self.baslik = False
         self.tablo: list[list[str]] | None = None
         self.hucre: list[str] | None = None
+        self.madde_basligi = False  # liste maddesi içindeki başlık (kalın yazılır)
 
     def _yaz(self, s: str) -> None:
         (self.hucre if self.hucre is not None else self.out).append(s)
@@ -43,9 +46,18 @@ class _Cevirici(HTMLParser):
             if tag not in BOS_ETIKET:
                 self.atla = 1
             return
-        if tag in ("h1", "h2", "h3"):
+        if a.get("role") == "img" and a.get("aria-label"):
+            self._yaz("\n\n" + str(a["aria-label"]) + "\n\n")
+            self.atla = 1
+            return
+        if tag in ("h1", "h2", "h3") and self.liste:
+            self.madde_basligi = True
+            self._yaz("**")
+        elif tag in ("h1", "h2", "h3"):
             self.baslik = True
             self._yaz("\n\n" + "#" * int(tag[1]) + " ")
+        elif tag in BLOK and self.liste and self.tablo is None:
+            self._yaz(" ")
         elif tag in BLOK and self.tablo is None:
             self._yaz("\n\n")
         elif tag == "br":
@@ -114,9 +126,14 @@ class _Cevirici(HTMLParser):
                 md = ["| " + " | ".join(r + [""] * (n - len(r))) + " |" for r in satirlar]
                 md.insert(1, "|" + " --- |" * n)
                 self.out.append("\n\n" + "\n".join(md) + "\n")
+        elif tag in ("h1", "h2", "h3") and self.madde_basligi:
+            self.madde_basligi = False
+            self._yaz("** ")
         elif tag in ("h1", "h2", "h3"):
             self.baslik = False
             self._yaz("\n\n")
+        elif tag in BLOK and self.liste:
+            self._yaz(" ")
         elif tag in BLOK:
             self._yaz("\n\n")
 
@@ -135,5 +152,6 @@ def html_to_md(govde: str, kok_url: str, dil: str = "tr") -> str:
     metin = re.sub(r"[ \t]{2,}", " ", metin)
     metin = re.sub(r"[ \t]+\n", "\n", metin)
     metin = re.sub(r"\n[ \t]+(?=[^ \t-]|-(?! ))", "\n", metin)
+    metin = re.sub(r"(?<=\w) +(?=[.,](?:\s|$))", "", metin)  # "sözcük ." → "sözcük." (vurgu öğesinden sonra)
     metin = re.sub(r"\n{3,}", "\n\n", metin)
     return metin.strip() + "\n"

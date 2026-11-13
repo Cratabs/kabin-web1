@@ -1,8 +1,8 @@
 # Kabin — arama motorları ve yapay zekâ ajanları siteyi okuyabilir ve alıntılayabilir.
-# Content-Signal (contentsignals.org): arama=evet, yanıt üretmede kullanım=evet, model eğitimi=hayır.
+# Content-Signal (contentsignals.org): arama=evet, yanıt üretmede kullanım=evet, model eğitimi=evet.
 
 User-agent: *
-Content-Signal: search=yes, ai-input=yes, ai-train=no
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
 Disallow: /api/
 
@@ -12,7 +12,7 @@ User-agent: Claude-SearchBot
 User-agent: Claude-User
 User-agent: PerplexityBot
 User-agent: Perplexity-User
-Content-Signal: search=yes, ai-input=yes, ai-train=no
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
 Disallow: /api/
 

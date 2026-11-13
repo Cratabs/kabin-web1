@@ -6,11 +6,15 @@ Kullanım:  python3 _kaynak/build.py            (üretir, eksik künye alanları
 Sayfa parçaları _kaynak/sayfalar/*.html (İngilizce: sayfalar/en/*.html) içindedir ve şu işaretleri kullanabilir:
   {{alan}}        künye değeri (boşsa görünür [DOLDURULACAK] işareti)
   {{alan_link}}   e-posta alanı için mailto bağlantısı
-  {{form:pilot}}  marka pilot formu        {{form:beta}} / {{beta:dugme}} / {{beta:cizgi}}  beta listesi
+  {{form:pilot}}  marka pilot formu (kapalıyken gizli)   {{pilot:not}}  form kapalıyken e-posta altındaki not
+  {{form:beta}}   davet (beta bekleme listesi) formu
   {{surum}} / {{guncelleme}}               yasal metin sürüm bilgisi
   {{taslak}}      hukuk onayı yoksa taslak uyarısı
 
 Ayrıca makine-okur çıktılar üretir (bkz. ajan.py): JSON-LD, sitemap.xml, llms.txt, sayfa başına .md.
+
+Stil, betik, yazı tipi, görsel ve model dosyaları üretilmez: depo kökündeki /css, /js, /fonts, /gorsel, /model
+klasörlerinde durur ve doğrudan düzenlenir. Bu betik yalnız adreslerine içerik özeti ekler (?v=…).
 
 Dil: "en/" ile başlayan çıktılar İngilizcedir. ESLER, iki dilde karşılığı olan sayfaları eşler (hreflang,
 dil değiştirici, sitemap). Yasal metinlerin İngilizcesi yoktur; İngilizce sayfalar Türkçe /yasal/ metnine gider.
@@ -33,43 +37,60 @@ import sablon  # noqa: E402
 KOK = KAYNAK.parent
 ISARET = re.compile(r"\{\{([a-z_]+)(?::([a-z]+))?\}\}")
 
-# (çıktı yolu, parça dosyası, başlık, açıklama, etkin menü)
+# (çıktı yolu, parça dosyası, başlık, açıklama, etkin menü, sayfa türü). Türler: sablon.py STILLER / BETIKLER.
 SAYFALAR = [
-    ("index.html", "anasayfa.html", "Kabin — Etiketteki beden değil, sana uyan beden.",
-     "İki fotoğraftan ölçü tahmini, ürünün beden tablosuyla bölge bölge karşılaştırma ve nedenini açıklayan "
-     "beden önerisi.", ""),
-    ("markalar.html", "markalar.html", "Markalar için Kabin — Beden önerisini birlikte doğrulayalım",
-     "Moda markaları için açıklanabilir beden önerisi pilotu.", "markalar"),
-    ("hakkinda.html", "hakkinda.html", "Hakkımızda — Kabin", "Kabin'i kimin, neden ve nasıl geliştirdiği.", ""),
-    ("iletisim.html", "iletisim.html", "İletişim — Kabin", "Kabin ekibinin e-posta ve adres bilgileri.", ""),
-    ("basvuru-alindi.html", "basvuru-alindi.html", "Talebin alındı — Kabin", "Pilot talebin kaydedildi.", ""),
-    ("basvuru-hata.html", "basvuru-hata.html", "Talep gönderilemedi — Kabin", "Pilot talebi gönderilemedi.", ""),
-    ("404.html", "404.html", "Sayfa bulunamadı — Kabin", "Aradığın sayfa bulunamadı.", ""),
-    ("yasal/index.html", "yasal-index.html", "Yasal metinler — Kabin", "Kabin yasal metinleri ve künye.", "yasal"),
+    ("index.html", "anasayfa.html", "Kabin · Hangi beden? Ölçünüze göre beden önerisi",
+     "Ölçünüzü bir kez alın, mezurayla ya da iki fotoğrafla. Kabin her üründe bedeninizi söylesin. "
+     "Şimdilik davetle, ücretsiz.", "", "ana"),
+    ("markalar.html", "markalar.html", "Kabin · Markalar için beden aracı",
+     "Müşteriniz ürün sayfanızda ölçüsünü girer, bedenini görür. Sayfanıza bir düğme gelir. "
+     "Önce birkaç üründe deneyin.", "markalar", "marka"),
+    ("hakkinda.html", "hakkinda.html", "Hakkında · Kabin",
+     "Kabin bedeni etiketteki harfe göre değil, sizin ölçünüze göre söyler. Neden ve kimlerin yaptığı.", "", "okuma"),
+    ("iletisim.html", "iletisim.html", "İletişim · Kabin",
+     "Soru, öneri, iş birliği ya da basın için e-posta yazın. Adres, KVKK ve güvenlik bildirimi bilgileri.",
+     "", "okuma"),
+    ("sorular.html", "sorular.html", "Sorular · Kabin",
+     "Fotoğraftan ölçü ne kadar doğru? Fotoğraflarım saklanıyor mu? Beden önerisi ne kadar güvenilir? "
+     "Verilerimi nasıl silerim?", "", "okuma"),
+    ("basvuru-alindi.html", "basvuru-alindi.html", "Aldık · Kabin", "İsteğiniz bize ulaştı.", "", "okuma"),
+    ("basvuru-hata.html", "basvuru-hata.html", "Gönderilemedi · Kabin", "İsteğiniz gönderilemedi.", "", "okuma"),
+    ("404.html", "404.html", "Sayfa bulunamadı · Kabin", "Aradığınız sayfa bulunamadı.", "", "okuma"),
+    ("yasal/index.html", "yasal-index.html", "Yasal metinler — Kabin", "Kabin yasal metinleri ve künye.",
+     "", "yasal"),
     ("yasal/kvkk-aydinlatma.html", "kvkk-aydinlatma.html", "KVKK Aydınlatma Metni — Kabin",
-     "Web sitesi ve marka pilot talebi için kişisel verilerin işlenmesine ilişkin aydınlatma metni.", "yasal"),
+     "Web sitesi ve marka pilot talebi için kişisel verilerin işlenmesine ilişkin aydınlatma metni.", "", "yasal"),
     ("yasal/gizlilik.html", "gizlilik.html", "Gizlilik Politikası — Kabin",
-     "Kabin web sitesi ve uygulaması gizlilik politikası; fotoğrafla ölçü dahil.", "yasal"),
-    ("yasal/cerez.html", "cerez.html", "Çerez Politikası — Kabin", "Kabin web sitesi çerez politikası.", "yasal"),
+     "Kabin web sitesi ve uygulaması gizlilik politikası; fotoğrafla ölçü dahil.", "", "yasal"),
+    ("yasal/cerez.html", "cerez.html", "Çerez Politikası — Kabin", "Kabin web sitesi çerez politikası.",
+     "", "yasal"),
     ("yasal/kullanim-kosullari.html", "kullanim-kosullari.html", "Web Sitesi Kullanım Koşulları — Kabin",
-     "Kabin web sitesi kullanım koşulları.", "yasal"),
+     "Kabin web sitesi kullanım koşulları.", "", "yasal"),
     ("yasal/kullanici-sozlesmesi.html", "kullanici-sozlesmesi.html", "Kullanıcı Sözleşmesi — Kabin",
-     "Kabin uygulamasını kullananlar ile aramızdaki sözleşme.", "yasal"),
+     "Kabin uygulamasını kullananlar ile aramızdaki sözleşme.", "", "yasal"),
     ("yasal/topluluk-kurallari.html", "topluluk-kurallari.html", "Topluluk Kuralları — Kabin",
-     "Kabin topluluğu kuralları ve moderasyon süreci.", "yasal"),
+     "Kabin topluluğu kuralları ve moderasyon süreci.", "", "yasal"),
     # İngilizce sürüm (yasal metinler çevrilmez).
-    ("en/index.html", "en/index.html", "Kabin — Not the size on the label. The size that fits you.",
-     "Measurement estimates from two photos, an area-by-area comparison with the item’s size chart, and a size "
-     "recommendation that explains why.", ""),
-    ("en/brands.html", "en/brands.html", "Kabin for brands — Let’s validate size recommendations together",
-     "An explainable size recommendation pilot for fashion brands.", "markalar"),
-    ("en/about.html", "en/about.html", "About us — Kabin", "Who is building Kabin, why and how.", ""),
-    ("en/contact.html", "en/contact.html", "Contact — Kabin", "Email and address details for the Kabin team.", ""),
-    ("en/application-received.html", "en/application-received.html", "Request received — Kabin",
-     "Your pilot request has been recorded.", ""),
-    ("en/application-error.html", "en/application-error.html", "Request not sent — Kabin",
-     "The pilot request could not be sent.", ""),
+    ("en/index.html", "en/index.html", "Kabin · Which size? Size suggestions from your measurements",
+     "Measure once, with a tape measure or two photos. Kabin tells you your size for every item. "
+     "Invite only for now, free.", "", "ana"),
+    ("en/brands.html", "en/brands.html", "Kabin · For brands",
+     "Your customer enters their measurements on your product page and sees their size.", "markalar", "marka"),
+    ("en/about.html", "en/about.html", "About · Kabin", "Why we’re building Kabin, and who we are.", "", "okuma"),
+    ("en/contact.html", "en/contact.html", "Contact · Kabin", "How to reach Kabin.", "", "okuma"),
+    ("en/questions.html", "en/questions.html", "Questions · Kabin",
+     "How accurate are measurements from photos? Are my photos stored? How reliable is the size recommendation? "
+     "How do I delete my data?", "", "okuma"),
+    ("en/application-received.html", "en/application-received.html", "Got it · Kabin",
+     "Your request reached us.", "", "okuma"),
+    ("en/application-error.html", "en/application-error.html", "Not sent · Kabin",
+     "Your request wasn’t sent.", "", "okuma"),
 ]
+# Yasal olmayan sayfaların içeriğinin son değişiklik günü (sitemap lastmod ve JSON-LD dateModified).
+# Bu sayfaların metni değişince elle güncelleyin; yasal metinlerde künyedeki guncelleme_iso kullanılır.
+ICERIK_TARIHI = "2026-11-14"
+# Yanda içindekiler listesi gösterilen uzun yasal metinler.
+ICINDEKILERLI = {"yasal/kullanim-kosullari.html"}
 # Arama motoru dizinine ve sitemap/llms.txt'ye girmeyen sayfalar.
 DIZINSIZ = {"404.html", "basvuru-alindi.html", "basvuru-hata.html",
             "en/application-received.html", "en/application-error.html"}
@@ -79,6 +100,7 @@ ESLER_TR_EN = {
     "markalar.html": "en/brands.html",
     "hakkinda.html": "en/about.html",
     "iletisim.html": "en/contact.html",
+    "sorular.html": "en/questions.html",
     "basvuru-alindi.html": "en/application-received.html",
     "basvuru-hata.html": "en/application-error.html",
 }
@@ -106,10 +128,6 @@ def unvan_en(alan: dict[str, str]) -> str:
     if deger.endswith(UNVAN_EK_TR):
         return escape(deger[: -len(UNVAN_EK_TR)].replace(" ve ", " and ") + UNVAN_EK_EN)
     return html_deger(alan)
-
-
-def kisa_ozet(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()[:10]
 
 
 def kunye_yukle() -> tuple[dict[str, object], dict[str, dict[str, str]]]:
@@ -143,12 +161,11 @@ def sayfa_uret(parca: str, meta: dict[str, object], alanlar: dict[str, dict[str,
     def degistir(m: re.Match[str]) -> str:
         ad, alt = m.group(1), m.group(2)
         if ad == "form" and alt == "pilot":
-            return sablon.form(alt, form_acik, mailto(alanlar["eposta_iletisim"]), dil)
-        beta_acik = meta.get("beta_listesi") is True
+            return sablon.form(alt, form_acik, dil)
+        if ad == "pilot" and alt == "not":
+            return sablon.pilot_notu(form_acik, dil)
         if ad == "form" and alt == "beta":
-            return sablon.beta_form(beta_acik, dil)
-        if ad == "beta" and alt in ("dugme", "cizgi"):
-            return sablon.beta_dugme(beta_acik, "button" if alt == "dugme" else "button outline", dil)
+            return sablon.beta_form(meta.get("beta_listesi") is True, dil)
         if ad == "unvan" and dil == "en":
             kullanilan.add(ad)
             return unvan_en(alanlar[ad])
@@ -170,9 +187,18 @@ def sayfa_uret(parca: str, meta: dict[str, object], alanlar: dict[str, dict[str,
     return ISARET.sub(degistir, parca)
 
 
-def css_uret() -> None:
-    parcalar = [(KAYNAK / "stil" / ad).read_text(encoding="utf-8") for ad in ("temel.css", "ek.css")]
-    (KOK / "styles.css").write_text("\n".join(parcalar), encoding="utf-8")
+def varlik_surumu() -> str:
+    """Bütün stil ve betik dosyalarının ortak içerik özeti. Biri değişince hepsinin adresi değişir (?v=…);
+    js/site.js sonradan yüklediği sahne betiklerine aynı eki koyar."""
+    dosyalar = sorted([*(KOK / "css").glob("*.css"), *(KOK / "js").rglob("*.js"), KOK / "app.js"])
+    eksik = [ad for ad in {a for adlar in sablon.STILLER.values() for a in adlar} if not (KOK / "css" / f"{ad}.css").exists()]
+    eksik += [ad for ad in {a for adlar in sablon.BETIKLER.values() for a in adlar} if not (KOK / "js" / f"{ad}.js").exists()]
+    if eksik:
+        raise SystemExit(f"Eksik stil/betik dosyası: {', '.join(sorted(eksik))}")
+    ozet = hashlib.sha256()
+    for yol in dosyalar:
+        ozet.update(yol.relative_to(KOK).as_posix().encode() + b"\0" + yol.read_bytes() + b"\0")
+    return ozet.hexdigest()[:10]
 
 
 def main() -> int:
@@ -180,10 +206,9 @@ def main() -> int:
     meta, alanlar = kunye_yukle()
     if not set(ESLER) <= {c for c, *_ in SAYFALAR}:
         raise SystemExit("ESLER: SAYFALAR listesinde olmayan bir sayfayı eşliyor")
-    css_uret()
     if not (KOK / "app.js").exists():
         raise SystemExit("app.js yok: önce `npm run build:ts` çalıştırın")
-    surum = {"css": kisa_ozet(KOK / "styles.css"), "js": kisa_ozet(KOK / "app.js")}
+    surum = varlik_surumu()
     bos = {ad for ad, alan in alanlar.items() if not alan["deger"].strip()}
     onay = meta["hukuk_onayi"] is True
     # Form yalnız künye eksiksiz VE yasal metinler hukuk onaylıyken açılır.
@@ -195,37 +220,39 @@ def main() -> int:
     yapisal = meta["yapisal"]
     if not isinstance(yapisal, dict):
         raise SystemExit("kunye.json: yapisal nesnesi eksik")
-    alt_bilgi_tr = {k: html_deger(alanlar[k]) for k in ("kisa_ad", "unvan")}
-    alt_bilgi_tr["eposta_link"] = mailto(alanlar["eposta_iletisim"])
-    alt_bilgi = {"tr": alt_bilgi_tr, "en": {**alt_bilgi_tr, "unvan": unvan_en(alanlar["unvan"])}}
     kullanilan: set[str] = set()
     dizinli: list[tuple[str, str, str]] = []
+    tarihler: dict[str, str] = {}
     # hreflang yalnız iki eşi de dizine giren sayfalar için (noindex sayfa alternatif olarak gösterilmez).
     dizinli_esler = {a: b for a, b in ESLER.items() if a not in DIZINSIZ and b not in DIZINSIZ}
-    for cikti, parca_adi, baslik, aciklama, etkin in SAYFALAR:
+    for cikti, parca_adi, baslik, aciklama, etkin, tur in SAYFALAR:
         parca = (KAYNAK / "sayfalar" / parca_adi).read_text(encoding="utf-8")
         dil = sayfa_dili(cikti)
         govde = sayfa_uret(parca, meta, alanlar, form_acik, kullanilan, dil)
         acik = cikti not in DIZINSIZ
+        tarih = str(meta["guncelleme_iso"]) if tur == "yasal" else ICERIK_TARIHI
+        # Yasal metin parçaları eski sarmalayıcı sınıflarıyla durur (dosyalara dokunulmaz); HTML'e yazarken çevrilir.
+        html_govde = sablon.okuma_govdesi(govde, dil, cikti in ICINDEKILERLI)
         html = (
             "<!-- Bu dosya _kaynak/build.py ile üretilir; doğrudan düzenlemeyin. -->\n"
             + sablon.head(
-                baslik, aciklama, surum, dil=dil,
+                baslik, aciklama, surum, tur=tur, dil=dil,
                 canonical=ajan.sayfa_url(kok, cikti) if acik else None,
                 md_href="/" + ajan.md_yolu(cikti) if acik else None,
-                jsonld=ajan.jsonld(kok, cikti, baslik, aciklama, govde, duz, same_as, yapisal, dil) if acik else None,
+                jsonld=(ajan.jsonld(kok, cikti, baslik, aciklama, govde, duz, same_as, yapisal, dil, tarih)
+                        if acik else None),
                 alternates=ajan.hreflang_ciftleri(kok, cikti, dizinli_esler) if acik else None,
             )
             + sablon.header(etkin, dil, dil_adresleri(cikti))
-            + f'<main id="icerik">{govde}</main>'
-            + sablon.footer(alt_bilgi[dil], dil)
+            + f'<main id="icerik">{html_govde}</main>'
+            + sablon.footer(dil, cikti, duz["eposta_iletisim"], tur, surum)
         )
         ajan.yaz(KOK / cikti, html + "\n")
         if acik:
             ajan.yaz(KOK / ajan.md_yolu(cikti), ajan.md_sayfa(kok, cikti, baslik, aciklama, govde, dil))
             dizinli.append((cikti, baslik, aciklama))
-    ajan.yaz(KOK / "sitemap.xml", ajan.sitemap(kok, [c for c, _, _ in dizinli], str(meta["guncelleme_iso"]),
-                                               dizinli_esler))
+            tarihler[cikti] = tarih
+    ajan.yaz(KOK / "sitemap.xml", ajan.sitemap(kok, [c for c, _, _ in dizinli], tarihler, dizinli_esler))
     ajan.yaz(KOK / "llms.txt", ajan.llms(kok, dizinli, duz))
     ajan.yaz(KOK / "robots.txt", ajan.robots(kok))
     # Yayın kapısı: PHP, künyede eksik alan varken ya da hukuk onayı yokken başvuru kabul etmez.
@@ -247,13 +274,13 @@ def main() -> int:
     if kullanilmayan:
         print("Uyarı: hiçbir sayfada kullanılmayan künye alanları:", ", ".join(sorted(kullanilmayan)))
     print(f"{len(SAYFALAR)} sayfa, {len(dizinli)} .md, sitemap.xml, llms.txt, robots.txt üretildi. "
-          f"css={surum['css']} js={surum['js']}")
+          f"sürüm eki={surum}")
     if bos:
         print(f"EKSİK künye alanı ({len(bos)}): {', '.join(sorted(bos))}")
     if not form_acik:
         print("Pilot formu KAPALI üretildi (e-posta yolu gösteriliyor); PHP uç noktası 503 dönecek.")
     print("Beta listesi " + ("AÇIK (sunucuda beta_accepting de true olmalı)." if meta.get("beta_listesi") is True
-                             else "KAPALI: düğme ve pencere üretilmedi."))
+                             else "KAPALI: davet formu üretilmedi."))
     if not onay:
         print("Hukuk onayı yok: yasal sayfalarda taslak uyarısı gösteriliyor.")
     if kontrol and (bos or not onay):

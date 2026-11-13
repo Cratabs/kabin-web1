@@ -1,0 +1,96 @@
+/* Kabin web · Yön D · okuma sayfaları: Hakkında, İletişim ve yasal metinler.
+   Dar okuma sütunu, serif başlık, rahat satır aralığı. 3B sahne ve betik yok.
+   Yasal metinlerin gövdesi canlı siteden birebir gelir; buradaki sınıf adları (eyebrow, meta, draft-notice, toc,
+   note, table-wrap, kunye, doc-list) o gövdenin kendi sınıflarıdır, yalnız görünüşleri burada tanımlanır. */
+
+.sayfa main { padding-top: clamp(7.5rem, 13vw, 11rem); padding-bottom: var(--bolum); }
+.sayfa .ust-bilgi { position: absolute; }
+
+.okuma-duzen { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
+@media (min-width: 1100px) {
+  .okuma-yanli { grid-template-columns: 15rem minmax(0, 1fr); gap: clamp(3rem, 6vw, 6rem); align-items: start; }
+}
+
+/* gövde: yaklaşık 70 karakterlik satır */
+.okuma { max-width: 44rem; font-size: 1.0625rem; line-height: 1.7; overflow-wrap: break-word; }
+.okuma > * + * { margin-top: 1.15em; }
+.okuma > :not(.table-wrap):not(.kunye) { max-width: 36rem; }
+
+.okuma .eyebrow { display: block; font: 600 0.8125rem/1.2 var(--font); letter-spacing: 0.14em; color: var(--textSecondary); }
+.okuma h1 { position: relative; isolation: isolate; margin-top: 1rem; font: 500 clamp(2.5rem, 6.2vw, 4.5rem)/1.05 var(--serif); letter-spacing: -0.025em; text-wrap: balance; }
+/* başlığın arkasında tek leke; harflerin altında kalır */
+.okuma h1::before { content: ''; position: absolute; z-index: -1; left: -0.35em; top: -0.3em; width: 1.7em; height: 1.35em; background: var(--blush); border-radius: 48% 52% 55% 45% / 50% 46% 54% 50%; }
+.yasal-sayfa .okuma h1::before { background: var(--mist); }
+.okuma h2 { margin-top: 2.6em; font: 500 clamp(1.5rem, 2.6vw, 1.9rem)/1.2 var(--serif); letter-spacing: -0.015em; scroll-margin-top: 2rem; text-wrap: balance; }
+.okuma h3 { margin-top: 1.8em; font: 600 1.125rem/1.3 var(--font); }
+.okuma h2 + *, .okuma h3 + * { margin-top: 0.8em; }
+.okuma [id] { scroll-margin-top: 2rem; }
+
+.okuma a { text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
+.okuma a:hover { text-decoration-thickness: 2px; }
+.okuma ul, .okuma ol { padding-left: 1.35em; }
+.okuma li + li { margin-top: 0.5em; }
+.okuma li > ul, .okuma li > ol { margin-top: 0.5em; }
+.okuma strong { font-weight: 600; }
+.okuma code { font: 0.9em/1.4 ui-monospace, 'Cascadia Mono', Consolas, monospace; background: var(--tone); padding: 0.1em 0.35em; border-radius: 0.35em; overflow-wrap: anywhere; }
+
+.okuma .meta { margin-top: 1.25rem; font-size: 0.9375rem; line-height: 1.5; color: var(--textSecondary); }
+.okuma .draft-notice { background: var(--butter); border-radius: 1.25rem; padding: 1rem 1.25rem; font-size: 0.9375rem; line-height: 1.5; }
+.okuma .note { background: var(--surface); border-radius: 1.25rem; padding: 1rem 1.25rem; box-shadow: var(--golge); }
+
+/* içindekiler: gövdedeki (kaynaktan gelen) kutu ve yandaki sütun aynı dili konuşur */
+.okuma .toc, .icindekiler { background: var(--tone); border-radius: 1.5rem; padding: 1.25rem 1.5rem; font-size: 0.9375rem; line-height: 1.45; }
+.okuma .toc strong, .icindekiler strong { display: block; font: 600 0.8125rem/1.2 var(--font); letter-spacing: 0.14em; text-transform: uppercase; color: var(--textSecondary); }
+.okuma .toc ol, .icindekiler ol { margin: 0.75rem 0 0; padding-left: 1.35em; }
+.okuma .toc li + li, .icindekiler li + li { margin-top: 0.4em; }
+.okuma .toc a, .icindekiler a { text-decoration: none; display: inline-block; padding: 0.15rem 0; }
+.okuma .toc a:hover, .icindekiler a:hover { text-decoration: underline; text-underline-offset: 0.25em; }
+/* yandaki liste: başlıklar kaynakta zaten numaralı, ikinci numara basılmaz */
+.icindekiler ol { list-style: none; padding-left: 0; }
+@media (min-width: 1100px) {
+  .icindekiler { position: sticky; top: 2rem; max-height: calc(100vh - 4rem); overflow: auto; }
+}
+
+/* tablolar: dar ekranda sayfa değil, tablo kutusu yana kayar */
+.okuma .table-wrap { overflow-x: auto; background: var(--surface); border-radius: 1.25rem; box-shadow: var(--golge); }
+.okuma table { width: 100%; min-width: 34rem; border-collapse: collapse; font-size: 0.9375rem; line-height: 1.5; }
+.okuma th, .okuma td { padding: 0.85rem 1rem; text-align: left; vertical-align: top; }
+.okuma th { font-weight: 600; background: var(--tone); }
+.okuma tbody tr + tr td { border-top: 1px solid var(--tone); }
+.okuma tr[id] { scroll-margin-top: 2rem; }
+
+/* künye ve iletişim bilgileri */
+.okuma .kunye { margin-top: 2.6em; background: var(--surface); border-radius: 1.75rem; padding: clamp(1.5rem, 3vw, 2.25rem); box-shadow: var(--golge); }
+.okuma .kunye h2 { margin-top: 0; }
+.okuma .kunye dl { margin: 1.25rem 0 0; display: grid; gap: 0.25rem 1.5rem; }
+.okuma .kunye dt { font-size: 0.875rem; color: var(--textSecondary); }
+.okuma .kunye dd { margin: 0 0 0.75rem; overflow-wrap: anywhere; }
+@media (min-width: 700px) {
+  .okuma .kunye dl { grid-template-columns: 13rem minmax(0, 1fr); row-gap: 0.75rem; }
+  .okuma .kunye dd { margin-bottom: 0; }
+}
+
+/* yasal metin listesi */
+.okuma .doc-list { list-style: none; padding: 0; margin-top: 2rem; }
+.okuma .doc-list li { margin: 0; padding: 1.25rem 0; border-top: 1px solid var(--tone); }
+.okuma .doc-list li:last-child { border-bottom: 1px solid var(--tone); }
+.okuma .doc-list a { font: 500 1.5rem/1.25 var(--serif); letter-spacing: -0.01em; text-decoration: none; }
+.okuma .doc-list a:hover { text-decoration: underline; text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
+.okuma .doc-list span { display: block; margin-top: 0.25rem; font-size: 0.9375rem; line-height: 1.5; color: var(--textSecondary); }
+
+/* alt bilgide bulunulan sayfa */
+.alt-satir a[aria-current] { color: var(--text); text-decoration: underline; text-underline-offset: 0.35em; }
+
+/* dokunmatik: içindekiler bağlantıları en az 44 px yükseklikte */
+@media (pointer: coarse) {
+  .okuma .toc a, .icindekiler a { display: inline-flex; align-items: center; min-height: var(--hit); padding-block: 0; }
+  .okuma .toc li + li, .icindekiler li + li { margin-top: 0; }
+}
+
+/* geniş ekran: okuma sütunu kabın ortasında (sola yapışık dar sütun bırakmaz); içindekiler yanda olan sayfada ikisi birlikte ortalanır */
+@media (min-width: 1100px) {
+  .okuma-duzen:not(.okuma-yanli) > .okuma { justify-self: center; width: 100%; max-width: 40rem; } /* ≈ 70 karakter satır */
+  .okuma-duzen:not(.okuma-yanli) > .okuma > :not(.table-wrap):not(.kunye) { max-width: none; }
+  .okuma-duzen:not(.okuma-yanli) > .okuma > .table-wrap { margin-inline: -2rem; }
+  .okuma-yanli { grid-template-columns: 15rem minmax(0, 44rem); justify-content: center; }
+}

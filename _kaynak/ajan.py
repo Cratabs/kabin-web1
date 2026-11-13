@@ -13,19 +13,41 @@ from typing import Any
 
 from md import html_to_md
 
-SSS = re.compile(r"<details><summary>(.*?)</summary>(.*?)</details>", re.S)
+# Sorular sayfası: her soru bir <h2>, yanıtı hemen ardındaki <p>. FAQPage verisi görünen metinden üretilir.
+SSS = re.compile(r"<h2>(.*?)</h2>\s*<p>(.*?)</p>", re.S)
 ETIKET = re.compile(r"<[^>]+>")
 # Sayfa dili → schema.org inLanguage (BCP 47).
 DIL_KODU = {"tr": "tr-TR", "en": "en"}
 SAYFA_TURU = {"hakkinda.html": "AboutPage", "en/about.html": "AboutPage",
               "iletisim.html": "ContactPage", "en/contact.html": "ContactPage"}
-SSS_SAYFALARI = {"index.html", "en/index.html"}
+SSS_SAYFALARI = {"sorular.html", "en/questions.html"}
 KURULUS_ACIKLAMA = {
-    "tr": "Fotoğraftan ölçü tahmini ve ürünün beden tablosuna göre açıklanabilir beden önerisi "
-          "sunan kişisel beden ve stil asistanı.",
+    "tr": "Ölçünüze göre beden söyleyen uygulama. Ölçünüzü mezurayla ya da iki fotoğrafla alır, ürünün beden "
+          "tablosuna bakar, hangi bedenin uyacağını ve nerede dar, nerede bol kalacağını gösterir. Dolap ve kombin "
+          "de içinde.",
     "en": "A personal size and style assistant that estimates body measurements from photos and gives "
           "explainable size recommendations based on the item's size chart.",
 }
+# Ana sayfa: uygulamayı tanımlayan düğüm. Bilerek yok: offers, puan, işletim sistemi, indirme adresi (sayfada yazmıyor).
+UYGULAMA_ACIKLAMA = {
+    "tr": "Ölçünüzü bir kez alırsınız; Kabin her üründe bedeninizi söyler: hangi beden, nerede dar, nerede bol. "
+          "Dolabınızı ekler, kombin kurarsınız. Öneri tahmindir, garanti değildir.",
+    "en": "You measure once; Kabin tells you your size for every item: which size, where it’s tight, where it’s "
+          "loose. You add your clothes and put outfits together. The suggestion is an estimate, not a guarantee.",
+}
+# Markalar sayfası: hizmeti tanımlayan düğüm. Bilerek yok: bölge, fiyat, süre (sayfada yazmıyor).
+HIZMET = {
+    "tr": {"name": "Kabin beden aracı", "serviceType": "Ürün sayfası için beden önerisi aracı",
+           "description": "Müşteriniz ürün sayfanızda ölçüsünü girer, bedenini görür. Ölçüyü yalnız müşteriniz görür. "
+                          "Size önerilen beden gelir.",
+           "audience": "Moda markaları ve mağazalar"},
+    "en": {"name": "Kabin size tool", "serviceType": "Size suggestion tool for product pages",
+           "description": "Your customer enters their measurements on your product page and sees their size. Only "
+                          "your customer sees the measurements. You get the suggested size.",
+           "audience": "Fashion brands and stores"},
+}
+ANA_SAYFALAR = {"index.html", "en/index.html"}
+MARKA_SAYFALARI = {"markalar.html", "en/brands.html"}
 
 
 def sayfa_url(kok: str, cikti: str) -> str:
@@ -70,7 +92,9 @@ def kurulus(kok: str, d: dict[str, str], same_as: list[str], yapisal: dict[str, 
 
 
 def jsonld(kok: str, cikti: str, baslik: str, aciklama: str, govde: str,
-           d: dict[str, str], same_as: list[str], yapisal: dict[str, Any], dil: str = "tr") -> str:
+           d: dict[str, str], same_as: list[str], yapisal: dict[str, Any], dil: str = "tr",
+           tarih: str | None = None) -> str:
+    """tarih: sayfa içeriğinin son değişiklik günü (sitemap lastmod ile aynı kaynak)."""
     url = sayfa_url(kok, cikti)
     sayfa: dict[str, object] = {
         "@type": "WebPage",
@@ -82,6 +106,8 @@ def jsonld(kok: str, cikti: str, baslik: str, aciklama: str, govde: str,
         "isPartOf": {"@id": f"{kok}/#site"},
         "publisher": {"@id": f"{kok}/#kurulus"},
     }
+    if tarih:
+        sayfa["dateModified"] = tarih
     if cikti in SAYFA_TURU:
         sayfa["@type"] = SAYFA_TURU[cikti]
     graf: list[dict[str, object]] = [
@@ -91,6 +117,17 @@ def jsonld(kok: str, cikti: str, baslik: str, aciklama: str, govde: str,
          "publisher": {"@id": f"{kok}/#kurulus"}},
         sayfa,
     ]
+    if cikti in ANA_SAYFALAR:
+        sayfa["about"] = {"@id": f"{kok}/#uygulama"}
+        graf.append({"@type": "SoftwareApplication", "@id": f"{kok}/#uygulama", "name": "Kabin",
+                     "applicationCategory": "LifestyleApplication", "description": UYGULAMA_ACIKLAMA[dil],
+                     "inLanguage": "tr", "publisher": {"@id": f"{kok}/#kurulus"}})
+    if cikti in MARKA_SAYFALARI:
+        h = HIZMET[dil]
+        sayfa["about"] = {"@id": url + "#hizmet"}
+        graf.append({"@type": "Service", "@id": url + "#hizmet", "name": h["name"], "serviceType": h["serviceType"],
+                     "description": h["description"], "provider": {"@id": f"{kok}/#kurulus"},
+                     "audience": {"@type": "BusinessAudience", "name": h["audience"]}})
     if cikti in SSS_SAYFALARI:
         sorular = [{"@type": "Question", "name": _duz(q),
                     "acceptedAnswer": {"@type": "Answer", "text": _duz(a)}} for q, a in SSS.findall(govde)]
@@ -110,31 +147,34 @@ def hreflang_ciftleri(kok: str, cikti: str, esler: dict[str, str]) -> list[tuple
     return [("tr", sayfa_url(kok, tr)), ("en", sayfa_url(kok, en)), ("x-default", sayfa_url(kok, tr))]
 
 
-def sitemap(kok: str, yollar: list[str], tarih: str, esler: dict[str, str]) -> str:
-    """esler: dizine giren sayfa → diğer dildeki eşi (iki yönlü). Eşler xhtml:link ile bildirilir."""
+def sitemap(kok: str, yollar: list[str], tarihler: dict[str, str], esler: dict[str, str]) -> str:
+    """esler: dizine giren sayfa → diğer dildeki eşi (iki yönlü). Eşler xhtml:link ile bildirilir.
+
+    tarihler: sayfa → içeriğinin son değişiklik günü (yasal metinlerde künyedeki güncelleme tarihi).
+    """
     satirlar = []
     for y in yollar:
         alt = "".join(f'<xhtml:link rel="alternate" hreflang="{k}" href="{a}"/>'
                       for k, a in hreflang_ciftleri(kok, y, esler))
-        satirlar.append(f"<url><loc>{sayfa_url(kok, y)}</loc><lastmod>{tarih}</lastmod>{alt}</url>\n")
+        satirlar.append(f"<url><loc>{sayfa_url(kok, y)}</loc><lastmod>{tarihler[y]}</lastmod>{alt}</url>\n")
     return ('<?xml version="1.0" encoding="UTF-8"?>\n'
             '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
             'xmlns:xhtml="http://www.w3.org/1999/xhtml">\n' + "".join(satirlar) + "</urlset>\n")
 
 
 # Kullanıcı adına ya da arama için sayfa okuyan yapay zekâ ajanları: açıkça izinli.
-# Eğitim amaçlı tarayıcılar (GPTBot, ClaudeBot, CCBot, Google-Extended …) "*" grubuna düşer;
-# erişebilirler ama Content-Signal ile model eğitimine izin vermediğimizi bildiririz.
+# Eğitim amaçlı tarayıcılar (GPTBot, ClaudeBot, CCBot, Google-Extended …) "*" grubuna düşer; onlar da açıktır.
+# Content-Signal bunu açıkça söyler: model eğitimine de izin veriyoruz (karar: 14 Kasım 2026).
 AJAN_TARAYICILAR = ("OAI-SearchBot", "ChatGPT-User", "Claude-SearchBot", "Claude-User",
                     "PerplexityBot", "Perplexity-User")
 
 
 def robots(kok: str) -> str:
-    kurallar = "Content-Signal: search=yes, ai-input=yes, ai-train=no\nAllow: /\nDisallow: /api/\n"
+    kurallar = "Content-Signal: search=yes, ai-input=yes, ai-train=yes\nAllow: /\nDisallow: /api/\n"
     gruplar = "".join(f"User-agent: {a}\n" for a in AJAN_TARAYICILAR)
     return (
         "# Kabin — arama motorları ve yapay zekâ ajanları siteyi okuyabilir ve alıntılayabilir.\n"
-        "# Content-Signal (contentsignals.org): arama=evet, yanıt üretmede kullanım=evet, model eğitimi=hayır.\n\n"
+        "# Content-Signal (contentsignals.org): arama=evet, yanıt üretmede kullanım=evet, model eğitimi=evet.\n\n"
         f"User-agent: *\n{kurallar}\n{gruplar}{kurallar}\nSitemap: {kok}/sitemap.xml\n"
     )
 
@@ -150,12 +190,13 @@ def llms(kok: str, sayfalar: list[tuple[str, str, str]], d: dict[str, str]) -> s
 
     return (
         "# Kabin\n\n"
-        "> Kabin, kişisel beden ve stil asistanıdır. Önden ve yandan çekilen iki fotoğraftan vücut ölçülerini "
-        "tahmin eder (mezurayla girilen ölçü her zaman önceliklidir), ürünün beden tablosuyla karşılaştırır ve "
-        "her bölge için dar / uygun / bol sonucunu nedeniyle gösterir. Dolap hesaba bağlıdır; kombin uyumu "
-        "puanlanır; toplulukta kombin paylaşılır. Fotoğraflar diske yazılmaz.\n\n"
-        "Önemli: Ölçüler ve beden önerileri tahminidir, uyum garantisi değildir. Uygulama davetle kullanılır; "
-        "sitede satış, ödeme ya da hesap açma yoktur.\n\n"
+        "> Kabin, ölçünüze göre beden söyleyen bir uygulamadır. Ölçünüzü bir kez mezurayla ya da önden ve yandan "
+        "iki fotoğrafla alırsınız; mezurayla girdiğiniz ölçü her zaman önce gelir. Ürünün bağlantısını uygulamaya "
+        "yapıştırırsınız; Kabin ürünün beden tablosuna bakar, hangi bedenin uyacağını ve göğüste, belde, basende "
+        "nerede dar, nerede bol kalacağını gösterir. Dolabınızı ekler, kombin kurarsınız; dolap hesaba bağlıdır. "
+        "Moda markaları için ürün sayfasına eklenen bir beden düğmesi de var.\n\n"
+        "Önemli: Öneri tahmindir, garanti değildir. Vücut fotoğrafları saklanmaz. Uygulama şimdilik davetle, "
+        "ücretsiz. Sitede satış, ödeme ya da hesap açma yoktur.\n\n"
         f"İletişim: {d['eposta_iletisim']} · KVKK başvuruları: {d['eposta_kvkk']} · "
         f"Güvenlik bildirimi: {d['eposta_guvenlik']} ({kok}/.well-known/security.txt)\n\n"
         "## Sayfalar\n\n" + liste(ana) + "\n## Yasal metinler\n\n" + liste(yasal)

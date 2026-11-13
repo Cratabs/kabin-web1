@@ -1,106 +1,129 @@
 <!-- Bu dosya _kaynak/build.py ile üretilir; doğrudan düzenlemeyin. -->
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="referrer" content="strict-origin-when-cross-origin"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'none'; object-src 'none'"><title>Kabin — Not the size on the label. The size that fits you.</title><meta name="description" content="Measurement estimates from two photos, an area-by-area comparison with the item’s size chart, and a size recommendation that explains why."><link rel="canonical" href="https://kabincommunity.com/en/"><link rel="alternate" hreflang="tr" href="https://kabincommunity.com/"><link rel="alternate" hreflang="en" href="https://kabincommunity.com/en/"><link rel="alternate" hreflang="x-default" href="https://kabincommunity.com/"><meta property="og:type" content="website"><meta property="og:site_name" content="Kabin"><meta property="og:locale" content="en_US"><meta property="og:title" content="Kabin — Not the size on the label. The size that fits you."><meta property="og:description" content="Measurement estimates from two photos, an area-by-area comparison with the item’s size chart, and a size recommendation that explains why."><meta property="og:url" content="https://kabincommunity.com/en/"><meta name="twitter:card" content="summary"><link rel="alternate" type="text/markdown" href="/en/index.md"><link rel="describedby" type="text/plain" href="/llms.txt"><meta name="theme-color" content="#faf8f5"><link rel="icon" href="/assets/kabin-mark.svg" type="image/svg+xml"><link rel="preload" href="/assets/playfair.ttf" as="font" type="font/ttf" crossorigin><link rel="stylesheet" href="/styles.css?v=ec6e5a2a0b"><script src="/app.js?v=1f4ad75967" defer></script><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://kabincommunity.com/#kurulus","name":"Kabin","url":"https://kabincommunity.com/","logo":"https://kabincommunity.com/assets/kabin-mark.svg","description":"A personal size and style assistant that estimates body measurements from photos and gives explainable size recommendations based on the item's size chart.","email":"berkay@kabincommunity.com","address":{"@type":"PostalAddress","streetAddress":"Yıldız Teknik Üniversitesi Davutpaşa Kampüsü","addressLocality":"Esenler","addressRegion":"İstanbul","addressCountry":"TR"},"founder":[{"@type":"Person","name":"Berkay Korkmaz"},{"@type":"Person","name":"Merve Kaplan"},{"@type":"Person","name":"Müfide Tuvana Taşar"}],"contactPoint":[{"@type":"ContactPoint","contactType":"customer support","email":"berkay@kabincommunity.com","availableLanguage":["tr"]},{"@type":"ContactPoint","contactType":"privacy","email":"berkay@kabincommunity.com","availableLanguage":["tr"]}]},{"@type":"WebSite","@id":"https://kabincommunity.com/#site","url":"https://kabincommunity.com/","name":"Kabin","inLanguage":["tr-TR","en"],"publisher":{"@id":"https://kabincommunity.com/#kurulus"}},{"@type":"WebPage","@id":"https://kabincommunity.com/en/#sayfa","url":"https://kabincommunity.com/en/","name":"Kabin — Not the size on the label. The size that fits you.","description":"Measurement estimates from two photos, an area-by-area comparison with the item’s size chart, and a size recommendation that explains why.","inLanguage":"en","isPartOf":{"@id":"https://kabincommunity.com/#site"},"publisher":{"@id":"https://kabincommunity.com/#kurulus"}},{"@type":"FAQPage","@id":"https://kabincommunity.com/en/#sss","mainEntity":[{"@type":"Question","name":"How accurate are measurements from photos?","acceptedAnswer":{"@type":"Answer","text":"Measurements from photos are estimates. We don’t yet publish a validated error rate. Loose clothing, a tilted posture or poor lighting affect the result; for the most precise result, you can check your measurements with a tape measure and correct them."}},{"@type":"Question","name":"Are my photos stored?","acceptedAnswer":{"@type":"Answer","text":"No. Photos are processed only in our server’s memory for the duration of the analysis; they are not written to disk or to logs, and they are not sent to third-party AI services. The measurement values from the analysis are stored on your device and in the measurement profile tied to your account."}},{"@type":"Question","name":"How reliable is the size recommendation?","acceptedAnswer":{"@type":"Answer","text":"Recommendations are estimates. The result depends on how accurate your measurements are, how accurate the store’s size chart is, and the fit information. Kabin does not guarantee fit."}},{"@type":"Question","name":"How do I delete my data?","acceptedAnswer":{"@type":"Answer","text":"You can delete your account and all data linked to it from the account settings in the app. For other requests, you can reach us through the channels listed in the KVKK information notice (in Turkish)."}}]}]}</script></head><body><a class="skip" href="#icerik">Skip to content</a><header><nav class="wrap nav" aria-label="Main menu"><a class="brand" href="/en/index.html" aria-label="Kabin home page"><img src="/assets/kabin-mark.svg" width="32" height="32" alt=""><span class="wordmark">kabin</span></a><div class="lang-switch" role="group" aria-label="Dil / Language"><a href="/" lang="tr" hreflang="tr" aria-label="TR, Türkçe">TR</a><a href="/en/" lang="en" hreflang="en" aria-label="EN, English" aria-current="true">EN</a></div><button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">Menu ☰</button><div class="nav-links" id="nav-links"><a href="/en/index.html#how-it-works">How it works</a><a href="/en/index.html#measurements">Photo measurements</a><a href="/en/brands.html">For brands</a><a href="/yasal/" hreflang="tr">Legal</a><a class="nav-cta" href="/en/index.html#contact">Contact <span aria-hidden="true">↗</span></a></div></nav></header><main id="icerik"><div class="wrap">
-<section class="hero" aria-labelledby="hero-title">
-  <div class="hero-copy">
-    <span class="status">PERSONAL SIZE AND STYLE ASSISTANT</span>
-    <h1 id="hero-title">Not the size<br>on the label.<br><em>The size that fits you.</em></h1>
-    <p>Estimate your measurements from two photos, one from the front and one from the side. Enter the size chart of the item you like, and we’ll explain, area by area, which size may fit you and why.</p>
-    <div class="buttons"><a class="button" href="#beta" data-beta-ac>Join the beta <span aria-hidden="true">↗</span></a><a class="text-link" href="#how-it-works">How it works ↓</a><a class="text-link" href="/en/brands.html">For brands ↗</a></div>
-    <p class="fine">Measurements estimated from photos and size recommendations are estimates;<br>they are not a guarantee of fit.</p>
-  </div>
-  <div class="hero-art" data-md="atla">
-    <img src="/assets/wardrobe.svg" width="780" height="920" alt="Original wardrobe illustration of a cream knit, a beige trench coat and sage trousers">
-    <span class="art-label">LESS GUESSWORK. MORE YOU.</span>
-    <div class="fit-float"><span class="eyebrow">SIZE NOTE · M</span><strong>Fit is in the details.</strong>
-      <div class="row"><span>Chest</span><span class="dot">Comfortable ease</span></div>
-      <div class="row"><span>Waist</span><span class="dot">Balanced</span></div>
-      <div class="row"><span>Hips</span><span class="dot">Close</span></div>
-      <p class="float-note">Illustrative interface · Not a real recommendation.</p></div>
-    <span class="vertical-note">KABIN — A PERSONAL STYLE ECOSYSTEM</span>
-  </div>
-</section>
-<div class="intro-strip"><p>FROM SHOPPING TO YOUR EVERYDAY STYLE</p><span><b>01</b> Your measurements</span><span><b>02</b> The item’s size chart</span><span><b>03</b> A size recommendation, with reasons</span></div>
+<!doctype html><html lang="en" class="betiksiz"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="referrer" content="strict-origin-when-cross-origin"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'none'; object-src 'none'"><title>Kabin · Which size? Size suggestions from your measurements</title><meta name="description" content="Measure once, with a tape measure or two photos. Kabin tells you your size for every item. Invite only for now, free."><link rel="canonical" href="https://kabincommunity.com/en/"><link rel="alternate" hreflang="tr" href="https://kabincommunity.com/"><link rel="alternate" hreflang="en" href="https://kabincommunity.com/en/"><link rel="alternate" hreflang="x-default" href="https://kabincommunity.com/"><meta property="og:type" content="website"><meta property="og:site_name" content="Kabin"><meta property="og:locale" content="en_US"><meta property="og:locale:alternate" content="tr_TR"><meta property="og:title" content="Kabin · Which size? Size suggestions from your measurements"><meta property="og:description" content="Measure once, with a tape measure or two photos. Kabin tells you your size for every item. Invite only for now, free."><meta property="og:url" content="https://kabincommunity.com/en/"><meta name="twitter:card" content="summary"><link rel="alternate" type="text/markdown" href="/en/index.md"><link rel="describedby" type="text/plain" href="/llms.txt"><meta name="theme-color" content="#EEF1EA"><link rel="icon" href="/assets/kabin-mark.svg" type="image/svg+xml"><link rel="preload" href="/fonts/playfair.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/css/temel.css?v=5e1ddf4baf"><link rel="stylesheet" href="/css/telefon.css?v=5e1ddf4baf"><link rel="stylesheet" href="/css/giris.css?v=5e1ddf4baf"><link rel="stylesheet" href="/css/bolum.css?v=5e1ddf4baf"><link rel="stylesheet" href="/css/ek.css?v=5e1ddf4baf"><script src="/js/menu.js?v=5e1ddf4baf"></script><script src="/app.js?v=5e1ddf4baf" defer></script><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://kabincommunity.com/#kurulus","name":"Kabin","url":"https://kabincommunity.com/","logo":"https://kabincommunity.com/assets/kabin-mark.svg","description":"A personal size and style assistant that estimates body measurements from photos and gives explainable size recommendations based on the item's size chart.","email":"berkay@kabincommunity.com","address":{"@type":"PostalAddress","streetAddress":"Yıldız Teknik Üniversitesi Davutpaşa Kampüsü","addressLocality":"Esenler","addressRegion":"İstanbul","addressCountry":"TR"},"founder":[{"@type":"Person","name":"Berkay Korkmaz"},{"@type":"Person","name":"Merve Kaplan"},{"@type":"Person","name":"Müfide Tuvana Taşar"}],"contactPoint":[{"@type":"ContactPoint","contactType":"customer support","email":"berkay@kabincommunity.com","availableLanguage":["tr"]},{"@type":"ContactPoint","contactType":"privacy","email":"berkay@kabincommunity.com","availableLanguage":["tr"]}]},{"@type":"WebSite","@id":"https://kabincommunity.com/#site","url":"https://kabincommunity.com/","name":"Kabin","inLanguage":["tr-TR","en"],"publisher":{"@id":"https://kabincommunity.com/#kurulus"}},{"@type":"WebPage","@id":"https://kabincommunity.com/en/#sayfa","url":"https://kabincommunity.com/en/","name":"Kabin · Which size? Size suggestions from your measurements","description":"Measure once, with a tape measure or two photos. Kabin tells you your size for every item. Invite only for now, free.","inLanguage":"en","isPartOf":{"@id":"https://kabincommunity.com/#site"},"publisher":{"@id":"https://kabincommunity.com/#kurulus"},"dateModified":"2026-11-14","about":{"@id":"https://kabincommunity.com/#uygulama"}},{"@type":"SoftwareApplication","@id":"https://kabincommunity.com/#uygulama","name":"Kabin","applicationCategory":"LifestyleApplication","description":"You measure once; Kabin tells you your size for every item: which size, where it’s tight, where it’s loose. You add your clothes and put outfits together. The suggestion is an estimate, not a guarantee.","inLanguage":"tr","publisher":{"@id":"https://kabincommunity.com/#kurulus"}}]}</script></head><body><a class="atla" href="#icerik">Skip to content</a><header class="ust-bilgi"><div class="kap"><a class="logo" href="/en/" aria-label="Kabin, home"><img src="/assets/kabin-mark.svg" width="32" height="32" alt="">kabin</a><nav class="gezin" id="gezin" aria-label="Site"><a href="/en/#how-it-works">How it works</a><a href="/en/#fit">How it fits</a><a href="/en/#wardrobe">Wardrobe</a><a href="/en/brands.html">For brands</a><a class="gezin-davet" href="/en/#invite">Request an invite</a><div class="dil" role="group" aria-label="Dil / Language"><a href="/" lang="tr" hreflang="tr" aria-label="TR, Türkçe">TR</a><a href="/en/" lang="en" hreflang="en" aria-label="EN, English" aria-current="true">EN</a></div></nav><a class="dugme dugme-1 dugme-k" href="/en/#invite">Request an invite</a><button class="menu-dugme" type="button" aria-expanded="false" aria-controls="gezin" aria-label="Menu"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" focusable="false"><path class="m1" d="M4 8.5h16"/><path class="m2" d="M4 15.5h16"/></svg></button></div></header><main id="icerik"><!-- GİRİŞ: sabitlenen 3B sahne. Kaydırdıkça mezura gömleği sarar, cevap kartı gelir. -->
+<section class="giris" data-iz aria-labelledby="giris-baslik">
+  <div class="giris-sabit sahne-kap" data-sahne="giris">
+    <h1 class="giris-baslik" id="giris-baslik" data-baslik><span class="satir" data-maske="Which">Which<i class="taban"></i></span> <span class="satir" data-maske="size?">size?<i class="taban"></i></span></h1>
+    <div class="giris-odak" data-odak aria-hidden="true"></div>
+    <div class="sahne-yedek" aria-hidden="true"><svg class="cizim c-web" viewBox="0 0 240 240" width="240" height="240" fill="none" aria-hidden="true" focusable="false"><g class="c-leke c-l1"><path fill="var(--blush)" d="M46 74c10-26 44-34 66-20 20 13 18 42 2 58-17 17-48 20-64 4-10-10-9-28-4-42z"/></g><g class="c-leke c-l2"><path fill="var(--mist)" d="M148 92c20-14 52-8 60 16 8 25-4 56-28 64-22 8-44-8-46-30-2-19 0-40 14-50z"/></g><g class="c-leke c-l3"><path fill="var(--butter)" d="M40 178c8-16 34-20 48-8 13 11 8 32-8 38-18 7-48-8-40-30z"/></g><g class="c-esin"><path class="c-cizgi" d="M120 58v-6c8-5 14-8 13-15-1-7-9-10-14-7-3 2-4 4-4 7"/><path class="c-cizgi" d="M120 58L52 98c-6 4-4 9 3 9h130c7 0 9-5 3-9L120 58z"/><path class="c-dolgu" d="M80 107c-3 30-9 58-5 88 13-7 25 3 37-4-1-30-3-58-5-84z"/><path class="c-kumas" d="M107 107c4 28 7 56 5 84 14 8 26-6 39 1-3-30-5-58-6-85z"/><path class="c-ince" d="M126 120c2 22 3 44 1 64M138 116c1 18 2 36 1 52"/></g><g class="c-mezura"><path class="c-serit-kenar" d="M150 196c26 6 52-4 50-26-2-18-26-20-28-4"/><path class="c-serit" d="M150 196c26 6 52-4 50-26-2-18-26-20-28-4"/><path class="c-serit-centik" d="M150 196c26 6 52-4 50-26-2-18-26-20-28-4"/></g><path class="c-ince" d="M196 47v10M191 52h10"/><path class="c-ince" d="M34 132v8M30 136h8"/><path class="c-ince" d="M178 214v8M174 218h8"/></svg></div>
+    <div class="sahne-tuval"></div>
 
-<section class="section" id="how-it-works">
-  <div class="section-heading"><div><span class="eyebrow">IN THREE STEPS</span><h2>A shopping decision<br><em>that knows you.</em></h2></div><p>Every brand’s fit is different.<br>Let your own measurements always be your starting point.</p></div>
-  <div class="steps">
-    <article class="step"><span class="step-no">01 / MEASUREMENTS</span><div class="step-icon" aria-hidden="true"><div class="photo-outline">FRONT</div><div class="photo-outline">SIDE</div></div>
-      <h3>Two photos or a tape measure.</h3>
-      <p>We estimate your body measurements from two photos you take from the front and the side. You see every measurement; if you have a value you measured with a tape, you can enter it. A measurement you enter yourself always takes priority.</p></article>
-    <article class="step"><span class="step-no">02 / ITEM</span><div class="step-icon" aria-hidden="true"><div class="measure-lines"><i></i><i></i><i></i></div></div>
-      <h3>Enter the item’s size chart.</h3>
-      <p>You enter the chest, waist and hip measurements from the size chart on the store’s product page into the app. You can also choose the item’s fit and how stretchy the fabric is.</p></article>
-    <article class="step"><span class="step-no">03 / RECOMMENDATION</span><div class="step-icon" aria-hidden="true"><span class="size-tile">S</span><span class="size-tile active">M</span><span class="size-tile">L</span></div>
-      <h3>Not just a size, but the reason.</h3>
-      <p>You see the recommended size and how each size would sit at the chest, waist and hips (tight, good fit, loose), one by one. The final decision is always yours.</p></article>
-  </div>
-</section>
-</div>
-
-<section class="demo-section" id="example"><div class="wrap demo-layout">
-  <div class="demo-copy"><span class="eyebrow">SEE WHAT’S BEHIND THE RECOMMENDATION</span><h2>More than<br><em>“get an M.”</em></h2>
-    <p>Switch sizes and see how the sample fit explanation changes. Kabin’s aim isn’t just to give you a letter, but to make your decision easier to understand.</p>
-    <p class="fine">This interaction uses fixed, illustrative data. It doesn’t take any measurements, doesn’t send data anywhere and isn’t a real purchase recommendation.</p></div>
-  <div class="demo-panel" data-md="atla">
-    <div class="demo-head"><span class="eyebrow">KABIN / SIZE NOTE</span><span>Sample experience</span></div>
-    <div class="demo-product"><div class="mini-garment" aria-hidden="true"><svg viewBox="0 0 70 90"><path d="M23 10L8 19 1 54l11 4 9-27-3 55h36l-3-55 9 27 10-4-8-35-15-9-12 9Z" fill="#b6a186"/><path d="M23 10l12 9-8 21-7-22m27-8L35 19l8 21 7-22M35 19v67" fill="none" stroke="#e6d9c4" stroke-width="2"/></svg></div>
-      <div><h3>Everyday trench coat</h3><p>Illustrative item · Regular fit · Non-stretch fabric</p></div></div>
-    <span class="fine" id="size-label">Change the sample size</span>
-    <div class="size-picker" role="group" aria-labelledby="size-label"><button type="button" data-size="S" aria-pressed="false">S</button><button type="button" data-size="M" aria-pressed="true">M</button><button type="button" data-size="L" aria-pressed="false">L</button></div>
-    <div id="fit-live" aria-live="polite">
-      <div class="fit-result"><strong id="fit-title">M · A balanced option</strong><p id="fit-description">Comfortable ease for everyday wear in the sample measurement profile.</p></div>
-      <div class="fit-region"><span>Chest</span><span id="fit-chest">Comfortable</span></div>
-      <div class="fit-region"><span>Waist</span><span id="fit-waist">Balanced</span></div>
-      <div class="fit-region"><span>Data used</span><span>Your measurement profile · The chart you confirmed</span></div>
+    <div class="giris-yazi">
+      <p class="lead">Measure once. Then we’ll tell you your size for every item.</p>
+      <div class="giris-dugme">
+        <a class="dugme dugme-1" href="#invite">Request an invite</a>
+        <a class="dugme dugme-2" href="#how-it-works">How it works</a>
+      </div>
+      <p class="ince">Invite only for now. Free.</p>
     </div>
-    <p class="fine">A real recommendation is calculated from your measurements and the size chart you enter.</p>
-  </div>
-</div></section>
 
-<div class="wrap">
-<section class="section" id="measurements">
-  <div class="section-heading"><div><span class="eyebrow">PHOTO MEASUREMENTS</span><h2>Two photos,<br><em>your measurements.</em></h2></div><p>No tape measure to hand? Start with your photos, and refine your measurements with a tape whenever you like.</p></div>
-  <div class="pilot-grid">
-    <article><h3>How do I take them?</h3><p>Two full-length photos, one from the front and one from the side. You also enter your height, weight and age, which support the estimate. The silhouette guide in the app shows you how to stand.</p></article>
-    <article><h3>What do I get?</h3><p>Estimated values for your body measurements. If you add a value you measured with a tape, the recommendation always uses your own measurement.</p></article>
-    <article><h3>What happens to my photos?</h3><p>They are processed only to estimate your measurements, in our own server’s memory for the duration of the analysis. They are not written to disk or to logs, are not stored and are never sent to any third-party AI service.</p></article>
-  </div>
-</section>
+    <figure class="giris-kart d-ui" aria-label="Example size suggestion">
+      <div class="kart">
+        <p class="oneri"><span>We suggest</span><b class="oneri-harf">M</b></p>
+        <p class="govde">Linen shirt. Right at the chest, easy at the waist.</p>
+        <div class="bolge" role="img" aria-label="Chest: right"><span class="bolge-ad">Chest</span><span class="bolge-iz" aria-hidden="true"><span class="">tight</span><span class="on z-tam">right</span><span class="">loose</span></span></div>
+        <div class="bolge" role="img" aria-label="Waist: loose"><span class="bolge-ad">Waist</span><span class="bolge-iz" aria-hidden="true"><span class="">tight</span><span class="">right</span><span class="on z-bol">loose</span></span></div>
+        <figcaption class="ikincil">Example.</figcaption>
+      </div>
+    </figure>
 
-<section class="section ecosystem" id="experience">
-  <div class="ecosystem-intro"><span class="eyebrow">MORE THAN A FITTING ROOM</span><h2>Style that runs<br><em>from your wardrobe to your outfits.</em></h2>
-    <p>Knowing your size is just the start. Kabin brings your wardrobe, your outfits and your style inspiration together in one experience.</p></div>
-  <div>
-    <article class="feature-row"><span class="feature-symbol" aria-hidden="true">⌑</span><div><h3>Your wardrobe, at your fingertips.</h3><p>Add your pieces one by one, or in bulk from your gallery. Your wardrobe is tied to your account; other users can’t see it.</p></div></article>
-    <article class="feature-row"><span class="feature-symbol" aria-hidden="true">◫</span><div><h3>Outfit builder.</h3><p>Pick pieces from your wardrobe and let our outfit model score how well they go together.</p></div></article>
-    <article class="feature-row"><span class="feature-symbol" aria-hidden="true">↗</span><div><h3>The Kabin community.</h3><p>Share your outfits, like and comment, and follow the styles you love. Your measurements never appear in any post; inappropriate content can be reported and is reviewed.</p></div></article>
+    <div class="cetvel" aria-hidden="true"><span class="cetvel-im"></span></div>
   </div>
 </section>
 
-<section class="business-banner"><div><span class="eyebrow">FOR FASHION BRANDS</span><h2>The right size.<br>A clearer decision.</h2><p>Let’s try explainable size recommendations with your product size data, in your own channel. First, let’s agree on the scope and success criteria together.</p></div><a class="button light" href="/en/brands.html">For brands <span aria-hidden="true">↗</span></a></section>
-
-<section class="privacy-row"><div><h3>Your measurements are personal.<br>So should your control be.</h3><p>Your body profile is not a public social profile. We process data only to the minimum extent our work requires; we don’t sell it and we don’t use it for advertising.</p><a class="text-link" href="/yasal/gizlilik.html" hreflang="tr">Privacy policy (in Turkish) ↗</a></div>
-  <ul>
-    <li>Your measurements and wardrobe are tied to your account; they don’t appear in the community unless you share them.</li>
-    <li>Your body photos are not stored and are never sent to any third-party AI service.</li>
-    <li>This site uses no cookies, analytics or advertising tools.</li>
-    <li>You can permanently delete your account and your data from the app.</li>
-  </ul>
+<!-- NASIL ÇALIŞIR: solda sabit telefon, sağda üç adım. Adım değişince ekran değişir. -->
+<section class="bolum adimlar" id="how-it-works" aria-labelledby="nasil-baslik">
+  <div class="kap adim-izgara">
+    <div class="adim-sahne">
+      <div class="adim-panel">
+        <span class="adim-cakil ac1" aria-hidden="true"></span><span class="adim-cakil ac2" aria-hidden="true"></span>
+        <div class="adim-teller d-ui tel-kirp" data-adim-teller aria-hidden="true" inert data-nosnippet></div>
+      </div>
+    </div>
+    <div class="adim-yazi">
+      <h2 class="kucuk-baslik" id="nasil-baslik"><span id="measurements"></span>How it works</h2>
+      <ol class="adim-liste">
+        <li class="adim" data-adim="0">
+          <span class="adim-no" aria-hidden="true">1</span>
+          <h3 class="b2">Take your measurements.</h3>
+          <p class="lead soluk">With a tape measure or two photos.</p>
+        </li>
+        <li class="adim" data-adim="1">
+          <span class="adim-no" aria-hidden="true">2</span>
+          <h3 class="b2">Paste the link.</h3>
+          <p class="lead soluk">The link to the item in the store is enough.</p>
+        </li>
+        <li class="adim" data-adim="2">
+          <span class="adim-no" aria-hidden="true">3</span>
+          <h3 class="b2">See your size.</h3>
+          <p class="lead soluk">Which size, where it’s tight, where it’s loose.</p>
+        </li>
+      </ol>
+    </div>
+  </div>
 </section>
 
-<section class="section faq"><span class="eyebrow">YOUR QUESTIONS</span><h2>A little closer.</h2>
-  <details><summary>How accurate are measurements from photos?</summary><p>Measurements from photos are estimates. We don’t yet publish a validated error rate. Loose clothing, a tilted posture or poor lighting affect the result; for the most precise result, you can check your measurements with a tape measure and correct them.</p></details>
-  <details><summary>Are my photos stored?</summary><p>No. Photos are processed only in our server’s memory for the duration of the analysis; they are not written to disk or to logs, and they are not sent to third-party AI services. The measurement values from the analysis are stored on your device and in the measurement profile tied to your account.</p></details>
-  <details><summary>How reliable is the size recommendation?</summary><p>Recommendations are estimates. The result depends on how accurate your measurements are, how accurate the store’s size chart is, and the fit information. Kabin does not guarantee fit.</p></details>
-  <details><summary>How do I delete my data?</summary><p>You can delete your account and all data linked to it from the account settings in the app. For other requests, you can reach us through the channels listed in the <a class="text-link" href="/yasal/kvkk-aydinlatma.html#haklar" hreflang="tr">KVKK information notice</a> (in Turkish).</p></details>
+<!-- UYGULAMA: iki ekran, gerçek HTML -->
+<section class="bolum uygulama" id="app" aria-labelledby="uygulama-baslik">
+  <div class="kap">
+    <h2 class="b2" id="uygulama-baslik">Here it is on your phone.</h2>
+  </div>
+  <div class="tel-serit d-ui tel-kirp" data-tel-serit aria-hidden="true" inert data-nosnippet></div>
+  <p class="gizli">What to wear today, and your wardrobe.</p>
 </section>
 
-<section class="join" id="contact"><div class="join-copy"><span class="eyebrow">CONTACT</span><h2>Write<br><em>to us.</em></h2>
-  <p>For questions, suggestions and partnerships, you can reach us at our email address. Details of pilot partnerships with fashion brands are on the <a class="text-link" href="/en/brands.html#pilot">For brands</a> page.</p>
-  <div class="buttons"><a class="button outline" href="#beta" data-beta-ac>Join the beta <span aria-hidden="true">↗</span></a></div></div>
-  <div class="contact-card"><p class="eyebrow">EMAIL</p><p class="contact-mail"><a class="text-link" href="mailto:berkay@kabincommunity.com">berkay@kabincommunity.com</a></p>
-    <p class="fine">Your personal data is processed in line with the <a class="text-link" href="/yasal/kvkk-aydinlatma.html" hreflang="tr">KVKK Information Notice</a>. <a class="text-link" href="/en/about.html">About us</a> · <a class="text-link" href="/en/contact.html">Contact details</a> · <a class="text-link" href="/yasal/kullanim-kosullari.html" hreflang="tr">Terms of use</a>. Our legal texts are in Turkish.</p></div>
+<!-- DAR · TAM · BOL: oynanabilir. Beden ve bölge değişince çubuklar ve mezura değişir. -->
+<section class="bolum uyum" id="fit" aria-labelledby="uyum-baslik">
+  <div class="kap uyum-izgara">
+    <div class="uyum-sahne sahne-kap" data-sahne="uyum">
+      <div class="uyum-odak" data-odak aria-hidden="true"></div>
+      <div class="sahne-yedek" aria-hidden="true"><svg class="cizim c-web" viewBox="0 0 240 240" width="240" height="240" fill="none" aria-hidden="true" focusable="false"><g class="c-leke c-l1"><path fill="var(--blush)" d="M46 74c10-26 44-34 66-20 20 13 18 42 2 58-17 17-48 20-64 4-10-10-9-28-4-42z"/></g><g class="c-leke c-l2"><path fill="var(--mist)" d="M148 92c20-14 52-8 60 16 8 25-4 56-28 64-22 8-44-8-46-30-2-19 0-40 14-50z"/></g><g class="c-leke c-l3"><path fill="var(--butter)" d="M40 178c8-16 34-20 48-8 13 11 8 32-8 38-18 7-48-8-40-30z"/></g><g class="c-esin"><path class="c-cizgi" d="M120 58v-6c8-5 14-8 13-15-1-7-9-10-14-7-3 2-4 4-4 7"/><path class="c-cizgi" d="M120 58L52 98c-6 4-4 9 3 9h130c7 0 9-5 3-9L120 58z"/><path class="c-dolgu" d="M80 107c-3 30-9 58-5 88 13-7 25 3 37-4-1-30-3-58-5-84z"/><path class="c-kumas" d="M107 107c4 28 7 56 5 84 14 8 26-6 39 1-3-30-5-58-6-85z"/><path class="c-ince" d="M126 120c2 22 3 44 1 64M138 116c1 18 2 36 1 52"/></g><g class="c-mezura"><path class="c-serit-kenar" d="M150 196c26 6 52-4 50-26-2-18-26-20-28-4"/><path class="c-serit" d="M150 196c26 6 52-4 50-26-2-18-26-20-28-4"/><path class="c-serit-centik" d="M150 196c26 6 52-4 50-26-2-18-26-20-28-4"/></g><path class="c-ince" d="M196 47v10M191 52h10"/><path class="c-ince" d="M34 132v8M30 136h8"/><path class="c-ince" d="M178 214v8M174 218h8"/></svg></div>
+      <div class="sahne-tuval"></div>
+    </div>
+    <div class="uyum-yazi">
+      <h2 class="b2" id="uyum-baslik"><span id="example"></span>How does it fit?</h2>
+      <p class="lead soluk">Change the size and see.</p>
+      <div class="uyum-kart d-ui" data-uyum data-nosnippet></div>
+      <p class="ince">Example: linen shirt. The suggestion is an estimate, not a guarantee.</p>
+    </div>
+  </div>
 </section>
-</div>
-<dialog class="beta-dialog" id="beta" aria-labelledby="beta-baslik"><div class="beta-head"><span class="eyebrow">BETA LIST</span><button type="button" class="beta-kapat" data-beta-kapat aria-label="Close">×</button></div><h2 id="beta-baslik">Be among the first <em>to try it.</em></h2><p class="fine">We’ll email you an invitation when the closed beta opens. We won’t send you anything else.</p><form class="apply" action="/api/basvuru.php" method="post" data-basvuru="beta"><fieldset class="form-body"><input type="hidden" name="tur" value="beta"><input type="hidden" name="dil" value="en"><input type="hidden" name="utm_source" value=""><input type="hidden" name="utm_medium" value=""><input type="hidden" name="utm_campaign" value=""><label for="beta-ad">Your name</label><input id="beta-ad" name="ad" autocomplete="given-name" minlength="2" maxlength="100" required><label for="beta-eposta">Your email address</label><input id="beta-eposta" name="eposta" type="email" autocomplete="email" maxlength="254" required><label for="beta-platform">Your phone</label><select id="beta-platform" name="platform" required><option value="">Select</option><option value="android">Android</option><option value="ios">iPhone</option><option value="diger">Other</option></select><p class="fine" id="beta-aydinlatma-ozet">The Kabin co-founders (joint data controllers) process your name, email and phone type to send you an invitation when the beta opens, and the promotional channel you came from only to count it in aggregate. The data is stored in our hosting provider’s data center abroad (EU) and is not shared with anyone; no newsletters or promotions are sent. The legal bases, your rights and the retention period are set out in the full notice (in Turkish).</p><label class="check-label"><input type="checkbox" name="yas18" value="evet" required><span>I am over 18.</span></label><label class="check-label"><input type="checkbox" name="aydinlatma" value="evet" required><span>I have read the <a href="/yasal/kvkk-aydinlatma.html#beta-listesi" hreflang="tr" target="_blank" rel="noopener">KVKK Information Notice</a> (in Turkish) and understand that my information will be processed for the purposes set out in it.</span></label><div class="hp" aria-hidden="true"><label for="web_sitesi_beta">Your website</label><input id="web_sitesi_beta" name="web_sitesi" type="text" tabindex="-1" autocomplete="off"></div><button class="button" type="submit">Join the list <span aria-hidden="true">↗</span></button></fieldset><p class="form-status" role="status" aria-live="polite"></p></form></dialog>
-</main><footer class="footer"><div class="wrap"><div class="footer-top"><a class="brand" href="/en/index.html"><img src="/assets/kabin-mark.svg" width="30" height="30" alt=""><span class="wordmark">kabin</span></a><div class="footer-links"><a href="/en/index.html#how-it-works">How it works</a><a href="/en/brands.html">For brands</a><a href="/en/about.html">About us</a><a href="/en/contact.html">Contact</a><a href="/yasal/kvkk-aydinlatma.html" hreflang="tr">KVKK information notice</a><a href="/yasal/gizlilik.html" hreflang="tr">Privacy</a><a href="/yasal/kullanici-sozlesmesi.html" hreflang="tr">User agreement</a><a href="/yasal/cerez.html" hreflang="tr">Cookies</a><a href="/yasal/kullanim-kosullari.html" hreflang="tr">Terms of use</a><a href="/yasal/" hreflang="tr">All legal texts</a></div></div><div class="footer-bottom"><span>© 2026 Kabin · Data controllers: Berkay Korkmaz, Merve Kaplan and Müfide Tuvana Taşar (the Kabin co-founders; no legal entity has been established yet) · <a class="text-link" href="mailto:berkay@kabincommunity.com">berkay@kabincommunity.com</a></span><span>Measurements from photos and size recommendations are estimates, not a guarantee of fit.</span><span>Our legal texts are available in Turkish only; the Turkish version is the governing one.</span></div></div></footer></body></html>
+
+<!-- DOLAP -->
+<section class="bolum dolap" id="wardrobe" aria-labelledby="dolap-baslik">
+  <div class="kap dolap-bas">
+    <div class="dolap-yazi">
+      <h2 class="b2" id="dolap-baslik"><span id="experience"></span>Your wardrobe is here&nbsp;too.</h2>
+      <p class="lead soluk">Add your clothes and put outfits together. Can’t decide? Ask a friend.</p>
+    </div>
+    <div class="gorsel-blok"><img class="gorsel" src="/gorsel/astra/dolap-portal-915.webp" srcset="/gorsel/astra/dolap-portal-640.webp 640w, /gorsel/astra/dolap-portal-915.webp 915w" sizes="(min-width: 900px) 30vw, 90vw" width="915" height="1156" loading="lazy" decoding="async" alt="An open wardrobe with folded trousers, a sweater, a shirt and a scarf coming out of it, and a tape measure winding around them."></div>
+  </div>
+  <div class="ray d-ui" data-ray data-nosnippet></div>
+</section>
+
+<!-- MARKALAR -->
+<section class="bolum marka-cagri" aria-labelledby="marka-baslik">
+  <div class="kap">
+    <div class="murekkep-panel">
+      <div class="murekkep-sag">
+        <h2 class="b2" id="marka-baslik">Have a store?</h2>
+        <p class="lead">We’ll add a size button to your product page. Try it on a few items first.</p>
+        <a class="dugme dugme-ters" href="/en/brands.html">For brands</a>
+      </div>
+      <div class="gorsel-blok"><img class="gorsel" src="/gorsel/astra/marka-vitrin-1203.webp" srcset="/gorsel/astra/marka-vitrin-640.webp 640w, /gorsel/astra/marka-vitrin-960.webp 960w, /gorsel/astra/marka-vitrin-1203.webp 1203w" sizes="(min-width: 900px) 36vw, 90vw" width="1203" height="907" loading="lazy" decoding="async" alt="A mock product page with a tape measure winding around it."></div>
+    </div>
+  </div>
+</section>
+
+<!-- DAVET -->
+<section class="bolum davet" id="invite" aria-labelledby="davet-baslik">
+  <div class="kap davet-izgara">
+    <div class="davet-yazi">
+      <h2 class="b2" id="davet-baslik"><span id="beta"></span>Request an invite.</h2>
+      <p class="lead soluk">We’ll email you an invite when a spot opens.</p>
+
+    <form class="davet-form" action="/api/basvuru.php" method="post" data-basvuru="beta"><input type="hidden" name="tur" value="beta"><input type="hidden" name="dil" value="en"><input type="hidden" name="utm_source" value=""><input type="hidden" name="utm_medium" value=""><input type="hidden" name="utm_campaign" value=""><div class="alan"><label for="d-ad">Your name</label><input id="d-ad" name="ad" autocomplete="given-name" minlength="2" maxlength="100" required></div><div class="alan"><label for="d-eposta">Email</label><input id="d-eposta" name="eposta" type="email" autocomplete="email" maxlength="254" required></div><div class="alan"><label for="d-tel">Which phone?</label><select id="d-tel" name="platform" required><option value="">Select</option><option value="android">Android</option><option value="ios">iPhone</option><option value="diger">Other</option></select></div><label class="onay"><input type="checkbox" name="yas18" value="evet" required><span>I’m over 18.</span></label><label class="onay"><input type="checkbox" name="aydinlatma" value="evet" required><span>I’ve read the <a class="bag" href="/yasal/kvkk-aydinlatma.html#beta-listesi" hreflang="tr" target="_blank" rel="noopener">KVKK Information Notice</a> (in Turkish).</span></label><div class="hp" aria-hidden="true"><label for="web_sitesi_beta">Your website</label><input id="web_sitesi_beta" name="web_sitesi" type="text" tabindex="-1" autocomplete="off"></div><div class="form-son"><button class="dugme dugme-1" type="submit">Request an invite</button><p class="ince form-status" role="status" aria-live="polite"></p></div><p class="ince form-ozet" id="beta-aydinlatma-ozet">The Kabin co-founders (joint data controllers) process your name, email and phone type to send you an invitation when the beta opens, and the promotional channel you came from only to count it in aggregate. The data is stored in our hosting provider’s data center abroad (EU) and is not shared with anyone; no newsletters or promotions are sent. The legal bases, your rights and the retention period are set out in the full notice (in Turkish).</p></form>
+    </div>
+    <div class="davet-gorsel"><img class="gorsel" src="/gorsel/astra/uc-beden-1453.webp" srcset="/gorsel/astra/uc-beden-640.webp 640w, /gorsel/astra/uc-beden-960.webp 960w, /gorsel/astra/uc-beden-1280.webp 1280w, /gorsel/astra/uc-beden-1453.webp 1453w" sizes="(min-width: 900px) 48vw, 92vw" width="1453" height="636" loading="lazy" decoding="async" alt="Three folded linen shirts, small to large, with a tape measure winding around them"></div>
+  </div>
+</section>
+</main><footer class="alt-bilgi"><span class="dev-yazi" aria-hidden="true"><span class="cakil c1"></span><span class="cakil c2"></span><span class="cakil c3"></span>kabin</span><div class="kap alt-satir"><nav aria-label="Footer links"><a href="/en/" aria-current="page">Home</a><a href="/en/about.html">About</a><a href="/en/questions.html">Questions</a><a href="/en/contact.html">Contact</a><a href="/en/brands.html">For brands</a><a href="/yasal/gizlilik.html" hreflang="tr">Privacy</a><a href="/yasal/kvkk-aydinlatma.html" hreflang="tr">KVKK notice</a><a href="/yasal/kullanim-kosullari.html" hreflang="tr">Terms of use</a><a href="/yasal/" hreflang="tr">All legal texts</a></nav><a id="contact" href="mailto:berkay@kabincommunity.com">berkay@kabincommunity.com</a><p class="alt-not">Our legal texts are available in Turkish only; the Turkish version is the governing one.</p></div></footer><script src="/js/dil.js?v=5e1ddf4baf"></script><script src="/js/cizim.js?v=5e1ddf4baf"></script><script src="/js/aski-serit.js?v=5e1ddf4baf"></script><script src="/js/telefon.js?v=5e1ddf4baf"></script><script src="/js/telefon-ek.js?v=5e1ddf4baf"></script><script src="/js/uyum.js?v=5e1ddf4baf"></script><script src="/js/sahne-yer.js?v=5e1ddf4baf"></script><script src="/js/site.js?v=5e1ddf4baf"></script></body></html>

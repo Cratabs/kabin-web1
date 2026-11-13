@@ -64,6 +64,9 @@ Durum 2026-11-07 itibarıyla (App-mvp, mvp-beta dalı):
 - [ ] Hostinger PHP ≥ 8.1, SSL kurulu, Force HTTPS açık
 - [ ] `kabin-private/config.php` web kökünün dışında, izin 600, `secret` rastgele
 - [ ] README > "Canlı denetim" komutlarının hepsi beklenen sonucu veriyor
+- [ ] 2026-11-14 görünüm taşımasından sonra canlıda: `/model/gomlek.gltf`, `/model/gomlek.bin`, `/fonts/inter.woff2` 200 dönüyor
+      ve tür başlıkları doğru (`model/gltf+json`, `application/octet-stream`, `font/woff2`); ana sayfada 3B gömlek görünüyor,
+      konsolda CSP hatası yok; eski `styles.css` ve `assets/*.ttf` sunucudan da silinmiş
 - [ ] `berkay@kabincommunity.com` posta kutusu hPanel'de açık ve posta alıyor (sitede, security.txt'de ve
       JSON-LD'de yayımlanıyor)
 - [ ] Form açıldıktan sonra: test talebi gönderildi, bildirim e-postası geldi, kayıt

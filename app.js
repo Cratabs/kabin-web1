@@ -1,85 +1,33 @@
 "use strict";
 const TEXT = {
     tr: {
-        menuOpen: 'Menüyü aç',
-        menuClose: 'Menüyü kapat',
-        examples: {
-            S: { title: 'S · Daha yakın bir kalıp', description: 'Örnek profilde hareket payı sınırlı; katmanlı kullanım için dar olabilir.', chest: 'Yakın / sınırlı pay', waist: 'Daha yakın' },
-            M: { title: 'M · Dengeli bir seçenek', description: 'Örnek ölçü profilinde günlük kullanım için rahat pay.', chest: 'Rahat', waist: 'Dengeli' },
-            L: { title: 'L · Daha bol bir görünüm', description: 'Örnek profilde daha fazla bolluk; bol kesim tercihi için düşünülebilir.', chest: 'Bol', waist: 'Bol' },
-        },
         errors: {
-            GECERSIZ: 'Lütfen zorunlu alanları kontrol et; e-posta adresi geçerli olmalı.',
-            SINIR: 'Kısa sürede çok fazla deneme yapıldı. Lütfen bir saat sonra tekrar dene.',
-            KAPALI: 'Talepler şu an bu formdan alınamıyor. Lütfen bize e-postayla yaz.',
-            KAYNAK: 'Başvuru bu sayfadan gönderilemedi. Sayfayı yenileyip tekrar dene.',
-            BUYUK: 'Gönderilen bilgi çok uzun.',
+            GECERSIZ: 'Alanları kontrol edin. E-posta adresi doğru olmalı.',
+            SINIR: 'Kısa sürede çok deneme yapıldı. Bir saat sonra yeniden deneyin.',
+            KAPALI: 'Form şu an kapalı. Bize e-posta yazın.',
+            KAYNAK: 'Bu sayfadan gönderilemedi. Sayfayı yenileyip yeniden deneyin.',
+            BUYUK: 'Yazdıklarınız çok uzun.',
         },
-        generic: 'Talep gönderilemedi. Bağlantını kontrol edip tekrar dene.',
+        generic: 'Gönderilemedi. Bağlantınızı kontrol edip yeniden deneyin.',
         sending: 'Gönderiliyor…',
-        pilotDone: ['Talebiniz alındı.', 'Talebinizi kaydettik; en kısa sürede e-postayla dönüş yapacağız.'],
-        betaDone: ['Listedesin.', 'Kapalı beta açıldığında e-posta adresine davet göndereceğiz.'],
+        pilotDone: ['Yazdıklarınızı aldık.', 'Size e-postayla döneceğiz.'],
+        betaDone: ['Listedesiniz.', 'Yer açılınca e-postayla davet göndeririz.'],
     },
     en: {
-        menuOpen: 'Open menu',
-        menuClose: 'Close menu',
-        examples: {
-            S: { title: 'S · A closer fit', description: 'Limited room to move in the sample profile; may feel tight for layering.', chest: 'Close / limited ease', waist: 'Closer' },
-            M: { title: 'M · A balanced option', description: 'Comfortable ease for everyday wear in the sample measurement profile.', chest: 'Comfortable', waist: 'Balanced' },
-            L: { title: 'L · A looser look', description: 'More room in the sample profile; worth considering if you prefer a loose cut.', chest: 'Loose', waist: 'Loose' },
-        },
         errors: {
-            GECERSIZ: 'Please check the required fields; the email address must be valid.',
-            SINIR: 'Too many attempts in a short time. Please try again in an hour.',
-            KAPALI: 'Requests can’t be received through this form right now. Please email us instead.',
-            KAYNAK: 'The request couldn’t be sent from this page. Please refresh the page and try again.',
-            BUYUK: 'The information you sent is too long.',
+            GECERSIZ: 'Check the fields. The email address has to be valid.',
+            SINIR: 'Too many tries in a short time. Try again in an hour.',
+            KAPALI: 'The form is closed right now. Email us instead.',
+            KAYNAK: 'It couldn’t be sent from this page. Refresh and try again.',
+            BUYUK: 'What you wrote is too long.',
         },
-        generic: 'The request couldn’t be sent. Please check your connection and try again.',
+        generic: 'It wasn’t sent. Check your connection and try again.',
         sending: 'Sending…',
-        pilotDone: ['Your request has been received.', 'We’ve recorded your request and will get back to you by email as soon as possible.'],
-        betaDone: ['You’re on the list.', 'We’ll send an invitation to your email address when the closed beta opens.'],
+        pilotDone: ['We got your message.', 'We’ll get back to you by email.'],
+        betaDone: ['You’re on the list.', 'We’ll email you an invite when a spot opens.'],
     },
 };
 const T = document.documentElement.lang === 'en' ? TEXT.en : TEXT.tr;
-const menu = document.querySelector('.menu-toggle');
-const nav = document.querySelector('#nav-links');
-function closeMenu() {
-    nav?.classList.remove('open');
-    menu?.setAttribute('aria-expanded', 'false');
-    menu?.setAttribute('aria-label', T.menuOpen);
-}
-menu?.addEventListener('click', () => {
-    const isOpen = menu.getAttribute('aria-expanded') !== 'true';
-    nav?.classList.toggle('open', isOpen);
-    menu.setAttribute('aria-expanded', String(isOpen));
-    menu.setAttribute('aria-label', isOpen ? T.menuClose : T.menuOpen);
-});
-nav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
-document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && menu?.getAttribute('aria-expanded') === 'true') {
-        closeMenu();
-        menu.focus();
-    }
-});
-const sizes = document.querySelectorAll('[data-size]');
-sizes.forEach((button) => button.addEventListener('click', () => {
-    const example = T.examples[button.dataset['size'] ?? ''];
-    if (example === undefined)
-        return;
-    sizes.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
-    const values = {
-        'fit-title': example.title,
-        'fit-description': example.description,
-        'fit-chest': example.chest,
-        'fit-waist': example.waist,
-    };
-    for (const [id, value] of Object.entries(values)) {
-        const node = document.getElementById(id);
-        if (node)
-            node.textContent = value;
-    }
-}));
 function errorCode(body) {
     if (typeof body !== 'object' || body === null || !('kod' in body))
         return null;
@@ -101,37 +49,19 @@ function showDone(form) {
     done.focus();
 }
 const UTM = /^[a-z0-9._-]{1,60}$/;
-const betaDialog = document.querySelector('dialog#beta');
-if (betaDialog) {
+const betaForm = document.querySelector('form[data-basvuru="beta"]');
+if (betaForm) {
     const params = new URLSearchParams(window.location.search);
     for (const key of ['utm_source', 'utm_medium', 'utm_campaign']) {
         const value = (params.get(key) ?? '').trim().toLowerCase();
-        const input = betaDialog.querySelector(`input[name="${key}"]`);
+        const input = betaForm.querySelector(`input[name="${key}"]`);
         if (input && UTM.test(value))
             input.value = value;
     }
-    const open = () => {
-        if (betaDialog.open)
-            return;
-        if (window.location.hash === '#beta')
-            history.replaceState(null, '', window.location.pathname + window.location.search);
-        betaDialog.showModal();
-        betaDialog.querySelector('input[name="ad"]')?.focus();
-    };
-    document.querySelectorAll('a[data-beta-ac]').forEach((a) => a.addEventListener('click', (event) => {
-        event.preventDefault();
-        open();
-    }));
-    betaDialog.querySelector('[data-beta-kapat]')?.addEventListener('click', () => betaDialog.close());
-    betaDialog.addEventListener('click', (event) => {
-        if (event.target === betaDialog)
-            betaDialog.close();
-    });
-    if (window.location.hash === '#beta')
-        open();
 }
 document.querySelectorAll('form[data-basvuru]').forEach((form) => {
-    const body = form.querySelector('.form-body');
+    const controls = form.querySelectorAll('input, select, textarea, button');
+    const lock = (locked) => controls.forEach((control) => (control.disabled = locked));
     const status = form.querySelector('.form-status');
     const setStatus = (text, isError) => {
         if (!status)
@@ -141,7 +71,7 @@ document.querySelectorAll('form[data-basvuru]').forEach((form) => {
     };
     form.addEventListener('submit', (event) => {
         event.preventDefault();
-        if (body?.disabled === true)
+        if (form.hidden)
             return;
         if (!form.reportValidity())
             return;
@@ -150,8 +80,7 @@ document.querySelectorAll('form[data-basvuru]').forEach((form) => {
             if (typeof value === 'string')
                 data.append(key, value);
         }
-        if (body)
-            body.disabled = true;
+        lock(true);
         setStatus(T.sending, false);
         fetch(form.action, {
             method: 'POST',
@@ -175,13 +104,11 @@ document.querySelectorAll('form[data-basvuru]').forEach((form) => {
             }
             const kod = errorCode(parsed);
             setStatus((kod !== null ? T.errors[kod] : undefined) ?? T.generic, true);
-            if (body)
-                body.disabled = false;
+            lock(false);
         })
             .catch(() => {
             setStatus(T.generic, true);
-            if (body)
-                body.disabled = false;
+            lock(false);
         });
     });
 });

@@ -8,8 +8,11 @@ ServerSignature Off
 ErrorDocument 404 /404.html
 ErrorDocument 403 /404.html
 
-AddType font/ttf .ttf
+AddType font/woff2 .woff2
 AddType image/svg+xml .svg
+AddType image/webp .webp
+AddType model/gltf+json .gltf
+AddType application/octet-stream .bin
 AddType text/plain .txt
 AddType text/markdown .md
 AddType application/xml .xml
@@ -108,7 +111,8 @@ AddCharset utf-8 .md .txt .xml
   <FilesMatch "\.(css|js)$">
     Header set Cache-Control "public, max-age=2592000"
   </FilesMatch>
-  <FilesMatch "\.(ttf|svg)$">
+  # Yazı tipi, görsel ve 3B model: adları içerikle birlikte değişir (aynı adla yeni içerik konmaz).
+  <FilesMatch "\.(woff2|svg|webp|jpg|gltf|bin)$">
     Header set Cache-Control "public, max-age=2592000"
   </FilesMatch>
 </IfModule>

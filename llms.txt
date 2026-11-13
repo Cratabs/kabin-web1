@@ -1,17 +1,18 @@
 # Kabin
 
-> Kabin, kişisel beden ve stil asistanıdır. Önden ve yandan çekilen iki fotoğraftan vücut ölçülerini tahmin eder (mezurayla girilen ölçü her zaman önceliklidir), ürünün beden tablosuyla karşılaştırır ve her bölge için dar / uygun / bol sonucunu nedeniyle gösterir. Dolap hesaba bağlıdır; kombin uyumu puanlanır; toplulukta kombin paylaşılır. Fotoğraflar diske yazılmaz.
+> Kabin, ölçünüze göre beden söyleyen bir uygulamadır. Ölçünüzü bir kez mezurayla ya da önden ve yandan iki fotoğrafla alırsınız; mezurayla girdiğiniz ölçü her zaman önce gelir. Ürünün bağlantısını uygulamaya yapıştırırsınız; Kabin ürünün beden tablosuna bakar, hangi bedenin uyacağını ve göğüste, belde, basende nerede dar, nerede bol kalacağını gösterir. Dolabınızı ekler, kombin kurarsınız; dolap hesaba bağlıdır. Moda markaları için ürün sayfasına eklenen bir beden düğmesi de var.
 
-Önemli: Ölçüler ve beden önerileri tahminidir, uyum garantisi değildir. Uygulama davetle kullanılır; sitede satış, ödeme ya da hesap açma yoktur.
+Önemli: Öneri tahmindir, garanti değildir. Vücut fotoğrafları saklanmaz. Uygulama şimdilik davetle, ücretsiz. Sitede satış, ödeme ya da hesap açma yoktur.
 
 İletişim: berkay@kabincommunity.com · KVKK başvuruları: berkay@kabincommunity.com · Güvenlik bildirimi: berkay@kabincommunity.com (https://kabincommunity.com/.well-known/security.txt)
 
 ## Sayfalar
 
-- [Kabin — Etiketteki beden değil, sana uyan beden.](https://kabincommunity.com/index.md): İki fotoğraftan ölçü tahmini, ürünün beden tablosuyla bölge bölge karşılaştırma ve nedenini açıklayan beden önerisi.
-- [Markalar için Kabin — Beden önerisini birlikte doğrulayalım](https://kabincommunity.com/markalar.md): Moda markaları için açıklanabilir beden önerisi pilotu.
-- [Hakkımızda — Kabin](https://kabincommunity.com/hakkinda.md): Kabin'i kimin, neden ve nasıl geliştirdiği.
-- [İletişim — Kabin](https://kabincommunity.com/iletisim.md): Kabin ekibinin e-posta ve adres bilgileri.
+- [Kabin · Hangi beden? Ölçünüze göre beden önerisi](https://kabincommunity.com/index.md): Ölçünüzü bir kez alın, mezurayla ya da iki fotoğrafla. Kabin her üründe bedeninizi söylesin. Şimdilik davetle, ücretsiz.
+- [Kabin · Markalar için beden aracı](https://kabincommunity.com/markalar.md): Müşteriniz ürün sayfanızda ölçüsünü girer, bedenini görür. Sayfanıza bir düğme gelir. Önce birkaç üründe deneyin.
+- [Hakkında · Kabin](https://kabincommunity.com/hakkinda.md): Kabin bedeni etiketteki harfe göre değil, sizin ölçünüze göre söyler. Neden ve kimlerin yaptığı.
+- [İletişim · Kabin](https://kabincommunity.com/iletisim.md): Soru, öneri, iş birliği ya da basın için e-posta yazın. Adres, KVKK ve güvenlik bildirimi bilgileri.
+- [Sorular · Kabin](https://kabincommunity.com/sorular.md): Fotoğraftan ölçü ne kadar doğru? Fotoğraflarım saklanıyor mu? Beden önerisi ne kadar güvenilir? Verilerimi nasıl silerim?
 
 ## Yasal metinler
 
@@ -27,7 +28,8 @@
 
 English versions of the main pages. Legal texts are available in Turkish only; the Turkish version is the governing one.
 
-- [Kabin — Not the size on the label. The size that fits you.](https://kabincommunity.com/en/index.md): Measurement estimates from two photos, an area-by-area comparison with the item’s size chart, and a size recommendation that explains why.
-- [Kabin for brands — Let’s validate size recommendations together](https://kabincommunity.com/en/brands.md): An explainable size recommendation pilot for fashion brands.
-- [About us — Kabin](https://kabincommunity.com/en/about.md): Who is building Kabin, why and how.
-- [Contact — Kabin](https://kabincommunity.com/en/contact.md): Email and address details for the Kabin team.
+- [Kabin · Which size? Size suggestions from your measurements](https://kabincommunity.com/en/index.md): Measure once, with a tape measure or two photos. Kabin tells you your size for every item. Invite only for now, free.
+- [Kabin · For brands](https://kabincommunity.com/en/brands.md): Your customer enters their measurements on your product page and sees their size.
+- [About · Kabin](https://kabincommunity.com/en/about.md): Why we’re building Kabin, and who we are.
+- [Contact · Kabin](https://kabincommunity.com/en/contact.md): How to reach Kabin.
+- [Questions · Kabin](https://kabincommunity.com/en/questions.md): How accurate are measurements from photos? Are my photos stored? How reliable is the size recommendation? How do I delete my data?

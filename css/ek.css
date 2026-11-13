@@ -1,0 +1,43 @@
+/* Kabin web · yayın ekleri: taslakta olmayan, canlı sitenin gerektirdiği parçalar. En son yüklenir.
+   Dil değiştirici, form (tuzak alan, durum satırı, sonuç kutusu, çok satırlı alan, aydınlatma özeti), pilot notu,
+   sonuç sayfalarının düğme satırı, alt bilgi notu, İngilizce başlık ölçüsü. Renk ve ölçüler css/temel.css token'larından. */
+
+/* dil değiştirici: menünün son öğesi. Geniş ekranda bağlantıların yanında, telefonda açılır listenin son satırı. */
+.dil { display: inline-flex; align-items: center; gap: 0.875rem; }
+.dil a[aria-current] { font-weight: 600; }
+@media (max-width: 819px) {
+  .js-menu .gezin .dil { display: flex; gap: 0; margin-top: 0.25rem; padding-top: 0.25rem; border-top: 1px solid var(--tone); }
+}
+
+/* form: tuzak alan görünmez (botlar doldurur); gizli form (kapalı pilot formu) ızgara kuralına rağmen gizli kalır */
+.hp { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+.davet-form[hidden] { display: none; }
+.form-son { display: grid; gap: 0.625rem; justify-items: start; }
+.form-status.err { color: var(--danger); }
+.form-ozet { font-size: 0.8125rem; }
+.alan textarea { width: 100%; min-height: 7.5rem; padding: 0.875rem 1.25rem; border-radius: 1.5rem; border: 1.5px solid var(--borderStrong); background: var(--surface); font: 400 1rem/1.45 var(--font); color: var(--text); resize: vertical; }
+.alan textarea:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 1.5rem; }
+.alan .opt { font-weight: 400; color: var(--textSecondary); }
+.form-done { max-width: 27.5rem; display: grid; gap: 0.5rem; background: var(--surface); border-radius: 2rem; padding: clamp(1.5rem, 3vw, 2.5rem); box-shadow: var(--golge); }
+.form-done strong { font: 500 clamp(1.6rem, 3vw, 2.25rem)/1.15 var(--serif); letter-spacing: -0.015em; }
+.form-done:focus-visible { border-radius: 2rem; }
+.davet-yazi .form-done { margin-top: 1rem; }
+@media (max-width: 899px) { .form-done { max-width: none; } }
+
+/* markalar: form kapalıyken e-posta altındaki not (koyu panelde açık yazı); form açılınca panelin altında durur */
+.murekkep-panel .panel-not { color: var(--onTabBar); max-width: 30em; }
+.pilot-form { margin-top: clamp(2rem, 4vw, 3.5rem); }
+
+/* sonuç sayfaları ve 404: düğme + yanındaki bağlantılar */
+.okuma .dugme-satir { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.75rem; margin-top: 2.25rem; }
+
+/* alt bilgi: İngilizce sayfada yasal metin notu, bağlantıların altında tam satır */
+.alt-not { flex-basis: 100%; margin: 0.5rem 0 0; }
+
+/* İngilizce markalar başlığı Türkçesinden uzun ("We’ll tell them"): dar ekranda satır kabın içine sığsın */
+@media (max-width: 899px) {
+  :lang(en) .m-baslik { font-size: min(calc((100vw - 2 * var(--kenar)) / 6.1), 5.5rem); }
+}
+@media (max-width: 899px) and (orientation: landscape) and (max-height: 560px) {
+  :lang(en) .m-baslik { font-size: min(calc((100vw - 2 * var(--kenar)) / 6.1), 5.5rem, 21vh); }
+}
