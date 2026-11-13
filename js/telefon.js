@@ -67,8 +67,8 @@
   function vitrinAlt() { return '<div class="vitrin-alt"><span class="veri"><b>Bugün</b> · 3 parça</span><span class="hap hap-1 hap-k">Kombin öner</span></div>'; }
   /* vitrin: 'foto' = üç fotoğraflı ızgara (bugünkü); 'aski' = askı şeridi, kesim (js/aski-serit.js); 'aski-foto' = kesim kapalıyken düşülen hâl */
   function vitrin(mod) {
-    if (mod === 'aski') return '<article class="vitrin vitrin-aski" aria-label="Vitrin">' + kok.KASKI.serit('kesim') + vitrinAlt() + '</article>';
-    if (mod === 'aski-foto') return '<article class="vitrin vitrin-aski vitrin-kart" aria-label="Vitrin">' + kok.KASKI.serit('foto') + vitrinAlt() + '</article>';
+    if (mod === 'aski') return '<article class="vitrin vitrin-aski" aria-label="Vitrin">' + kok.KASKI.serit('kesim', null, 3) + vitrinAlt() + '</article>';
+    if (mod === 'aski-foto') return '<article class="vitrin vitrin-aski vitrin-kart" aria-label="Vitrin">' + kok.KASKI.serit('foto', null, 3) + vitrinAlt() + '</article>';
     return '<article class="vitrin">' +
       '<div class="vitrin-izgara"><span class="foto f-buyuk">' + ham('p4', 'Lacivert ceket') + '</span><span class="foto">' + ham('p1', 'Keten gömlek') + '</span><span class="foto">' + ham('p9', 'Kahve chino') + '</span></div>' +
       vitrinAlt() + '</article>';

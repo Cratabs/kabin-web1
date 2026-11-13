@@ -398,12 +398,17 @@
     /* yavaş cihaz: görünürken ilk 30 kare ısınma, sonraki 90 karenin ortanca süresi 33 ms'yi (≈ 30 kare/sn) aşarsa durağan çizime geç */
     var yv = { n: 0, ornek: [], karar: false };
     function yavasDenetle(dtk) {
-      if (yv.karar || ++yv.n <= 30) return;
+      if (yv.karar || ++yv.n <= 8) return;
       yv.ornek.push(dtk);
-      if (yv.ornek.length < 90) return;
+      /* erken karar: ısınmadan sonraki 12 karenin ortancası 50 ms'yi (< 20 kare/sn) aşıyorsa beklemeden durağan çizime geç;
+         çok yavaş cihazda (ekran kartı yok, yazılımla çizim) 120 kare boyunca ana iş parçacığını tutmasın */
+      var erken = yv.ornek.length === 12 && yv.n <= 30;
+      if (!erken && (yv.n <= 30 || yv.ornek.length < 90 + 22)) return;
+      var s = (erken ? yv.ornek : yv.ornek.slice(22)).slice().sort(function (a, b) { return a - b; });
+      var ort = s[s.length >> 1];
+      if (erken && ort <= 50 && !YAVAS_ZORLA) return;
       yv.karar = true;
-      var s = yv.ornek.slice().sort(function (a, b) { return a - b; });
-      d.ortancaMs = s[s.length >> 1];
+      d.ortancaMs = ort;
       if (d.ortancaMs > YAVAS_MS || YAVAS_ZORLA) {
         hazir = false; kap.classList.remove('sahne-hazir'); kap.classList.add('sahne-yavas');
         if (kok.__kabinYer) kok.__kabinYer();

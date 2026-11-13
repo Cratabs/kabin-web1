@@ -18,6 +18,7 @@ let checks = 0;
 try {
   for (const width of [2560, 1440, 768, 390, 320]) {
     const context = await browser.newContext({ viewport: { width, height: 900 } });
+    await context.addInitScript(() => { window.__kabin3bZorla = true; }); // test tarayıcısı yazılımla çizer; site orada 3B'yi kapatır, testte açık kalsın
     const page = await context.newPage();
     const errors = [];
     const outgoing = [];

@@ -30,11 +30,13 @@
     return '<img class="aski-kesim" src="' + KOK + 'kesim/' + p.id + '.webp" alt="" loading="lazy" decoding="async" draggable="false">';
   }
 
-  function serit(tur, etiket) {
+  /* adet: yalnız ilk n parça (Ana vitrini: bugünkü kombinin 3 parçası); verilmezse hepsi (dolap rayı) */
+  function serit(tur, etiket, adet) {
     tur = tur || 'kesim';
+    var liste = adet ? P.slice(0, adet) : P;
     return '<div class="aski-serit aski-t-' + tur + '" data-aski>' +
       '<span class="aski-cubuk" aria-hidden="true"></span>' +
-      '<ul class="aski-liste" aria-label="' + L(etiket || 'Dolabındaki parçalar') + '">' + P.map(function (p, i) {
+      '<ul class="aski-liste" aria-label="' + L(etiket || 'Dolabındaki parçalar') + '">' + liste.map(function (p, i) {
         return '<li class="aski-o' + (i === BAS ? ' orta' : '') + '" data-i="' + i + '" data-ust="' + p.ust + '" data-boy="' + p.boy + '"' + (p.k ? ' data-k="' + p.k + '"' : '') + '>' +
           '<button type="button" class="aski-btn" tabindex="' + (i === BAS ? 0 : -1) + '" aria-label="' + L(p.ad) + '">' +
           '<span class="aski-olcek"><span class="aski-sallan">' + askiSvg() + gorsel(p, tur) + '</span><span class="aski-golge" aria-hidden="true"></span></span>' +

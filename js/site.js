@@ -20,9 +20,16 @@
   if (C) hepsi('.sahne-yedek').forEach(function (el) { if (!el.firstElementChild) el.innerHTML = C.buyuk('c-web'); });
   if (E) hepsi('[data-bolge]').forEach(function (el) { var p = el.getAttribute('data-bolge').split(':'); el.outerHTML = E.bolge(p[0], p[1]); });
 
-  /* 3B desteği: WebGL var mı, ?3b=0 değil mi */
+  /* 3B desteği: WebGL var mı, ?3b=0 değil mi. Ekran kartı olmayan ortamda (yazılımla çizim: SwiftShader, llvmpipe…) her kare
+     ana iş parçacığını uzun süre tutar; orada 3B hiç başlatılmaz, durağan çizim kalır. Testler __kabin3bZorla ile açar. */
   function webgl() {
-    try { var c = d.createElement('canvas'); return !!(kok.WebGLRenderingContext && (c.getContext('webgl2') || c.getContext('webgl'))); } catch (e) { return false; }
+    try {
+      var c = d.createElement('canvas'), g = kok.WebGLRenderingContext && (c.getContext('webgl2') || c.getContext('webgl'));
+      if (!g) return false;
+      if (kok.__kabin3bZorla) return true;
+      var e = g.getExtension('WEBGL_debug_renderer_info'), ad = e ? String(g.getParameter(e.UNMASKED_RENDERER_WEBGL)) : '';
+      return !/swiftshader|llvmpipe|softpipe|software|basic render/i.test(ad);
+    } catch (h) { return false; }
   }
   var var3b = webgl() && !/[?&]3b=0/.test(location.search);
   if (!var3b) kokEl.classList.add('sahnesiz');
@@ -126,7 +133,7 @@
 
   /* uygulama ekranları */
   var serit = d.querySelector('[data-tel-serit]');
-  if (serit && E) serit.innerHTML = E.ana() + E.dolap(); /* onaylanan Ana: fotoğraf vitrini + köşede askı çizimi. Cevap ekranı adımlarda var, burada yinelenmez. */
+  if (serit && E) serit.innerHTML = E.ana('aski') + E.dolap(); /* Ana: askı şeridi (uygulamadaki vitrin). Cevap ekranı adımlarda var, burada yinelenmez. */
 
   /* dolap rayı */
   var ray = d.querySelector('[data-ray]');
