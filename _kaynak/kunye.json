@@ -79,7 +79,10 @@
       "aciklama": "2026-11-08'den beri metinlerde kullanılmıyor (genel yetki kuralları; HMK m.17)."
     }
   },
-  "sameAs": [],
+  "sameAs": [
+    "https://www.instagram.com/kabincommunity",
+    "https://www.linkedin.com/company/kabincommunity/"
+  ],
   "_sameAs_not": "Kabin'in resmî sosyal medya / dizin profil adresleri (https://...). Boş liste olabilir; yapılandırılmış veride sameAs olarak yayımlanır.",
   "yapisal": {
     "_not": "JSON-LD (schema.org) için yapılandırılmış künye. Metin alanlarıyla tutarlı tutun.",
