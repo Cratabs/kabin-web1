@@ -121,7 +121,9 @@ def jsonld(kok: str, cikti: str, baslik: str, aciklama: str, govde: str,
         sayfa["about"] = {"@id": f"{kok}/#uygulama"}
         graf.append({"@type": "SoftwareApplication", "@id": f"{kok}/#uygulama", "name": "Kabin",
                      "applicationCategory": "LifestyleApplication", "description": UYGULAMA_ACIKLAMA[dil],
-                     "inLanguage": "tr", "publisher": {"@id": f"{kok}/#kurulus"}})
+                     "inLanguage": "tr", "publisher": {"@id": f"{kok}/#kurulus"},
+                     # Uygulama ücretsiz (şimdilik davetle); ajanlar fiyatı tahmin etmesin.
+                     "offers": {"@type": "Offer", "price": "0", "priceCurrency": "TRY"}})
     if cikti in MARKA_SAYFALARI:
         h = HIZMET[dil]
         sayfa["about"] = {"@id": url + "#hizmet"}
