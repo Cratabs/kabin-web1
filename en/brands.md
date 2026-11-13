@@ -21,7 +21,7 @@ Example page.
 
 1. **We look at your size chart.** Together we choose which items to try it on.
 1. **We turn the button on for those items.** Your customer taps the button and sees their size.
-1. **We look at the results together.**
+1. **We look at the results together.** You decide whether to carry on.
 
 In the pilot we measure returns and sales together. You see the result in your own numbers.
 

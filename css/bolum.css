@@ -59,6 +59,8 @@
 .tel-serit { display: flex; gap: 28px; justify-content: center; align-items: flex-start; padding: 44px 24px 64px; --tel-boy: 720px; }
 .tel-serit .tel:nth-child(2) { margin-top: 72px; }
 .tel-serit .tel:nth-child(3) { margin-top: 28px; }
+/* Telefonda maket ekranı doldurmasın: sayfanın içinde bir telefon gibi dursun, yandaki ekran görünsün. */
+@media (max-width: 560px) { .tel-serit .tel { zoom: 0.74; } }
 @media (max-width: 1180px) {
   .tel-serit { justify-content: flex-start; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-inline: 20px; }
   .tel-serit::-webkit-scrollbar { display: none; }

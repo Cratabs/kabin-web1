@@ -21,7 +21,7 @@ Sayfanıza bir düğme gelir. Gerisi orada olur, müşteri sayfadan çıkmaz.
 
 1. **Beden tablonuza bakarız.** Hangi ürünlerde deneyeceğimizi birlikte seçeriz.
 1. **Düğmeyi o ürünlerde açarız.** Müşteriniz düğmeye basar, bedenini görür.
-1. **Sonuca birlikte bakarız.**
+1. **Sonuca birlikte bakarız.** Devam edip etmemeye siz karar verirsiniz.
 
 Pilotta iadeyi ve satışı birlikte ölçeriz. Sonucu kendi rakamlarınızla görürsünüz.
 

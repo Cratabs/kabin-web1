@@ -14,7 +14,12 @@
       dg.setAttribute('aria-expanded', String(acik));
       if (!acik && odakDon) dg.focus();
     }
-    dg.addEventListener('click', function () { ac(dg.getAttribute('aria-expanded') !== 'true'); });
+    dg.addEventListener('click', function (e) {
+      var acilacak = dg.getAttribute('aria-expanded') !== 'true';
+      ac(acilacak);
+      /* klavyeyle açıldıysa (detail 0) odak ilk bağlantıya geçer: Tab menüde ilerler, dil değiştiriciye ulaşır */
+      if (acilacak && e.detail === 0) { var ilk = nav.querySelector('a'); if (ilk) ilk.focus(); }
+    });
     nav.addEventListener('click', function (e) { if (e.target.closest('a')) ac(false); });
     d.addEventListener('keydown', function (e) {
       if ((e.key === 'Escape' || e.key === 'Esc') && dg.getAttribute('aria-expanded') === 'true') { e.preventDefault(); ac(false, true); }
