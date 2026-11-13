@@ -79,7 +79,7 @@ Bedenini tanımak başlangıç. Kabin; dolabını, kombinlerini ve stil ilhamın
 
 ### Dolabın, elinin altında.
 
-Parçalarını tek tek ya da galeriden toplu olarak ekle. Dolabın yalnız senin cihazında saklanır.
+Parçalarını tek tek ya da galeriden toplu olarak ekle. Dolabın hesabına bağlıdır; başka kullanıcılar göremez.
 
 ### Kombin oluşturucu.
 
@@ -103,7 +103,7 @@ Beden profili, herkese açık bir sosyal profil değildir. Veriyi işimiz için 
 
 [Gizlilik politikası ↗](https://kabincommunity.com/yasal/gizlilik.html)
 
-- Ölçülerin ve dolabın cihazında saklanır; toplulukta görünmez.
+- Ölçülerin ve dolabın hesabına bağlıdır; sen paylaşmadıkça toplulukta görünmez.
 - Vücut fotoğrafların saklanmaz ve hiçbir üçüncü taraf yapay zekâ hizmetine gönderilmez.
 - Bu site çerez, analiz ya da reklam aracı kullanmaz.
 - Hesabını ve verilerini uygulamadan kalıcı olarak silebilirsin.
@@ -118,7 +118,7 @@ Fotoğraftan çıkarılan ölçüler tahmindir. Henüz doğrulanmış bir hata o
 
 ### Fotoğraflarım saklanıyor mu?
 
-Hayır. Fotoğraflar yalnız analiz süresince sunucumuzun belleğinde işlenir; diske ya da kayıtlara yazılmaz ve üçüncü taraf yapay zekâ hizmetlerine gönderilmez. Analizden çıkan ölçü değerleri senin cihazında saklanır.
+Hayır. Fotoğraflar yalnız analiz süresince sunucumuzun belleğinde işlenir; diske ya da kayıtlara yazılmaz ve üçüncü taraf yapay zekâ hizmetlerine gönderilmez. Analizden çıkan ölçü değerleri cihazında ve hesabına bağlı ölçü profilinde saklanır.
 
 ### Beden önerisi ne kadar güvenilir?
 

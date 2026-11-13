@@ -79,7 +79,7 @@ Knowing your size is just the start. Kabin brings your wardrobe, your outfits an
 
 ### Your wardrobe, at your fingertips.
 
-Add your pieces one by one, or in bulk from your gallery. Your wardrobe is stored only on your device.
+Add your pieces one by one, or in bulk from your gallery. Your wardrobe is tied to your account; other users can’t see it.
 
 ### Outfit builder.
 
@@ -103,7 +103,7 @@ Your body profile is not a public social profile. We process data only to the mi
 
 [Privacy policy (in Turkish) ↗](https://kabincommunity.com/yasal/gizlilik.html)
 
-- Your measurements and wardrobe are stored on your device; they don’t appear in the community.
+- Your measurements and wardrobe are tied to your account; they don’t appear in the community unless you share them.
 - Your body photos are not stored and are never sent to any third-party AI service.
 - This site uses no cookies, analytics or advertising tools.
 - You can permanently delete your account and your data from the app.
@@ -118,7 +118,7 @@ Measurements from photos are estimates. We don’t yet publish a validated error
 
 ### Are my photos stored?
 
-No. Photos are processed only in our server’s memory for the duration of the analysis; they are not written to disk or to logs, and they are not sent to third-party AI services. The measurement values from the analysis are stored on your device.
+No. Photos are processed only in our server’s memory for the duration of the analysis; they are not written to disk or to logs, and they are not sent to third-party AI services. The measurement values from the analysis are stored on your device and in the measurement profile tied to your account.
 
 ### How reliable is the size recommendation?
 

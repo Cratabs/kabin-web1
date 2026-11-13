@@ -152,7 +152,7 @@ def llms(kok: str, sayfalar: list[tuple[str, str, str]], d: dict[str, str]) -> s
         "# Kabin\n\n"
         "> Kabin, kişisel beden ve stil asistanıdır. Önden ve yandan çekilen iki fotoğraftan vücut ölçülerini "
         "tahmin eder (mezurayla girilen ölçü her zaman önceliklidir), ürünün beden tablosuyla karşılaştırır ve "
-        "her bölge için dar / uygun / bol sonucunu nedeniyle gösterir. Dolap cihazda tutulur; kombin uyumu "
+        "her bölge için dar / uygun / bol sonucunu nedeniyle gösterir. Dolap hesaba bağlıdır; kombin uyumu "
         "puanlanır; toplulukta kombin paylaşılır. Fotoğraflar diske yazılmaz.\n\n"
         "Önemli: Ölçüler ve beden önerileri tahminidir, uyum garantisi değildir. Uygulama davetle kullanılır; "
         "sitede satış, ödeme ya da hesap açma yoktur.\n\n"
